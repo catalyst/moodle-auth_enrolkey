@@ -34,21 +34,41 @@ class token_signup_form extends login_signup_form {
 	function definition() {
 		global $USER, $CFG;
 		
+		// Generates the default signup form.
 		parent::definition();
 		
 		$mform = $this->_form;
 		
 		if ($this->signup_token_enabled()) {
-			$element = $mform->createElement('text', 'signup_token_element', get_string('auth_tokensignup_field', 'auth_token'), array('https' => $CFG->loginhttps));
+			$element = $mform->createElement('text', 'signup_token', get_string('auth_tokensignup_field', 'auth_token'), array('https' => $CFG->loginhttps));
 			
 			// https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType
-			$mform->setType('signup_token_element', 'PARAM_TEXT');
+			$mform->setType('signup_token', PARAM_TEXT);
 			
-			// The Submit button elements.
-			$mform->insertElementBefore($element, 'buttonar');
+			// TODO: investigate the order of elements, insert as second last.
 
+			// The Submit button elements.
+			// formslib.php line 1202: 'buttonar' specified. 
+			$mform->insertElementBefore($element, 'buttonar');
 		}
 		
+	}
+	
+	function validation($data, $files) {
+		global $CFG, $DB;
+		$errors = parent::validation($data, $files);
+		
+		$authplugin = get_auth_plugin($CFG->registerauth);
+		
+		$token = $data['signup_token'];
+		
+		// Initial token validaiton test.
+		// Will not print error message with missing the token.
+		if ($token != null && $token !== "1234") {
+			$errors['signup_token'] = get_string('auth_tokensignup_token_invalid', 'auth_token');
+		}
+				
+		return $errors;
 	}
 	
 	function signup_token_enabled() {

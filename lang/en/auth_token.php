@@ -26,4 +26,5 @@ $string['auth_tokensettings'] = 'Adds a token form element to the sign-up page f
 $string['auth_tokensettings_key'] = 'Enable Token element';
 $string['auth_tokendescription'] = 'This provides Token based authentication';
 $string['auth_tokensignup_field'] = 'Token';
+$string['auth_tokensignup_token_invalid'] = 'The token you have entered is invalid.';
 $string['pluginname'] = 'Token authentication';
