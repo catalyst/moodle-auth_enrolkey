@@ -34,7 +34,7 @@ class auth_plugin_token extends auth_plugin_base {
     /**
      * Constructor.
      */
-    function __construct() {
+    public function __construct() {
         $this->authtype = 'token';
         $this->config = get_config('auth/token');
     }
@@ -47,11 +47,12 @@ class auth_plugin_token extends auth_plugin_base {
      * @param string $password The password
      * @return bool Authentication success or failure.
      */
-    function user_login ($username, $password) {
+    public function user_login ($username, $password) {
         global $CFG, $DB;
-        if ($user = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id))) {
+        if ($user = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id))) {
             return validate_internal_user_password($user, $password);
         }
+        // TODO: if token is set, check token.
         return false;
     }
 
@@ -65,19 +66,19 @@ class auth_plugin_token extends auth_plugin_base {
      * @return boolean result
      *
      */
-    function user_update_password($user, $newpassword) {
+    public function user_update_password($user, $newpassword) {
         $user = get_complete_user_data('id', $user->id);
         // This will also update the stored hash to the latest algorithm
         // if the existing hash is using an out-of-date algorithm (or the
         // legacy md5 algorithm).
         return update_internal_user_password($user, $newpassword);
     }
-	
+
     /**
-     * Adds this authentication to the self registration list.
-     * 
+     * Adds this authentication method to the self registration list.
+     *
      */
-    function can_signup() {
+    public function can_signup() {
         return true;
     }
 
@@ -88,7 +89,7 @@ class auth_plugin_token extends auth_plugin_base {
      * @param object $user new user object
      * @param boolean $notify print notice with link and terminate
      */
-    function user_signup($user, $notify=true) {
+    public function user_signup($user, $notify=true) {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/user/profile/lib.php');
         require_once($CFG->dirroot.'/user/lib.php');
@@ -110,7 +111,7 @@ class auth_plugin_token extends auth_plugin_base {
         \core\event\user_created::create_from_userid($user->id)->trigger();
 
         if (! send_confirmation_email($user)) {
-            print_error('auth_emailnoemail','auth_email');
+            print_error('auth_emailnoemail', 'auth_email');
         }
 
         if ($notify) {
@@ -131,7 +132,7 @@ class auth_plugin_token extends auth_plugin_base {
      *
      * @return bool
      */
-    function can_confirm() {
+    public function can_confirm() {
         return true;
     }
 
@@ -141,7 +142,7 @@ class auth_plugin_token extends auth_plugin_base {
      * @param string $username
      * @param string $confirmsecret
      */
-    function user_confirm($username, $confirmsecret) {
+    public function user_confirm($username, $confirmsecret) {
         global $DB;
         $user = get_complete_user_data('username', $username);
 
@@ -152,26 +153,13 @@ class auth_plugin_token extends auth_plugin_base {
             } else if ($user->secret == $confirmsecret && $user->confirmed) {
                 return AUTH_CONFIRM_ALREADY;
 
-            } else if ($user->secret == $confirmsecret) {   // They have provided the secret key to get in
-                $DB->set_field("user", "confirmed", 1, array("id"=>$user->id));
+            } else if ($user->secret == $confirmsecret) {   // They have provided the secret key to get in.
+                $DB->set_field("user", "confirmed", 1, array("id" => $user->id));
                 return AUTH_CONFIRM_OK;
             }
         } else {
             return AUTH_CONFIRM_ERROR;
         }
-    }
-
-    function prevent_local_passwords() {
-        return false;
-    }
-
-    /**
-     * Returns true if this authentication plugin is 'internal'.
-     *
-     * @return bool
-     */
-    function is_internal() {
-        return true;
     }
 
     /**
@@ -180,18 +168,8 @@ class auth_plugin_token extends auth_plugin_base {
      *
      * @return bool
      */
-    function can_change_password() {
+    public function can_change_password() {
         return true;
-    }
-
-    /**
-     * Returns the URL for changing the user's pw, or empty if the default can
-     * be used.
-     *
-     * @return moodle_url
-     */
-    function change_password_url() {
-        return null; // use default internal method
     }
 
     /**
@@ -199,7 +177,7 @@ class auth_plugin_token extends auth_plugin_base {
      *
      * @return bool
      */
-    function can_reset_password() {
+    public function can_reset_password() {
         return true;
     }
 
@@ -208,7 +186,7 @@ class auth_plugin_token extends auth_plugin_base {
      *
      * @return bool
      */
-    function can_be_manually_set() {
+    public function can_be_manually_set() {
         return true;
     }
 
@@ -220,24 +198,24 @@ class auth_plugin_token extends auth_plugin_base {
      *
      * @param array $page An object containing all the data for this page.
      */
-    function config_form($config, $err, $user_fields) {
-        include "config.html";
+    public function config_form($config, $err, $userfields) {
+        include("config.html");
     }
 
     /**
      * Processes and stores configuration data for this authentication plugin.
      */
-    function process_config($config) {
-        // set to defaults if undefined
+    public function process_config($config) {
+        // Set to defaults if undefined.
         if (!isset($config->recaptcha)) {
             $config->recaptcha = false;
         }
-        
+
         if (!isset($config->authtoken)) {
-        	$config->authtoken = false;
+            $config->authtoken = false;
         }
 
-        // save settings
+        // Save settings.
         set_config('recaptcha', $config->recaptcha, 'auth/token');
         set_config('authtoken', $config->authtoken, 'auth/token');
         return true;
@@ -247,22 +225,23 @@ class auth_plugin_token extends auth_plugin_base {
      * Returns whether or not the captcha element is enabled, and the admin settings fulfil its requirements.
      * @return bool
      */
-    function is_captcha_enabled() {
+    public function is_captcha_enabled() {
         global $CFG;
-        return isset($CFG->recaptchapublickey) && isset($CFG->recaptchaprivatekey) && get_config("auth/{$this->authtype}", 'recaptcha');
+        return isset($CFG->recaptchapublickey) && isset($CFG->recaptchaprivatekey) && get_config("auth/{$this->authtype}",
+                'recaptcha');
     }
-    
+
     /**
      * Return a form to capture user details for account creation.
      * This is used in /login/signup.php.
      * @return moodle_form A form which edits a record from the user table.
      */
-	function signup_form() {
+    public function signup_form() {
         global $CFG;
-		
+
         require_once($CFG->dirroot.'/login/signup_form.php');
         require_once('token_signup_form.php');
-        return new token_signup_form(null, null, 'post', '', array('autocomplete'=>'on'));
+        return new token_signup_form(null, null, 'post', '', array('autocomplete' => 'on'));
     }
 
 }
