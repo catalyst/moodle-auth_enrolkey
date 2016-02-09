@@ -93,6 +93,7 @@ class auth_plugin_token extends auth_plugin_base {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/user/profile/lib.php');
         require_once($CFG->dirroot.'/user/lib.php');
+        require_once($CFG->dirroot.'/enrol/self/lib.php');
 
         $plainpassword = $user->password;
         $user->password = hash_internal_user_password($user->password);
@@ -101,6 +102,26 @@ class auth_plugin_token extends auth_plugin_base {
         }
 
         $user->id = user_create_user($user, false, false);
+        
+        // Finding all possible courses that have the signup_token.
+        $courses = $DB->get_records('enrol', array('password' => $user->signup_token));
+        
+        // Enroling the user to any of the courses that match.
+        foreach ($courses as $course) {
+            $enrol = enrol_get_plugin('self');
+            $context = context_course::instance($course->courseid);
+            $instances = enrol_get_instances($course->courseid, true);
+
+            $token_instance = null;
+            foreach ($instances as $instance) {
+                if ($instance->enrol == 'self') {
+                    $token_instance = $instance;
+                    break;
+                }
+            }
+
+            $enrol->enrol_user($token_instance, $user->id);
+        }
 
         user_add_password_history($user->id, $plainpassword);
 
