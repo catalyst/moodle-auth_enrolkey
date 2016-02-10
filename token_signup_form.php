@@ -49,8 +49,11 @@ class token_signup_form extends login_signup_form {
             // The Submit button elements.
             // formslib.php line 1202: 'buttonar' specified.
             $mform->insertElementBefore($element, 'buttonar');
-        }
 
+            if ($this->signup_token_required()) {
+                $mform->addRule('signup_token', get_string('auth_tokensignup_missing', 'auth_token'), 'required', null, 'server');
+            }
+        }
     }
 
     public function validation($data, $files) {
@@ -60,11 +63,11 @@ class token_signup_form extends login_signup_form {
         $authplugin = get_auth_plugin($CFG->registerauth);
 
         $token = $data['signup_token'];
-        
+
         $record = null;
         // Check the record if a token is present.
-        if(!empty($token)) {
-        	$records = $DB->get_records('enrol', array('password' => $token));
+        if (!empty($token)) {
+            $records = $DB->get_records('enrol', array('password' => $token));
         }
 
         // Will not print error message with missing the token.
@@ -75,7 +78,11 @@ class token_signup_form extends login_signup_form {
     }
 
     public function signup_token_enabled() {
-        return get_config('auth/token', 'authtoken');
+        return get_config('auth_token', 'tokenvisible');
+    }
+
+    public function signup_token_required() {
+        return get_config('auth_token', 'tokenrequired');
     }
 
 }

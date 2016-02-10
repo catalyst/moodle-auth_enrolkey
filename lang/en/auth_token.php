@@ -22,9 +22,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['auth_tokensettings'] = 'Adds a token form element to the sign-up page for self-registration users. This will be checked against available tokens and enrol the user to a specific course.';
-$string['auth_tokensettings_key'] = 'Enable Token element';
+$string['auth_tokensettings_visible_description'] = 'Adds a token form element to the sign-up page for self-registration users. This will be checked against available tokens and enrol the user to a specific course';
+$string['auth_tokensettings_required_description'] = 'The token element will be a required field for validation';
+$string['auth_tokensettings_visible'] = 'Enable Token element';
+$string['auth_tokensettings_required'] = 'Require Token for validation';
 $string['auth_tokendescription'] = 'This provides Token based authentication';
 $string['auth_tokensignup_field'] = 'Token';
-$string['auth_tokensignup_token_invalid'] = 'The token you have entered is invalid.';
+$string['auth_tokensignup_token_invalid'] = 'The token you have entered is invalid';
+$string['auth_tokensignup_missing'] = 'Missing token';
 $string['pluginname'] = 'Token authentication';
