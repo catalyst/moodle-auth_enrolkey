@@ -18,7 +18,7 @@
  * Signup form that provides additional token field.
  *
  * @package    auth_token
- * @copyright  2016 Nicholas Hoobin
+ * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
