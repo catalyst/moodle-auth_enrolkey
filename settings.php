@@ -18,7 +18,7 @@
  * Token Authentication settings page
  *
  * @package    auth_token
- * @copyright  2016 Nicholas Hoobin
+ * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,13 +26,13 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
     require_once($CFG->dirroot . '/auth/token/auth.php');
-    
+
     $options = array(get_string('no'), get_string('yes'));
 
     $settings->add(new admin_setting_configselect('auth_token/tokenvisible',
             get_string('auth_tokensettings_visible', 'auth_token'),
             get_string('auth_tokensettings_visible_description', 'auth_token'), 1, $options));
-    
+
     $settings->add(new admin_setting_configselect('auth_token/tokenrequired',
             get_string('auth_tokensettings_required', 'auth_token'),
             get_string('auth_tokensettings_required_description', 'auth_token'), 1, $options));
