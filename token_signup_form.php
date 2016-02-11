@@ -66,8 +66,9 @@ class token_signup_form extends login_signup_form {
 
         $record = null;
         // Check the record if a token is present.
+        // TODO: research check for true valid token, date ranges, etc.
         if (!empty($token)) {
-            $records = $DB->get_records('enrol', array('password' => $token));
+            $records = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
         }
 
         // Will not print error message with missing the token.

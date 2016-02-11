@@ -60,17 +60,17 @@ class auth_token_auth_testcase extends advanced_testcase {
         $instance2->password = 'key_1';
         $instance3->password = 'key_1';
         $instance4->password = 'key_2';
-
-        $instance1->status = ENROL_INSTANCE_ENABLED;
-        $instance2->status = ENROL_INSTANCE_ENABLED;
-        $instance3->status = ENROL_INSTANCE_ENABLED;
-        $instance4->status = ENROL_INSTANCE_ENABLED;
-
+        
         $DB->update_record('enrol', $instance1);
         $DB->update_record('enrol', $instance2);
         $DB->update_record('enrol', $instance3);
         $DB->update_record('enrol', $instance4);
-
+        
+        $selfenrol->update_status($instance1, ENROL_INSTANCE_ENABLED);
+        $selfenrol->update_status($instance2, ENROL_INSTANCE_ENABLED);
+        $selfenrol->update_status($instance3, ENROL_INSTANCE_ENABLED);
+        $selfenrol->update_status($instance4, ENROL_INSTANCE_ENABLED);
+        
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course1->id, 'enrol' => 'self', 'password' => '')));
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course2->id, 'enrol' => 'self', 'password' => 'key_1')));
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course3->id, 'enrol' => 'self', 'password' => 'key_1')));
