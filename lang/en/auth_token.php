@@ -18,7 +18,7 @@
  * Strings for component 'auth_token', language 'en'.
  *
  * @package   auth_token
- * @copyright 2016 Nicholas Hoobin
+ * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,4 +30,6 @@ $string['auth_tokendescription'] = 'This provides Token based authentication';
 $string['auth_tokensignup_field'] = 'Token';
 $string['auth_tokensignup_token_invalid'] = 'The token you have entered is invalid';
 $string['auth_tokensignup_missing'] = 'Missing token';
+$string['auth_tokensignup_view'] = 'Token enrollment';
+$string['auth_tokensignup_view_message'] = 'You have enrolled into {$a->course}, {$a->enrolinstance} as a {$a->role}.';
 $string['pluginname'] = 'Token authentication';
