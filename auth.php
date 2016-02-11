@@ -18,7 +18,7 @@
  * Authentication Plugin: Token Authentication
  *
  * @package    auth_token
- * @copyright  2016 Nicholas Hoobin
+ * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -52,26 +52,8 @@ class auth_plugin_token extends auth_plugin_base {
         if ($user = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id))) {
             return validate_internal_user_password($user, $password);
         }
-        // TODO: If a token account, check token expiration?
-        return false;
-    }
 
-    /**
-     * Updates the user's password.
-     *
-     * called when the user password is updated.
-     *
-     * @param  object  $user        User table object  (with system magic quotes)
-     * @param  string  $newpassword Plaintext password (with system magic quotes)
-     * @return boolean result
-     *
-     */
-    public function user_update_password($user, $newpassword) {
-        $user = get_complete_user_data('id', $user->id);
-        // This will also update the stored hash to the latest algorithm
-        // if the existing hash is using an out-of-date algorithm (or the
-        // legacy md5 algorithm).
-        return update_internal_user_password($user, $newpassword);
+        return false;
     }
 
     /**
@@ -90,23 +72,21 @@ class auth_plugin_token extends auth_plugin_base {
      * @param boolean $notify print notice with link and terminate
      */
     public function user_signup($user, $notify=true) {
-        global $CFG, $DB, $SESSION;
+        global $CFG, $DB, $SESSION, $USER;
         require_once($CFG->dirroot . '/user/profile/lib.php');
         require_once($CFG->dirroot . '/user/lib.php');
         require_once($CFG->dirroot . '/enrol/self/lib.php');
 
         $plainpassword = $user->password;
         $user->password = hash_internal_user_password($user->password);
-        if (empty($user->calendartype)) {
-            $user->calendartype = $CFG->calendartype;
-        }
+
+        // These are currently not present in the user object.
+        $user->currentlogin = time();
+        $user->picture = 0;
+        $user->imagealt = 0;
+        $user->deleted = 0;
 
         $user->id = user_create_user($user, false, false);
-
-        user_add_password_history($user->id, $plainpassword);
-
-        // Save any custom profile field information.
-        profile_save_data($user);
 
         // Trigger event.
         \core\event\user_created::create_from_userid($user->id)->trigger();
@@ -114,28 +94,28 @@ class auth_plugin_token extends auth_plugin_base {
         if (! send_confirmation_email($user)) {
             print_error('auth_emailnoemail', 'auth_email');
         }
-        
-        // Passed validation, this is a token signup session.
-        $SESSION->token = true;
-        
-        $enrol = enrol_get_plugin('self');
-        
+
         // Password is the Enrolment key that is specified in the Self enrolment instance.
         $courses = $DB->get_records('enrol', array('password' => $user->signup_token));
-        
+
+        $enrol = enrol_get_plugin('self');
         foreach ($courses as $course) {
-        	$context = context_course::instance($course->courseid);
-        	$instances = enrol_get_instances($course->courseid, true);
-        
-        	foreach ($instances as $instance) {
-        		if ($instance->enrol == 'self') {
-        			$enrol->enrol_user($instance, $user->id);
-        		}
-        	}
+            $enrol->enrol_user($course, $user->id);
         }
 
-        redirect(new moodle_url("/auth/token/view.php"));
-        return true;
+        if (!PHPUNIT_TEST) {
+            complete_user_login($user);
+            $USER->loggedin = true;
+            $USER->site = $CFG->wwwroot;
+            set_moodle_cookie($USER->username);
+        }
+
+        // Will be passed to view.php to show which courses they have been enrolled it.
+        $SESSION->auth_token = $user->signup_token;
+
+        if (!PHPUNIT_TEST) {
+            redirect(new moodle_url("/auth/token/view.php"));
+        }
     }
 
     /**
@@ -174,25 +154,6 @@ class auth_plugin_token extends auth_plugin_base {
     }
 
     /**
-     * Returns true if this authentication plugin can change the user's
-     * password.
-     *
-     * @return bool
-     */
-    public function can_change_password() {
-        return true;
-    }
-
-    /**
-     * Returns true if plugin allows resetting of internal password.
-     *
-     * @return bool
-     */
-    public function can_reset_password() {
-        return true;
-    }
-
-    /**
      * Returns true if plugin can be manually set.
      *
      * @return bool
@@ -212,26 +173,6 @@ class auth_plugin_token extends auth_plugin_base {
         require_once($CFG->dirroot . '/login/signup_form.php');
         require_once('token_signup_form.php');
         return new token_signup_form(null, null, 'post', '', array('autocomplete' => 'on'));
-    }
-
-    public function check_valid_token($token) {
-        global $DB;
-
-        $enrol = enrol_get_plugin('self');
-
-        // Password is the Enrolment key that is specified in the Self enrolment instance.
-        $courses = $DB->get_records('enrol', array('password' => $token));
-
-        foreach ($courses as $course) {
-            $context = context_course::instance($course->courseid);
-            $instances = enrol_get_instances($course->courseid, true);
-
-            foreach ($instances as $instance) {
-                if ($instance->enrol == 'self') {
-                    // TODO: Check valid token date ranges.
-                }
-            }
-        }
     }
 }
 
