@@ -18,7 +18,7 @@
  * Token Authentication tests.
  *
  * @package    auth_token
- * @copyright  2016 Nicholas Hoobin
+ * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -60,17 +60,17 @@ class auth_token_auth_testcase extends advanced_testcase {
         $instance2->password = 'key_1';
         $instance3->password = 'key_1';
         $instance4->password = 'key_2';
-        
+
         $DB->update_record('enrol', $instance1);
         $DB->update_record('enrol', $instance2);
         $DB->update_record('enrol', $instance3);
         $DB->update_record('enrol', $instance4);
-        
+
         $selfenrol->update_status($instance1, ENROL_INSTANCE_ENABLED);
         $selfenrol->update_status($instance2, ENROL_INSTANCE_ENABLED);
         $selfenrol->update_status($instance3, ENROL_INSTANCE_ENABLED);
         $selfenrol->update_status($instance4, ENROL_INSTANCE_ENABLED);
-        
+
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course1->id, 'enrol' => 'self', 'password' => '')));
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course2->id, 'enrol' => 'self', 'password' => 'key_1')));
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course3->id, 'enrol' => 'self', 'password' => 'key_1')));
