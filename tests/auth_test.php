@@ -27,8 +27,16 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->dirroot . '/auth/token/auth.php');
 
+/**
+ * Token Authentication tests.
+ * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class auth_token_auth_testcase extends advanced_testcase {
 
+    /**
+     * Test test_auth_token()
+     */
     public function test_auth_token() {
         global $CFG, $DB;
 
