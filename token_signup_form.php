@@ -77,9 +77,6 @@ class token_signup_form extends login_signup_form {
 
         $token = $data['signup_token'];
 
-        $record = null;
-        // Check the record if a token is present.
-        // TODO: research check for true valid token, date ranges, etc.
         if (!empty($token)) {
             $canenrol = false;
 
