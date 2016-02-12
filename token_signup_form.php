@@ -48,7 +48,7 @@ class token_signup_form extends login_signup_form {
 
             // The Submit button elements.
             // formslib.php line 1202: 'buttonar' specified.
-            $mform->insertElementBefore($element, 'buttonar');
+            $mform->insertElementBefore($element, 'email');
 
             if ($this->signup_token_required()) {
                 $mform->addRule('signup_token', get_string('auth_tokensignup_missing', 'auth_token'), 'required', null, 'server');
