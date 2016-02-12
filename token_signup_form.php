@@ -72,7 +72,8 @@ class token_signup_form extends login_signup_form {
         global $CFG, $DB;
         $errors = parent::validation($data, $files);
 
-        $authplugin = get_auth_plugin($CFG->registerauth);
+        $authplugin  = get_auth_plugin('token');
+        $enrolplugin = enrol_get_plugin('self');
 
         $token = $data['signup_token'];
 
@@ -80,11 +81,24 @@ class token_signup_form extends login_signup_form {
         // Check the record if a token is present.
         // TODO: research check for true valid token, date ranges, etc.
         if (!empty($token)) {
-            $records = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
+            $canenrol = false;
+
+            $instances = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
+
+            // There may be more than one enrolment instance configured with various dates to check against.
+            foreach ($instances as $instance) {
+                if ($enrolplugin->can_self_enrol($instance)) {
+                    $canenrol = true;
+                }
+            }
+
+            if (!$canenrol) {
+                $errors['signup_token'] = get_string('auth_tokensignup_token_invalid', 'auth_token');
+            }
         }
 
         // Will not print error message with missing the token.
-        if (empty($records) && !empty($token)) {
+        if (empty($instances) && !empty($token)) {
             $errors['signup_token'] = get_string('auth_tokensignup_token_invalid', 'auth_token');
         }
         return $errors;
