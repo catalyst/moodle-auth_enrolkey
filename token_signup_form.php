@@ -50,8 +50,7 @@ class token_signup_form extends login_signup_form {
             // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
             $mform->setType('signup_token', PARAM_TEXT);
 
-            // The Submit button elements.
-            // formslib.php line 1202: 'buttonar' specified.
+            // Make the course token field visible earlier.
             $mform->insertElementBefore($element, 'email');
 
             if ($this->signup_token_required()) {
