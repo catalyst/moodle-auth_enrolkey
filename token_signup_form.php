@@ -27,10 +27,14 @@
  *
  * This provides an additional token that will be validated upon signup.
  *
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @package auth_token
+ * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class token_signup_form extends login_signup_form {
+
+    /**
+     * Creates the Moodle singup form, calls parent::definition();
+     */
     public function definition() {
         global $USER, $CFG;
 
@@ -56,6 +60,15 @@ class token_signup_form extends login_signup_form {
         }
     }
 
+    /**
+     * Returns an array with fields that are invalid during signup.
+     * This is used in /login/signup.php.
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK (true allowed for backwards compatibility too).
+     */
     public function validation($data, $files) {
         global $CFG, $DB;
         $errors = parent::validation($data, $files);
@@ -78,10 +91,18 @@ class token_signup_form extends login_signup_form {
         return $errors;
     }
 
+    /**
+     * Returns if the signup token field is enabled.
+     * @return bool
+     */
     public function signup_token_enabled() {
         return get_config('auth_token', 'tokenvisible');
     }
 
+    /**
+     * Returns if the signup token field is required.
+     * @return bool
+     */
     public function signup_token_required() {
         return get_config('auth_token', 'tokenrequired');
     }
