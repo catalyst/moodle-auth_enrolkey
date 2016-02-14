@@ -37,5 +37,4 @@ $string['auth_tokensignup_view_message_basic'] = 'You have enrolled into {$a->co
 $string['auth_tokensignup_view_message_basic_dates'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course starts: {$a->startdate}<br />Course ends: {$a->enddate}';
 $string['auth_tokensignup_view_message_basic_dates_startonly'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course starts: {$a->startdate}';
 $string['auth_tokensignup_view_message_basic_dates_endonly'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course ends: {$a->enddate}';
-$string['auth_tokensignup_view_message_instancename'] = 'You have enrolled into {$a->course}, {$a->enrolinstance} as a {$a->role}.';
 $string['pluginname'] = 'Token authentication';
