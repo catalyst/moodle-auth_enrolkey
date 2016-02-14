@@ -14,6 +14,8 @@ Run the Moodle upgrade.
 # Setup
 Enable the Token authentication plugin. 
     `(Site administration > Plugins > Authentication > Manage Authentication)`
+
+On the same page to manage authentication options, scroll down to the common settings and select `Token Authentication` in the Self Registration drop down list for `registerauth`.
     
 Enable the Self enrolment plugin. 
     `(Site administration > Plugins > Enrolments > Manage enrol plugins)`
