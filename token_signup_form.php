@@ -78,26 +78,23 @@ class token_signup_form extends login_signup_form {
         $token = $data['signup_token'];
 
         if (!empty($token)) {
-            $canenrol = false;
+            $selfenrolinstance = false;
 
             $instances = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
 
             // There may be more than one enrolment instance configured with various dates to check against.
             foreach ($instances as $instance) {
                 if ($enrolplugin->can_self_enrol($instance)) {
-                    $canenrol = true;
+                    $selfenrolinstance = true;
                 }
             }
 
-            if (!$canenrol) {
+            // No token matched, this will produce an error message. There are concerns about bruteforcing.
+            if (!$selfenrolinstance) {
                 $errors['signup_token'] = get_string('auth_tokensignup_token_invalid', 'auth_token');
             }
         }
 
-        // Will not print error message with missing the token.
-        if (empty($instances) && !empty($token)) {
-            $errors['signup_token'] = get_string('auth_tokensignup_token_invalid', 'auth_token');
-        }
         return $errors;
     }
 
