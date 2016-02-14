@@ -22,11 +22,13 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['auth_tokendescription'] = 'This provides Token based authentication';
+$string['auth_tokensettings_heading'] = 'General settings';
+$string['auth_tokensettings_content'] = '<p>Token-based self-registration enables a user to create their own account via a \'Create new account\' button on the login page. The user then receives an email containing a secure link to a page where they can confirm their account. Future logins just check the username and password against the stored values in the Moodle database.</p><p>During self-registration if a token is entered in the Course Token field then it will proceed to automatically enrol the new user into any course key that it matches. The keys are enabled in (Course administration > Users > Enrolment methods > Add method > Self enrolment) and will use the Enrolment Key field.</p><p>Note: In addition to enabling the plugin, token-based self-registration must also be selected from the self registration drop-down menu on the \'Manage authentication\' page.</p>';
 $string['auth_tokensettings_visible_description'] = 'Adds a token form element to the sign-up page for self-registration users. This will be checked against available tokens and enrol the user to a specific course';
 $string['auth_tokensettings_required_description'] = 'The token element will be a required field for validation';
 $string['auth_tokensettings_visible'] = 'Enable Token element';
 $string['auth_tokensettings_required'] = 'Require Token for validation';
-$string['auth_tokendescription'] = 'This provides Token based authentication';
 $string['auth_tokensignup_field'] = 'Course token';
 $string['auth_tokensignup_token_invalid'] = 'The token you have entered is invalid';
 $string['auth_tokensignup_missing'] = 'Missing token';
