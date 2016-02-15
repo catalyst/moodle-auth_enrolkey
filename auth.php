@@ -99,11 +99,13 @@ class auth_plugin_token extends auth_plugin_base {
         }
 
         // Password is the Enrolment key that is specified in the Self enrolment instance.
-        $courses = $DB->get_records('enrol', array('password' => $user->signup_token));
+        $courses = $DB->get_records('enrol', array('enrol' => 'self', 'password' => $user->signup_token));
 
         $enrol = enrol_get_plugin('self');
         foreach ($courses as $course) {
-            $enrol->enrol_user($course, $user->id);
+            if ($enrol->can_self_enrol($course) === true) {
+                $enrol->enrol_user($course, $user->id);
+            }
         }
 
         if (!PHPUNIT_TEST) {
