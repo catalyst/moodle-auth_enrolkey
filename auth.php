@@ -93,8 +93,10 @@ class auth_plugin_token extends auth_plugin_base {
         // Trigger event.
         \core\event\user_created::create_from_userid($user->id)->trigger();
 
-        if (! send_confirmation_email($user)) {
-            print_error('auth_emailnoemail', 'auth_email');
+        if (!PHPUNIT_TEST) {
+            if (!send_confirmation_email($user)) {
+                print_error('auth_emailnoemail', 'auth_email');
+            }
         }
 
         // Password is the Enrolment key that is specified in the Self enrolment instance.
