@@ -1,3 +1,8 @@
+<a href="https://travis-ci.org/nhoobin/moodle-auth_token">
+<img src="https://travis-ci.org/nhoobin/moodle-auth_token.svg?branch=master">
+</a>
+
+
 Moodle Token auth plugin
 ========================
 
