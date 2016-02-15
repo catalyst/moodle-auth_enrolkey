@@ -149,7 +149,6 @@ class auth_token_auth_testcase extends advanced_testcase {
         $tokenauth->user_signup($user1, false);
         $tokenauth->user_signup($user2, false);
 
-
         // User 1 should be enrolled into course 2 and 3.
         $this->assertFalse(is_enrolled($context1, $user1, ''));
         $this->assertTrue(is_enrolled($context2, $user1, ''));
