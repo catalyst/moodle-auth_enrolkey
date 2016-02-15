@@ -37,4 +37,22 @@ $string['auth_tokensignup_view_message_basic'] = 'You have enrolled into {$a->co
 $string['auth_tokensignup_view_message_basic_dates'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course starts: {$a->startdate}<br />Course ends: {$a->enddate}';
 $string['auth_tokensignup_view_message_basic_dates_startonly'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course starts: {$a->startdate}';
 $string['auth_tokensignup_view_message_basic_dates_endonly'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course ends: {$a->enddate}';
+$string['auth_tokensignup_auth_instructions'] = 'Hi! For full access to courses you\'ll need to take
+a minute to create a new account for yourself on this web site.
+Each of the individual courses may also have a one-time
+"enrolment key", which you can use during this sign up:
+<ol>
+<li>Fill out the <a href="{$a}">New Account</a> form with your details.</li>
+<li>If you are prompted for an "enrolment key" - use the one
+that your teacher has given you. This will "enrol" you in the
+course.</li>
+<li>An email will be immediately sent to your email address.</li>
+<li>Read your email, and click on the web link it contains.</li>
+<li>Your account will be confirmed and you will be logged in.</li>
+<li>Now, select the course you want to participate in.</li>
+<li>You can now access the full course. From now on you will only need
+to enter your personal username and password (in the form on this page)
+to log in and access any course you have enrolled in.</li>
+</ol>';
 $string['pluginname'] = 'Token authentication';
+
