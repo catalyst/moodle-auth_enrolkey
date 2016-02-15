@@ -123,6 +123,9 @@ class auth_plugin_token extends auth_plugin_base {
         }
     }
 
+    /**
+     * Prints helpful instructions in login/index.php
+     */
     public function loginpage_hook() {
         global $CFG;
 
