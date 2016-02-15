@@ -22,9 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
 require_once('../../config.php');
+
+defined('MOODLE_INTERNAL') || die;
 
 $PAGE->set_url(new moodle_url('/admin/token/view.php'));
 
