@@ -92,7 +92,7 @@ class auth_plugin_token extends auth_plugin_base {
         // Trigger event.
         \core\event\user_created::create_from_userid($user->id)->trigger();
 
-        if (!PHPUNIT_TEST) {
+        if ($notify) {
             if (!send_confirmation_email($user)) {
                 print_error('auth_emailnoemail', 'auth_email');
             }
