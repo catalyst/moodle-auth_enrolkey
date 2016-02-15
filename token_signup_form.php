@@ -98,7 +98,7 @@ class token_signup_form extends login_signup_form {
 
             // There may be more than one enrolment instance configured with various dates to check against.
             foreach ($instances as $instance) {
-                if ($enrolplugin->can_self_enrol($instance)) {
+                if ($enrolplugin->can_self_enrol($instance) === true) {
                     $selfenrolinstance = true;
                 }
             }
