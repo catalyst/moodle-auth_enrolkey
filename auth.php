@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Authentication Plugin: Token Authentication
+ * Authentication Plugin: Enrolment key based self-registration.
  *
  * @package    auth_token
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir . '/authlib.php');
 
 /**
- * Email authentication plugin.
+ * Enrolment key based self-registration.
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -94,7 +94,7 @@ class auth_plugin_token extends auth_plugin_base {
 
         if ($notify) {
             if (!send_confirmation_email($user)) {
-                print_error('auth_emailnoemail', 'auth_email');
+                print_error('auth_tokennoemail', 'auth_token');
             }
         }
 

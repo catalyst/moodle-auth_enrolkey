@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Token Authentication settings page
+ * Enrolment key based self-registration settings page
  *
  * @package    auth_token
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)

@@ -22,16 +22,17 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['auth_tokendescription'] = 'This provides Token based authentication';
+$string['auth_tokendescription'] = 'This provides Enrolment key based self-registration';
 $string['auth_tokensettings_heading'] = 'General settings';
-$string['auth_tokensettings_content'] = '<p>Token-based self-registration enables a user to create their own account via a \'Create new account\' button on the login page. The user then receives an email containing a secure link to a page where they can confirm their account. Future logins just check the username and password against the stored values in the Moodle database.</p><p>During self-registration if a token is entered in the Course Token field then it will proceed to automatically enrol the new user into any course key that it matches. The keys are enabled in (Course administration > Users > Enrolment methods > Add method > Self enrolment) and will use the Enrolment Key field.</p><p>Note: In addition to enabling the plugin, token-based self-registration must also be selected from the self registration drop-down menu on the \'Manage authentication\' page.</p>';
-$string['auth_tokensettings_visible_description'] = 'Adds a token form element to the sign-up page for self-registration users. This will be checked against available tokens and enrol the user to a specific course';
-$string['auth_tokensettings_required_description'] = 'The token element will be a required field for validation';
-$string['auth_tokensettings_visible'] = 'Enable Token element';
-$string['auth_tokensettings_required'] = 'Require Token for validation';
-$string['auth_tokensignup_field'] = 'Course token';
-$string['auth_tokensignup_token_invalid'] = 'The token you have entered is invalid';
-$string['auth_tokensignup_missing'] = 'Missing token';
+$string['auth_tokensettings_content'] = '<p>Enrolment key based self-registration enables a user to create their own account via a \'Create new account\' button on the login page. The user then receives an email containing a secure link to a page where they can confirm their account. Future logins just check the username and password against the stored values in the Moodle database.</p><p>During self-registration if an enrolment key is entered in the enrolment key field then it will proceed to automatically enrol the new user into any course that it matches. The keys are enabled in (Course administration > Users > Enrolment methods > Add method > Self enrolment).</p><p>Note: In addition to enabling the plugin, Enrolment key based self-registration must also be selected from the self registration drop-down menu on the \'Manage authentication\' page.</p>';
+$string['auth_tokensettings_visible_description'] = 'Adds a new form element to the sign-up page for self-registration users. This will be checked against available enrolment keys and enrol the user to the matching courses';
+$string['auth_tokensettings_required_description'] = 'The enrolment key will be a required field for validation';
+$string['auth_tokensettings_visible'] = 'Enable enrolment key element';
+$string['auth_tokensettings_required'] = 'Require enrolment key for validation';
+$string['auth_tokensignup_field'] = 'Enrolment key';
+$string['auth_tokensignup_token_invalid'] = 'The enrolment key you have entered is invalid';
+$string['auth_tokensignup_missing'] = 'Missing enrolment key';
+$string['auth_tokennoemail'] = 'Tried to send you an email but failed!';
 $string['auth_tokensignup_view'] = 'Course enrolment';
 $string['auth_tokensignup_view_message_basic'] = 'You have enrolled into {$a->course} as a {$a->role}.';
 $string['auth_tokensignup_view_message_basic_dates'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course starts: {$a->startdate}<br />Course ends: {$a->enddate}';
@@ -54,5 +55,7 @@ course.</li>
 to enter your personal username and password (in the form on this page)
 to log in and access any course you have enrolled in.</li>
 </ol>';
-$string['pluginname'] = 'Token authentication';
+$string['auth_tokenrecaptcha'] = 'Adds a visual/audio confirmation form element to the sign-up page for self-registering users. This protects your site against spammers and contributes to a worthwhile cause. See http://www.google.com/recaptcha for more details.';
+$string['auth_tokenrecaptcha_key'] = 'Enable reCAPTCHA element';
+$string['pluginname'] = 'Enrolment key based self-registration';
 

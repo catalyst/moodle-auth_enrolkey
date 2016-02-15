@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Signup form that provides additional token field.
+ * Signup form that provides additional enrolment key field.
  *
  * @package    auth_token
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
@@ -25,7 +25,7 @@
 /**
  * A new signup form that extends login_signup_form.
  *
- * This provides an additional token that will be validated upon signup.
+ * This provides an additional enrolment key field that will be validated upon signup.
  *
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -98,7 +98,7 @@ class token_signup_form extends login_signup_form {
     }
 
     /**
-     * Returns if the signup token field is enabled.
+     * Returns if the enrolment key field is enabled.
      * @return bool
      */
     public function signup_token_enabled() {
@@ -106,7 +106,7 @@ class token_signup_form extends login_signup_form {
     }
 
     /**
-     * Returns if the signup token field is required.
+     * Returns if the enrolment key field is required.
      * @return bool
      */
     public function signup_token_required() {

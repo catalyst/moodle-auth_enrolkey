@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Post signup page to notify user of courses enrolled via tokens.
+ * Post signup page to notify user of courses enrolled via enrolment keys.
  *
  * @package    auth_token
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
