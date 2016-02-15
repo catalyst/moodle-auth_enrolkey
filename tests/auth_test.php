@@ -38,7 +38,7 @@ class auth_token_auth_testcase extends advanced_testcase {
      * Test test_auth_token()
      */
     public function test_auth_token() {
-        global $CFG, $DB;
+        global $DB;
 
         $this->resetAfterTest(true);
 

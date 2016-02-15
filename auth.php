@@ -79,7 +79,6 @@ class auth_plugin_token extends auth_plugin_base {
         require_once($CFG->dirroot . '/user/lib.php');
         require_once($CFG->dirroot . '/enrol/self/lib.php');
 
-        $plainpassword = $user->password;
         $user->password = hash_internal_user_password($user->password);
 
         // These are currently not present in the user object.

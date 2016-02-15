@@ -36,7 +36,7 @@ class token_signup_form extends login_signup_form {
      * Creates the Moodle singup form, calls parent::definition();
      */
     public function definition() {
-        global $USER, $CFG;
+        global $CFG;
 
         // Generates the default signup form.
         parent::definition();
@@ -69,10 +69,9 @@ class token_signup_form extends login_signup_form {
      *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
     public function validation($data, $files) {
-        global $CFG, $DB;
+        global $DB;
         $errors = parent::validation($data, $files);
 
-        $authplugin  = get_auth_plugin('token');
         $enrolplugin = enrol_get_plugin('self');
 
         $token = $data['signup_token'];
