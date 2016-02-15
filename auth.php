@@ -124,8 +124,7 @@ class auth_plugin_token extends auth_plugin_base {
     public function loginpage_hook() {
         global $CFG;
 
-        if($CFG->registerauth == $this->authtype) {
-
+        if ($CFG->registerauth == $this->authtype) {
             $url = '/login/signup.php';
             $CFG->auth_instructions = get_string('auth_tokensignup_auth_instructions', 'auth_token', $url);
         }
