@@ -99,12 +99,16 @@ class auth_plugin_token extends auth_plugin_base {
         }
 
         // Password is the Enrolment key that is specified in the Self enrolment instance.
-        $courses = $DB->get_records('enrol', array('enrol' => 'self', 'password' => $user->signup_token));
+        $enrolplugins = $DB->get_records('enrol', array('enrol' => 'self', 'password' => $user->signup_token));
+
+        $availableenrolids = [];
 
         $enrol = enrol_get_plugin('self');
-        foreach ($courses as $course) {
-            if ($enrol->can_self_enrol($course) === true) {
-                $enrol->enrol_user($course, $user->id);
+        foreach ($enrolplugins as $enrolplugin) {
+            if ($enrol->can_self_enrol($enrolplugin) === true) {
+                $enrol->enrol_user($enrolplugin, $user->id);
+
+                $availableenrolids[] = $enrolplugin->id;
             }
         }
 
@@ -115,8 +119,9 @@ class auth_plugin_token extends auth_plugin_base {
             set_moodle_cookie($USER->username);
         }
 
-        // Will be passed to view.php to show which courses they have been enrolled it.
+        // Will be passed to view.php to show which courses they have been enrolled in.
         $SESSION->auth_token = $user->signup_token;
+        $SESSION->availableenrolids = $availableenrolids;
 
         if (!PHPUNIT_TEST) {
             redirect(new moodle_url("/auth/token/view.php"));

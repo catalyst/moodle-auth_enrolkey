@@ -26,20 +26,21 @@ require_once('../../config.php');
 
 defined('MOODLE_INTERNAL') || die;
 
-$PAGE->set_url(new moodle_url('/admin/token/view.php'));
+if (isset($SESSION->auth_token) && isset($SESSION->availableenrolids)) {
 
-$PAGE->set_course($SITE);
-$PAGE->set_title(get_string('pluginname', 'auth_token'));
-$PAGE->set_heading(get_string('auth_tokensignup_view', 'auth_token'));
+    $PAGE->set_url(new moodle_url('/admin/token/view.php'));
 
-echo $OUTPUT->header();
+    $PAGE->set_course($SITE);
+    $PAGE->set_title(get_string('pluginname', 'auth_token'));
+    $PAGE->set_heading(get_string('auth_tokensignup_view', 'auth_token'));
 
-if (isset($SESSION->auth_token)) {
+    echo $OUTPUT->header();
+
     $authtoken = $SESSION->auth_token;
+    $availableenrolids = $SESSION->availableenrolids;
 
-    $enrolplugins = $DB->get_records('enrol', array('enrol' => 'self', 'password' => $authtoken));
-
-    foreach ($enrolplugins as $plugin) {
+    foreach ($availableenrolids as $enrolid) {
+        $plugin = $DB->get_record('enrol', array('enrol' => 'self', 'password' => $authtoken, 'id' => $enrolid));
         $course = $DB->get_record('course', array('id' => $plugin->courseid));
 
         $coursecontext = context_course::instance($plugin->courseid);
@@ -72,10 +73,13 @@ if (isset($SESSION->auth_token)) {
 
         echo $OUTPUT->notification($successoutput, 'notifysuccess');
     }
+
+    echo $OUTPUT->continue_button(new moodle_url('/index.php'));
+
+    echo $OUTPUT->footer();
+
+    unset($SESSION->auth_token);
+    unset($SESSION->availableenrolids);
 }
 
-echo $OUTPUT->continue_button(new moodle_url('/index.php'));
 
-echo $OUTPUT->footer();
-
-unset($SESSION->auth_token);
