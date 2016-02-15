@@ -1,7 +1,4 @@
-<a href="https://travis-ci.org/nhoobin/moodle-auth_token">
-<img src="https://travis-ci.org/nhoobin/moodle-auth_token.svg?branch=master">
-</a>
-
+[![Build Status](https://travis-ci.org/nhoobin/moodle-auth_token.svg?branch=master)](https://travis-ci.org/nhoobin/moodle-auth_token)
 
 Moodle Token auth plugin
 ========================
@@ -9,6 +6,8 @@ Moodle Token auth plugin
 This is a functional clone of the Email-based self-registration plugin that also enrols a user into available courses based on a token supplied. When a user enters a valid token it will automatically enrol them into the course that token was specified for.
 
 Courses that provide self enrolment can restrict access to them with a key. If the signup token matches any course enrolment key then the new user will be enrolled into those courses. 
+
+Found in the Moodle plugins directory at [https://moodle.org/plugins/auth_token](https://moodle.org/plugins/auth_token)
 
 # Installation
 
