@@ -48,3 +48,7 @@ The user can enter a token into the field name `Course token`.
 There is an optional setting that can force this field to be required.
 
 If the token matches **any** valid instance of self enrolment, then the user will be enrolled to those courses.  
+
+# TODO
+
+Rename language pack strings from 'tokens' to 'enrolment keys'.
