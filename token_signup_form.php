@@ -56,6 +56,12 @@ class token_signup_form extends login_signup_form {
             if ($this->signup_token_required()) {
                 $mform->addRule('signup_token', get_string('auth_tokensignup_missing', 'auth_token'), 'required', null, 'server');
             }
+
+            if ($this->signup_captcha_enabled()) {
+                $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'), array('https' => $CFG->loginhttps));
+                $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
+                $mform->closeHeaderBefore('recaptcha_element');
+            }
         }
     }
 
@@ -111,6 +117,15 @@ class token_signup_form extends login_signup_form {
      */
     public function signup_token_required() {
         return get_config('auth_token', 'tokenrequired');
+    }
+
+    /**
+     * Returns whether or not the captcha element is enabled, and the admin settings fulfil its requirements.
+     * @return bool
+     */
+    function signup_captcha_enabled() {
+        global $CFG;
+        return !empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey) && get_config('auth_token', 'recaptcha');
     }
 
 }

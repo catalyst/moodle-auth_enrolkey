@@ -36,4 +36,8 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configselect('auth_token/tokenrequired',
             get_string('auth_tokensettings_required', 'auth_token'),
             get_string('auth_tokensettings_required_description', 'auth_token'), 1, $options));
+
+    $settings->add(new admin_setting_configselect('auth_token/recaptcha',
+            get_string('auth_tokenrecaptcha_key', 'auth_token'),
+            get_string('auth_tokenrecaptcha', 'auth_token'), 0, $options));
 }
