@@ -29,6 +29,9 @@ if ($ADMIN->fulltree) {
 
     $options = array(get_string('no'), get_string('yes'));
 
+    $settings->add(new admin_setting_heading('auth_token_heading', get_string('auth_tokensettings_heading', 'auth_token'),
+            get_string('auth_tokensettings_content', 'auth_token')));
+
     $settings->add(new admin_setting_configselect('auth_token/tokenvisible',
             get_string('auth_tokensettings_visible', 'auth_token'),
             get_string('auth_tokensettings_visible_description', 'auth_token'), 1, $options));
