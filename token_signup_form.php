@@ -58,7 +58,8 @@ class token_signup_form extends login_signup_form {
             }
 
             if ($this->signup_captcha_enabled()) {
-                $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'), array('https' => $CFG->loginhttps));
+                $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'),
+                        array('https' => $CFG->loginhttps));
                 $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
                 $mform->closeHeaderBefore('recaptcha_element');
             }
@@ -66,7 +67,8 @@ class token_signup_form extends login_signup_form {
             if (!empty($CFG->sitepolicy)) {
                 $mform->addElement('header', 'policyagreement', get_string('policyagreement'), '');
                 $mform->setExpanded('policyagreement');
-                $mform->addElement('static', 'policylink', '', '<a href="'.$CFG->sitepolicy.'" onclick="this.target=\'_blank\'">'.get_String('policyagreementclick').'</a>');
+                $mform->addElement('static', 'policylink', '',
+                        '<a href="'.$CFG->sitepolicy.'" onclick="this.target=\'_blank\'">'.get_String('policyagreementclick').'</a>');
                 $mform->addElement('checkbox', 'policyagreed', get_string('policyaccept'));
                 $mform->addRule('policyagreed', get_string('policyagree'), 'required', null, 'server');
             }
