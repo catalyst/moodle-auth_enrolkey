@@ -49,73 +49,121 @@ class auth_token_auth_testcase extends advanced_testcase {
         $course2 = $this->getDataGenerator()->create_course();
         $course3 = $this->getDataGenerator()->create_course();
         $course4 = $this->getDataGenerator()->create_course();
+        $course5 = $this->getDataGenerator()->create_course();
+        $course6 = $this->getDataGenerator()->create_course();
+        $course7 = $this->getDataGenerator()->create_course();
+        $course8 = $this->getDataGenerator()->create_course();
 
-        $this->assertEquals(5, $DB->count_records('course'));
+        // Additional for the test db that exists.
+        $this->assertEquals(9, $DB->count_records('course'));
 
         $context1 = context_course::instance($course1->id);
         $context2 = context_course::instance($course2->id);
         $context3 = context_course::instance($course3->id);
         $context4 = context_course::instance($course4->id);
+        $context5 = context_course::instance($course5->id);
+        $context6 = context_course::instance($course6->id);
+        $context7 = context_course::instance($course7->id);
+        $context8 = context_course::instance($course8->id);
 
-        $this->assertEquals(4, $DB->count_records('enrol', array('enrol' => 'self')));
+        $this->assertEquals(8, $DB->count_records('enrol', array('enrol' => 'self')));
 
         $instance1 = $DB->get_record('enrol', array('courseid' => $course1->id, 'enrol' => 'self'), '*', MUST_EXIST);
         $instance2 = $DB->get_record('enrol', array('courseid' => $course2->id, 'enrol' => 'self'), '*', MUST_EXIST);
         $instance3 = $DB->get_record('enrol', array('courseid' => $course3->id, 'enrol' => 'self'), '*', MUST_EXIST);
         $instance4 = $DB->get_record('enrol', array('courseid' => $course4->id, 'enrol' => 'self'), '*', MUST_EXIST);
+        $instance5 = $DB->get_record('enrol', array('courseid' => $course5->id, 'enrol' => 'self'), '*', MUST_EXIST);
+        $instance6 = $DB->get_record('enrol', array('courseid' => $course6->id, 'enrol' => 'self'), '*', MUST_EXIST);
+        $instance7 = $DB->get_record('enrol', array('courseid' => $course7->id, 'enrol' => 'self'), '*', MUST_EXIST);
+        $instance8 = $DB->get_record('enrol', array('courseid' => $course8->id, 'enrol' => 'self'), '*', MUST_EXIST);
 
         $instance1->password = '';
         $instance2->password = 'key_1';
         $instance3->password = 'key_1';
         $instance4->password = 'key_2';
+        $instance5->password = 'key_2';
+        $instance6->password = 'key_1';
+        $instance7->password = 'key_1';
+        $instance8->password = 'key_1';
 
         $DB->update_record('enrol', $instance1);
         $DB->update_record('enrol', $instance2);
         $DB->update_record('enrol', $instance3);
         $DB->update_record('enrol', $instance4);
+        $DB->update_record('enrol', $instance5);
+        $DB->update_record('enrol', $instance6);
+        $DB->update_record('enrol', $instance7);
+        $DB->update_record('enrol', $instance8);
 
         $selfenrol->update_status($instance1, ENROL_INSTANCE_ENABLED);
         $selfenrol->update_status($instance2, ENROL_INSTANCE_ENABLED);
         $selfenrol->update_status($instance3, ENROL_INSTANCE_ENABLED);
         $selfenrol->update_status($instance4, ENROL_INSTANCE_ENABLED);
+        $selfenrol->update_status($instance5, ENROL_INSTANCE_ENABLED);
+        $selfenrol->update_status($instance6, ENROL_INSTANCE_ENABLED);
+        $selfenrol->update_status($instance7, ENROL_INSTANCE_ENABLED);
+        $selfenrol->update_status($instance8, ENROL_INSTANCE_DISABLED);
+
+        $this->assertTrue($selfenrol->can_self_enrol($instance1));
+        $this->assertTrue($selfenrol->can_self_enrol($instance2));
+        $this->assertTrue($selfenrol->can_self_enrol($instance3));
+        $this->assertTrue($selfenrol->can_self_enrol($instance4));
+        $this->assertTrue($selfenrol->can_self_enrol($instance5));
+        $this->assertTrue($selfenrol->can_self_enrol($instance6));
+        $this->assertTrue($selfenrol->can_self_enrol($instance7));
+        $this->assertContains('Enrolment is disabled or inactive', $selfenrol->can_self_enrol($instance8));
 
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course1->id, 'enrol' => 'self', 'password' => '')));
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course2->id, 'enrol' => 'self', 'password' => 'key_1')));
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course3->id, 'enrol' => 'self', 'password' => 'key_1')));
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course4->id, 'enrol' => 'self', 'password' => 'key_2')));
+        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course5->id, 'enrol' => 'self', 'password' => 'key_2')));
+        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course6->id, 'enrol' => 'self', 'password' => 'key_1')));
+        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course7->id, 'enrol' => 'self', 'password' => 'key_1')));
+        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course8->id, 'enrol' => 'self', 'password' => 'key_1')));
 
         // During create_user() it will insert the user into the database, we just want to generate the user object.
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
+        $user3 = $this->getDataGenerator()->create_user();
 
         $user1->signup_token = 'key_1';
         $user2->signup_token = 'key_2';
+        $user3->signup_token = 'key_1';
 
         // So we will remove the user record from the database. As we want to test $auth->user_signup().
         $user1record = array('username' => $user1->username, 'mnethostid' => $user1->mnethostid);
         $user2record = array('username' => $user2->username, 'mnethostid' => $user2->mnethostid);
+        $user3record = array('username' => $user3->username, 'mnethostid' => $user3->mnethostid);
 
         $DB->delete_records('user', $user1record);
         $DB->delete_records('user', $user2record);
+        $DB->delete_records('user', $user3record);
 
         // Testing that the user no longer exists, this would give a unique key restraint error if you tried it add it.
         $this->assertEquals(0, $DB->record_exists('user', $user1record));
         $this->assertEquals(0, $DB->record_exists('user', $user2record));
+        $this->assertEquals(0, $DB->record_exists('user', $user3record));
 
         // Now signing up correctly. No email notification (false).
         $tokenauth->user_signup($user1, false);
         $tokenauth->user_signup($user2, false);
 
+
         // User 1 should be enrolled into course 2 and 3.
-        $this->assertFalse(is_enrolled($context1, $user1, '', false));
-        $this->assertTrue(is_enrolled($context2, $user1, '', false));
-        $this->assertTrue(is_enrolled($context3, $user1, '', false));
-        $this->assertFalse(is_enrolled($context4, $user1, '', false));
+        $this->assertFalse(is_enrolled($context1, $user1, ''));
+        $this->assertTrue(is_enrolled($context2, $user1, ''));
+        $this->assertTrue(is_enrolled($context3, $user1, ''));
+        $this->assertFalse(is_enrolled($context4, $user1, ''));
+
+        $this->assertFalse(is_enrolled($context8, $user1, ''));
 
         // User 2 should be enrolled into course 4.
-        $this->assertFalse(is_enrolled($context1, $user2, '', false));
-        $this->assertFalse(is_enrolled($context2, $user2, '', false));
-        $this->assertFalse(is_enrolled($context3, $user2, '', false));
-        $this->assertTrue(is_enrolled($context4, $user2, '', false));
+        $this->assertFalse(is_enrolled($context1, $user2, ''));
+        $this->assertFalse(is_enrolled($context2, $user2, ''));
+        $this->assertFalse(is_enrolled($context3, $user2, ''));
+        $this->assertTrue(is_enrolled($context4, $user2, ''));
+
+        $this->assertFalse(is_enrolled($context8, $user2, ''));
     }
 }
