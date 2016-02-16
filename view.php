@@ -24,8 +24,6 @@
 
 require_once('../../config.php');
 
-//defined('MOODLE_INTERNAL') || die;
-
 if (isset($SESSION->auth_token) && isset($SESSION->availableenrolids)) {
 
     $PAGE->set_url(new moodle_url('/admin/token/view.php'));
