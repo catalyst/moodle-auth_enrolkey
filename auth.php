@@ -86,6 +86,7 @@ class auth_plugin_token extends auth_plugin_base {
         $user->picture = 0;
         $user->imagealt = 0;
         $user->deleted = 0;
+        $user->policyagreed = 0;
 
         $user->id = user_create_user($user, false, false);
 
@@ -122,10 +123,13 @@ class auth_plugin_token extends auth_plugin_base {
         // Will be passed to view.php to show which courses they have been enrolled in.
         $SESSION->auth_token = $user->signup_token;
         $SESSION->availableenrolids = $availableenrolids;
+        // $SESSION->wantsurl = "/auth/token/view.php";
 
-        if (!PHPUNIT_TEST) {
+        if ($notify) {
             redirect(new moodle_url("/auth/token/view.php"));
         }
+
+        return true;
     }
 
     /**
