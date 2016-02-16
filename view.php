@@ -24,7 +24,7 @@
 
 require_once('../../config.php');
 
-defined('MOODLE_INTERNAL') || die;
+//defined('MOODLE_INTERNAL') || die;
 
 if (isset($SESSION->auth_token) && isset($SESSION->availableenrolids)) {
 
@@ -52,6 +52,7 @@ if (isset($SESSION->auth_token) && isset($SESSION->availableenrolids)) {
         $data->role          = $rolenames[$plugin->roleid];
         $data->startdate     = date('Y-m-d H:i', $plugin->enrolstartdate);
         $data->enddate       = date('Y-m-d H:i', $plugin->enrolenddate);
+        $data->href          = '/course/view.php?id=' . $plugin->courseid;
 
         if ($plugin->enrolstartdate > 0 && $plugin->enrolenddate > 0) {
             // The course had both a start and end date.
@@ -78,8 +79,9 @@ if (isset($SESSION->auth_token) && isset($SESSION->availableenrolids)) {
 
     echo $OUTPUT->footer();
 
-    unset($SESSION->auth_token);
-    unset($SESSION->availableenrolids);
 }
+
+unset($SESSION->auth_token);
+unset($SESSION->availableenrolids);
 
 
