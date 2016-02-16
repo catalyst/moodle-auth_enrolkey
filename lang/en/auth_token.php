@@ -34,10 +34,10 @@ $string['auth_tokensignup_token_invalid'] = 'The enrolment key you have entered 
 $string['auth_tokensignup_missing'] = 'Missing enrolment key';
 $string['auth_tokennoemail'] = 'Tried to send you an email but failed!';
 $string['auth_tokensignup_view'] = 'Course enrolment';
-$string['auth_tokensignup_view_message_basic'] = 'You have enrolled into {$a->course} as a {$a->role}.';
-$string['auth_tokensignup_view_message_basic_dates'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course starts: {$a->startdate}<br />Course ends: {$a->enddate}';
-$string['auth_tokensignup_view_message_basic_dates_startonly'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course starts: {$a->startdate}';
-$string['auth_tokensignup_view_message_basic_dates_endonly'] = 'You have enrolled into {$a->course} as a {$a->role}.<br />Course ends: {$a->enddate}';
+$string['auth_tokensignup_view_message_basic'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a>';
+$string['auth_tokensignup_view_message_basic_dates'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a><br />Course starts: {$a->startdate}<br />Course ends: {$a->enddate}';
+$string['auth_tokensignup_view_message_basic_dates_startonly'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a><br />Course starts: {$a->startdate}';
+$string['auth_tokensignup_view_message_basic_dates_endonly'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a><br />Course ends: {$a->enddate}';
 $string['auth_tokensignup_auth_instructions'] = 'Hi! For full access to courses you\'ll need to take
 a minute to create a new account for yourself on this web site.
 Each of the individual courses may also have a one-time
