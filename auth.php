@@ -121,7 +121,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         }
 
         // Will be passed to view.php to show which courses they have been enrolled in.
-        $SESSION->auth_enrolkey = $user->signup_token;
         $SESSION->availableenrolids = $availableenrolids;
 
         if ($notify) {
