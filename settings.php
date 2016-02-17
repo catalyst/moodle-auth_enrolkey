@@ -29,18 +29,18 @@ if ($ADMIN->fulltree) {
 
     $options = array(get_string('no'), get_string('yes'));
 
-    $settings->add(new admin_setting_heading('auth_enrolkey_heading', get_string('auth_enrolkeysettings_heading', 'auth_enrolkey'),
-            get_string('auth_enrolkeysettings_content', 'auth_enrolkey')));
+    $settings->add(new admin_setting_heading('auth_enrolkey_heading', get_string('settings_heading', 'auth_enrolkey'),
+            get_string('settings_content', 'auth_enrolkey')));
 
     $settings->add(new admin_setting_configselect('auth_enrolkey/tokenvisible',
-            get_string('auth_enrolkeysettings_visible', 'auth_enrolkey'),
-            get_string('auth_enrolkeysettings_visible_description', 'auth_enrolkey'), 1, $options));
+            get_string('settings_visible_title', 'auth_enrolkey'),
+            get_string('settings_visible_description', 'auth_enrolkey'), 1, $options));
 
     $settings->add(new admin_setting_configselect('auth_enrolkey/tokenrequired',
-            get_string('auth_enrolkeysettings_required', 'auth_enrolkey'),
-            get_string('auth_enrolkeysettings_required_description', 'auth_enrolkey'), 1, $options));
+            get_string('settings_required_title', 'auth_enrolkey'),
+            get_string('settings_required_description', 'auth_enrolkey'), 1, $options));
 
     $settings->add(new admin_setting_configselect('auth_enrolkey/recaptcha',
-            get_string('auth_enrolkeyrecaptcha_key', 'auth_enrolkey'),
-            get_string('auth_enrolkeyrecaptcha', 'auth_enrolkey'), 0, $options));
+            get_string('recaptcha_key', 'auth_enrolkey'),
+            get_string('recaptcha', 'auth_enrolkey'), 0, $options));
 }

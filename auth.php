@@ -95,7 +95,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
 
         if ($notify) {
             if (!send_confirmation_email($user)) {
-                print_error('auth_enrolkeynoemail', 'auth_enrolkey');
+                print_error('noemail', 'auth_enrolkey');
             }
         }
 
@@ -139,7 +139,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
 
         if ($CFG->registerauth == $this->authtype) {
             $url = '/login/signup.php';
-            $CFG->auth_instructions = get_string('auth_enrolkeysignup_auth_instructions', 'auth_enrolkey', $url);
+            $CFG->auth_instructions = get_string('signup_auth_instructions', 'auth_enrolkey', $url);
         }
 
     }

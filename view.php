@@ -30,7 +30,7 @@ if (isset($SESSION->auth_enrolkey) && isset($SESSION->availableenrolids)) {
 
     $PAGE->set_course($SITE);
     $PAGE->set_title(get_string('pluginname', 'auth_enrolkey'));
-    $PAGE->set_heading(get_string('auth_enrolkeysignup_view', 'auth_enrolkey'));
+    $PAGE->set_heading(get_string('signup_view', 'auth_enrolkey'));
 
     echo $OUTPUT->header();
 
@@ -54,19 +54,19 @@ if (isset($SESSION->auth_enrolkey) && isset($SESSION->availableenrolids)) {
 
         if ($plugin->enrolstartdate > 0 && $plugin->enrolenddate > 0) {
             // The course had both a start and end date.
-            $successoutput = get_string('auth_enrolkeysignup_view_message_basic_dates', 'auth_enrolkey', $data);
+            $successoutput = get_string('signup_view_message_basic_dates', 'auth_enrolkey', $data);
 
         } else if ($plugin->enrolstartdate > 0 && $plugin->enrolenddate == 0) {
             // The course only has a start date set.
-            $successoutput = get_string('auth_enrolkeysignup_view_message_basic_dates_startonly', 'auth_enrolkey', $data);
+            $successoutput = get_string('signup_view_message_basic_dates_startonly', 'auth_enrolkey', $data);
 
         } else if ($plugin->enrolstartdate == 0 && $plugin->enrolenddate > 0) {
             // The course only has a start date set.
-            $successoutput = get_string('auth_enrolkeysignup_view_message_basic_dates_endonly', 'auth_enrolkey', $data);
+            $successoutput = get_string('signup_view_message_basic_dates_endonly', 'auth_enrolkey', $data);
 
         } else {
             // The course has no date restrictions.
-            $successoutput = get_string('auth_enrolkeysignup_view_message_basic', 'auth_enrolkey', $data);
+            $successoutput = get_string('signup_view_message_basic', 'auth_enrolkey', $data);
 
         }
 

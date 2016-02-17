@@ -44,7 +44,7 @@ class enrolkey_signup_form extends login_signup_form {
         $mform = $this->_form;
 
         if ($this->signup_token_enabled()) {
-            $element = $mform->createElement('text', 'signup_token', get_string('auth_enrolkeysignup_field', 'auth_enrolkey'),
+            $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'),
                     array('https' => $CFG->loginhttps));
 
             // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
@@ -54,7 +54,7 @@ class enrolkey_signup_form extends login_signup_form {
             $mform->insertElementBefore($element, 'email');
 
             if ($this->signup_token_required()) {
-                $mform->addRule('signup_token', get_string('auth_enrolkeysignup_missing', 'auth_enrolkey'), 'required', null, 'server');
+                $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'server');
             }
 
             if ($this->signup_captcha_enabled()) {
@@ -98,7 +98,7 @@ class enrolkey_signup_form extends login_signup_form {
 
             // No token matched, this will produce an error message. There are concerns about bruteforcing.
             if (!$selfenrolinstance) {
-                $errors['signup_token'] = get_string('auth_enrolkeysignup_token_invalid', 'auth_enrolkey');
+                $errors['signup_token'] = get_string('signup_token_invalid', 'auth_enrolkey');
             }
         }
 
