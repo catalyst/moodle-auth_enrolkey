@@ -17,7 +17,7 @@
 /**
  * Signup form that provides additional enrolment key field.
  *
- * @package    auth_token
+ * @package    auth_enrolkey
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class token_signup_form extends login_signup_form {
+class enrolkey_signup_form extends login_signup_form {
 
     /**
      * Creates the Moodle singup form, calls parent::definition();
@@ -44,7 +44,7 @@ class token_signup_form extends login_signup_form {
         $mform = $this->_form;
 
         if ($this->signup_token_enabled()) {
-            $element = $mform->createElement('text', 'signup_token', get_string('auth_tokensignup_field', 'auth_token'),
+            $element = $mform->createElement('text', 'signup_token', get_string('auth_enrolkeysignup_field', 'auth_enrolkey'),
                     array('https' => $CFG->loginhttps));
 
             // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
@@ -54,7 +54,7 @@ class token_signup_form extends login_signup_form {
             $mform->insertElementBefore($element, 'email');
 
             if ($this->signup_token_required()) {
-                $mform->addRule('signup_token', get_string('auth_tokensignup_missing', 'auth_token'), 'required', null, 'server');
+                $mform->addRule('signup_token', get_string('auth_enrolkeysignup_missing', 'auth_enrolkey'), 'required', null, 'server');
             }
 
             if ($this->signup_captcha_enabled()) {
@@ -98,7 +98,7 @@ class token_signup_form extends login_signup_form {
 
             // No token matched, this will produce an error message. There are concerns about bruteforcing.
             if (!$selfenrolinstance) {
-                $errors['signup_token'] = get_string('auth_tokensignup_token_invalid', 'auth_token');
+                $errors['signup_token'] = get_string('auth_enrolkeysignup_token_invalid', 'auth_enrolkey');
             }
         }
 
@@ -110,7 +110,7 @@ class token_signup_form extends login_signup_form {
      * @return bool
      */
     public function signup_token_enabled() {
-        return get_config('auth_token', 'tokenvisible');
+        return get_config('auth_enrolkey', 'tokenvisible');
     }
 
     /**
@@ -118,7 +118,7 @@ class token_signup_form extends login_signup_form {
      * @return bool
      */
     public function signup_token_required() {
-        return get_config('auth_token', 'tokenrequired');
+        return get_config('auth_enrolkey', 'tokenrequired');
     }
 
     /**
@@ -127,7 +127,7 @@ class token_signup_form extends login_signup_form {
      */
     public function signup_captcha_enabled() {
         global $CFG;
-        return !empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey) && get_config('auth_token', 'recaptcha');
+        return !empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey) && get_config('auth_enrolkey', 'recaptcha');
     }
 
 }

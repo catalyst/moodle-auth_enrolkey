@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Token Authentication tests.
+ * Enrolkey authentication tests.
  *
- * @package    auth_token
+ * @package    auth_enrolkey
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,24 +25,24 @@
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/auth/token/auth.php');
+require_once($CFG->dirroot . '/auth/enrolkey/auth.php');
 
 /**
  * Token Authentication tests.
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class auth_token_auth_testcase extends advanced_testcase {
+class auth_enrolkey_auth_testcase extends advanced_testcase {
 
     /**
-     * Test test_auth_token()
+     * Test test_auth_enrolkey()
      */
-    public function test_auth_token() {
+    public function test_auth_enrolkey() {
         global $DB;
 
         $this->resetAfterTest(true);
 
-        $tokenauth = get_auth_plugin('token');
+        $tokenauth = get_auth_plugin('enrolkey');
         $selfenrol = enrol_get_plugin('self');
 
         $course1 = $this->getDataGenerator()->create_course();

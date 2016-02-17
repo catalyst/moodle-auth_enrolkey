@@ -17,7 +17,7 @@
 /**
  * Version information.
  *
- * @package    auth_token
+ * @package    auth_enrolkey
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,6 +27,6 @@ defined('MOODLE_INTERNAL') || die;
 $plugin->version   = 2016021700;        // The current plugin version (Date: YYYYMMDDXX).
 $plugin->release   = 2016021700;        // Match release exactly to version.
 $plugin->requires  = 2014051200;        // Requires this Moodle version. (2.7+)
-$plugin->component = 'auth_token';      // Full name of the plugin (used for diagnostics).
+$plugin->component = 'auth_enrolkey';      // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_STABLE;
 

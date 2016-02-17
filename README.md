@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/nhoobin/moodle-auth_token.svg?branch=master)](https://travis-ci.org/nhoobin/moodle-auth_token)
+[![Build Status](https://travis-ci.org/nhoobin/moodle-auth_enrolkey.svg?branch=master)](https://travis-ci.org/nhoobin/moodle-auth_enrolkey)
 
 Moodle Enrolment key based self-registration
 ========================
@@ -7,11 +7,11 @@ This is a functional clone of the Email-based self-registration plugin that also
 
 Courses that provide self enrolment can restrict access to them with a key. If the signup token matches any course enrolment key then the new user will be enrolled into those courses. 
 
-Found in the Moodle plugins directory at [https://moodle.org/plugins/auth_token](https://moodle.org/plugins/auth_token)
+Found in the Moodle plugins directory at [https://moodle.org/plugins/auth_enrolkey](https://moodle.org/plugins/auth_enrolkey)
 
 # Installation
 
-Add the plugin to /auth/token/
+Add the plugin to /auth/enrolkey/
 
 Run the Moodle upgrade.
 

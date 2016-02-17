@@ -17,24 +17,24 @@
 /**
  * Post signup page to notify user of courses enrolled via enrolment keys.
  *
- * @package    auth_token
+ * @package    auth_enrolkey
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once('../../config.php');
 
-if (isset($SESSION->auth_token) && isset($SESSION->availableenrolids)) {
+if (isset($SESSION->auth_enrolkey) && isset($SESSION->availableenrolids)) {
 
-    $PAGE->set_url(new moodle_url('/admin/token/view.php'));
+    $PAGE->set_url(new moodle_url('/admin/enrolkey/view.php'));
 
     $PAGE->set_course($SITE);
-    $PAGE->set_title(get_string('pluginname', 'auth_token'));
-    $PAGE->set_heading(get_string('auth_tokensignup_view', 'auth_token'));
+    $PAGE->set_title(get_string('pluginname', 'auth_enrolkey'));
+    $PAGE->set_heading(get_string('auth_enrolkeysignup_view', 'auth_enrolkey'));
 
     echo $OUTPUT->header();
 
-    $authtoken = $SESSION->auth_token;
+    $authtoken = $SESSION->auth_enrolkey;
     $availableenrolids = $SESSION->availableenrolids;
 
     foreach ($availableenrolids as $enrolid) {
@@ -54,19 +54,19 @@ if (isset($SESSION->auth_token) && isset($SESSION->availableenrolids)) {
 
         if ($plugin->enrolstartdate > 0 && $plugin->enrolenddate > 0) {
             // The course had both a start and end date.
-            $successoutput = get_string('auth_tokensignup_view_message_basic_dates', 'auth_token', $data);
+            $successoutput = get_string('auth_enrolkeysignup_view_message_basic_dates', 'auth_enrolkey', $data);
 
         } else if ($plugin->enrolstartdate > 0 && $plugin->enrolenddate == 0) {
             // The course only has a start date set.
-            $successoutput = get_string('auth_tokensignup_view_message_basic_dates_startonly', 'auth_token', $data);
+            $successoutput = get_string('auth_enrolkeysignup_view_message_basic_dates_startonly', 'auth_enrolkey', $data);
 
         } else if ($plugin->enrolstartdate == 0 && $plugin->enrolenddate > 0) {
             // The course only has a start date set.
-            $successoutput = get_string('auth_tokensignup_view_message_basic_dates_endonly', 'auth_token', $data);
+            $successoutput = get_string('auth_enrolkeysignup_view_message_basic_dates_endonly', 'auth_enrolkey', $data);
 
         } else {
             // The course has no date restrictions.
-            $successoutput = get_string('auth_tokensignup_view_message_basic', 'auth_token', $data);
+            $successoutput = get_string('auth_enrolkeysignup_view_message_basic', 'auth_enrolkey', $data);
 
         }
 
@@ -79,7 +79,7 @@ if (isset($SESSION->auth_token) && isset($SESSION->availableenrolids)) {
 
 }
 
-unset($SESSION->auth_token);
+unset($SESSION->auth_enrolkey);
 unset($SESSION->availableenrolids);
 
 

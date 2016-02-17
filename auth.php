@@ -17,7 +17,7 @@
 /**
  * Authentication Plugin: Enrolment key based self-registration.
  *
- * @package    auth_token
+ * @package    auth_enrolkey
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,14 +31,14 @@ require_once($CFG->libdir . '/authlib.php');
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class auth_plugin_token extends auth_plugin_base {
+class auth_plugin_enrolkey extends auth_plugin_base {
 
     /**
      * Constructor.
      */
     public function __construct() {
-        $this->authtype = 'token';
-        $this->config = get_config('auth_token');
+        $this->authtype = 'enrolkey';
+        $this->config = get_config('auth_enrolkey');
     }
 
     /**
@@ -95,7 +95,7 @@ class auth_plugin_token extends auth_plugin_base {
 
         if ($notify) {
             if (!send_confirmation_email($user)) {
-                print_error('auth_tokennoemail', 'auth_token');
+                print_error('auth_enrolkeynoemail', 'auth_enrolkey');
             }
         }
 
@@ -121,12 +121,11 @@ class auth_plugin_token extends auth_plugin_base {
         }
 
         // Will be passed to view.php to show which courses they have been enrolled in.
-        $SESSION->auth_token = $user->signup_token;
+        $SESSION->auth_enrolkey = $user->signup_token;
         $SESSION->availableenrolids = $availableenrolids;
-        // $SESSION->wantsurl = "/auth/token/view.php";
 
         if ($notify) {
-            redirect(new moodle_url("/auth/token/view.php"));
+            redirect(new moodle_url("/auth/enrolkey/view.php"));
         }
 
         return true;
@@ -140,7 +139,7 @@ class auth_plugin_token extends auth_plugin_base {
 
         if ($CFG->registerauth == $this->authtype) {
             $url = '/login/signup.php';
-            $CFG->auth_instructions = get_string('auth_tokensignup_auth_instructions', 'auth_token', $url);
+            $CFG->auth_instructions = get_string('auth_enrolkeysignup_auth_instructions', 'auth_enrolkey', $url);
         }
 
     }
@@ -198,8 +197,8 @@ class auth_plugin_token extends auth_plugin_base {
         global $CFG;
 
         require_once($CFG->dirroot . '/login/signup_form.php');
-        require_once('token_signup_form.php');
-        return new token_signup_form(null, null, 'post', '', array('autocomplete' => 'on'));
+        require_once('enrolkey_signup_form.php');
+        return new enrolkey_signup_form(null, null, 'post', '', array('autocomplete' => 'on'));
     }
 }
 
