@@ -24,7 +24,16 @@
 
 require_once('../../config.php');
 
-if (isset($SESSION->auth_enrolkey) && isset($SESSION->availableenrolids)) {
+require_login();
+
+if (isset($SESSION->availableenrolids)) {
+    $availableenrolids = $SESSION->availableenrolids;
+    unset($SESSION->availableenrolids);
+} else {
+    redirect(new moodle_url('/'));
+}
+
+if (!empty($availableenrolids)) {
 
     $PAGE->set_url(new moodle_url('/admin/enrolkey/view.php'));
 
@@ -34,11 +43,8 @@ if (isset($SESSION->auth_enrolkey) && isset($SESSION->availableenrolids)) {
 
     echo $OUTPUT->header();
 
-    $authtoken = $SESSION->auth_enrolkey;
-    $availableenrolids = $SESSION->availableenrolids;
-
     foreach ($availableenrolids as $enrolid) {
-        $plugin = $DB->get_record('enrol', array('enrol' => 'self', 'password' => $authtoken, 'id' => $enrolid));
+        $plugin = $DB->get_record('enrol', array('enrol' => 'self', 'id' => $enrolid));
         $course = $DB->get_record('course', array('id' => $plugin->courseid));
 
         $coursecontext = context_course::instance($plugin->courseid);
@@ -78,8 +84,3 @@ if (isset($SESSION->auth_enrolkey) && isset($SESSION->availableenrolids)) {
     echo $OUTPUT->footer();
 
 }
-
-unset($SESSION->auth_enrolkey);
-unset($SESSION->availableenrolids);
-
-
