@@ -49,3 +49,7 @@ There is an optional setting that can force this field to be required.
 
 If the token matches **any** valid instance of self enrolment, then the user will be enrolled to those courses.  
 
+# TODO
+
+Add option to bypass view.php, this may not be required if only enroling into one course.
+
