@@ -44,16 +44,16 @@ Each of the individual courses may also have a one-time
 "enrolment key", which you can use during this sign up:
 <ol>
 <li>Fill out the <a href="{$a}">New Account</a> form with your details.</li>
-<li>If you are prompted for an "enrolment key" - use the one
+<li>You will be prompted for an "enrolment key" - use the one
 that your teacher has given you. This will "enrol" you in the
 course.</li>
-<li>An email will be immediately sent to your email address.</li>
+<li>Your account will be created and you will be logged in.</li>
+<li>You can now access the full course for this session.</li>
+<li>An email has also been immediately sent to your email address.</li>
 <li>Read your email, and click on the web link it contains.</li>
-<li>Your account will be confirmed and you will be logged in.</li>
-<li>Now, select the course you want to participate in.</li>
-<li>You can now access the full course. From now on you will only need
-to enter your personal username and password (in the form on this page)
-to log in and access any course you have enrolled in.</li>
+<li>From now on you will only need to enter your personal
+username and password (in the form on this page) to log in
+and access any course you have enrolled in.</li>
 </ol>';
 $string['recaptcha'] = 'Adds a visual/audio confirmation form element to the sign-up page for self-registering users. This protects your site against spammers and contributes to a worthwhile cause. See http://www.google.com/recaptcha for more details.';
 $string['recaptcha_key'] = 'Enable reCAPTCHA element';
