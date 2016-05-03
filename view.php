@@ -56,7 +56,7 @@ if (!empty($availableenrolids)) {
         $data->role          = $rolenames[$plugin->roleid];
         $data->startdate     = date('Y-m-d H:i', $plugin->enrolstartdate);
         $data->enddate       = date('Y-m-d H:i', $plugin->enrolenddate);
-        $data->href          = '/course/view.php?id=' . $plugin->courseid;
+        $data->href          = new moodle_url('/course/view.php', array('id' => $plugin->courseid));
 
         if ($plugin->enrolstartdate > 0 && $plugin->enrolenddate > 0) {
             // The course had both a start and end date.
