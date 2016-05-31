@@ -146,8 +146,12 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $this->assertEquals(0, $DB->record_exists('user', $user3record));
 
         // Now signing up correctly. No email notification (false).
+        $sink = $this->redirectEvents();
         $tokenauth->user_signup($user1, false);
         $tokenauth->user_signup($user2, false);
+
+        // Even though we don't send emails, the 'self' plugin may.
+        $sink->close();
 
         // User 1 should be enrolled into course 2 and 3.
         $this->assertFalse(is_enrolled($context1, $user1, ''));
