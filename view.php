@@ -74,8 +74,6 @@ if (!empty($availableenrolids)) {
         echo $OUTPUT->notification($successoutput, 'notifysuccess');
     }
 
-    // echo $OUTPUT->continue_button(new moodle_url('/index.php'));
-
 } else {
 
     $data = new stdClass();
