@@ -38,7 +38,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
      * Test test_auth_enrolkey()
      */
     public function test_auth_enrolkey() {
-        global $DB;
+        global $DB, $CFG;
 
         $this->resetAfterTest(true);
 
@@ -145,6 +145,10 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $this->assertEquals(0, $DB->record_exists('user', $user2record));
         $this->assertEquals(0, $DB->record_exists('user', $user3record));
 
+        // This hack is for email testin in travis.
+        $debug = $CFG->debug;
+        unset($CFG->debug);
+
         // Now signing up correctly. No email notification (false).
         $sink = $this->redirectEvents();
         $tokenauth->user_signup($user1, false);
@@ -152,6 +156,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
 
         // Even though we don't send emails, the 'self' plugin may.
         $sink->close();
+        $CFG->debug = $debug;
 
         // User 1 should be enrolled into course 2 and 3.
         $this->assertFalse(is_enrolled($context1, $user1, ''));
