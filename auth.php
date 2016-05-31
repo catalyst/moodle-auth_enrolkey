@@ -87,7 +87,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $user->imagealt = 0;
         $user->deleted = 0;
         $user->policyagreed = 0;
-
         $user->id = user_create_user($user, false, false);
 
         // Trigger event.
@@ -95,9 +94,21 @@ class auth_plugin_enrolkey extends auth_plugin_base {
 
         if ($notify) {
             if (!send_confirmation_email($user)) {
+                // TODO make this more resilient? Email shouldn't be critical here.
                 print_error('noemail', 'auth_enrolkey');
             }
         }
+
+        if (PHPUNIT_TEST) {
+            $USER->username = $user->username;
+            $USER->id = $user->id;
+            $USER->email = $user->email;
+        } else {
+            complete_user_login($user);
+        }
+        $USER->loggedin = true;
+        $USER->site = $CFG->wwwroot;
+        set_moodle_cookie($USER->username);
 
         // Password is the Enrolment key that is specified in the Self enrolment instance.
         $enrolplugins = $DB->get_records('enrol', array('enrol' => 'self', 'password' => $user->signup_token));
@@ -107,24 +118,16 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $enrol = enrol_get_plugin('self');
         foreach ($enrolplugins as $enrolplugin) {
             if ($enrol->can_self_enrol($enrolplugin) === true) {
-                $enrol->enrol_user($enrolplugin, $user->id);
 
+                $data = new stdClass();
+                $data->enrolpassword = $enrolplugin->password;
+                $enrol->enrol_self($enrolplugin, $data);
                 $availableenrolids[] = $enrolplugin->id;
             }
         }
 
-        if (!PHPUNIT_TEST) {
-            complete_user_login($user);
-            $USER->loggedin = true;
-            $USER->site = $CFG->wwwroot;
-            set_moodle_cookie($USER->username);
-        }
-
-        // Will be passed to view.php to show which courses they have been enrolled in.
-        $SESSION->availableenrolids = $availableenrolids;
-
         if ($notify) {
-            redirect(new moodle_url("/auth/enrolkey/view.php"));
+            redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
         }
 
         return true;

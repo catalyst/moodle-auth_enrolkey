@@ -26,22 +26,17 @@ require_once('../../config.php');
 
 require_login();
 
-if (isset($SESSION->availableenrolids)) {
-    $availableenrolids = $SESSION->availableenrolids;
-    unset($SESSION->availableenrolids);
-} else {
-    redirect(new moodle_url('/'));
-}
+$availableenrolids = required_param('ids', PARAM_RAW);
+$availableenrolids = explode(',', $availableenrolids);
+
+$PAGE->set_url(new moodle_url('/auth/enrolkey/view.php'));
+$PAGE->set_course($SITE);
+$PAGE->set_title(get_string('pluginname', 'auth_enrolkey'));
+$PAGE->set_heading(get_string('signup_view', 'auth_enrolkey'));
+
+echo $OUTPUT->header();
 
 if (!empty($availableenrolids)) {
-
-    $PAGE->set_url(new moodle_url('/admin/enrolkey/view.php'));
-
-    $PAGE->set_course($SITE);
-    $PAGE->set_title(get_string('pluginname', 'auth_enrolkey'));
-    $PAGE->set_heading(get_string('signup_view', 'auth_enrolkey'));
-
-    echo $OUTPUT->header();
 
     foreach ($availableenrolids as $enrolid) {
         $plugin = $DB->get_record('enrol', array('enrol' => 'self', 'id' => $enrolid));
@@ -56,7 +51,7 @@ if (!empty($availableenrolids)) {
         $data->role          = $rolenames[$plugin->roleid];
         $data->startdate     = date('Y-m-d H:i', $plugin->enrolstartdate);
         $data->enddate       = date('Y-m-d H:i', $plugin->enrolenddate);
-        $data->href          = new moodle_url('/course/view.php', array('id' => $plugin->courseid));
+        $data->href          = (new moodle_url('/course/view.php', array('id' => $plugin->courseid)))->out();
 
         if ($plugin->enrolstartdate > 0 && $plugin->enrolenddate > 0) {
             // The course had both a start and end date.
@@ -79,8 +74,16 @@ if (!empty($availableenrolids)) {
         echo $OUTPUT->notification($successoutput, 'notifysuccess');
     }
 
-    echo $OUTPUT->continue_button(new moodle_url('/index.php'));
+    // echo $OUTPUT->continue_button(new moodle_url('/index.php'));
 
-    echo $OUTPUT->footer();
+} else {
+
+    $data = new stdClass();
+    $data->href          = (new moodle_url('/'))->out();
+    $failure = get_string('signup_failure', 'auth_enrolkey', $data);
+    echo $OUTPUT->notification($failure, 'notifyfailure');
 
 }
+
+echo $OUTPUT->footer();
+

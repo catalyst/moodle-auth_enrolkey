@@ -29,12 +29,13 @@ $string['settings_visible_description'] = 'Adds a new form element to the sign-u
 $string['settings_required_description'] = 'The enrolment key will be a required field for validation';
 $string['settings_visible_title'] = 'Enable enrolment key element';
 $string['settings_required_title'] = 'Require enrolment key for validation';
+$string['signup_failure'] = 'Opps! Something went wrong, and you may not have been enrolled properly. Go to <a href="{$a->href}">Home</a>';
 $string['signup_field_title'] = 'Enrolment key';
 $string['signup_token_invalid'] = 'The enrolment key you have entered is invalid';
 $string['signup_missing'] = 'Missing enrolment key';
 $string['noemail'] = 'Tried to send you an email but failed!';
 $string['signup_view'] = 'Course enrolment';
-$string['signup_view_message_basic'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a>';
+$string['signup_view_message_basic'] = 'You have been enrolled as a {$a->role} into the course \'<a href="{$a->href}">{$a->course}</a>\'';
 $string['signup_view_message_basic_dates'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a><br />Course starts: {$a->startdate}<br />Course ends: {$a->enddate}';
 $string['signup_view_message_basic_dates_startonly'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a><br />Course starts: {$a->startdate}';
 $string['signup_view_message_basic_dates_endonly'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a><br />Course ends: {$a->enddate}';
