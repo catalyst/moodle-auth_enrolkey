@@ -72,7 +72,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      *
      * @return bool
      */
-    function can_change_password() {
+    public function can_change_password() {
         return true;
     }
 
