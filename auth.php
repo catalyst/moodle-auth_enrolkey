@@ -67,6 +67,16 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     }
 
     /**
+     * Returns true if this authentication plugin can change the user's
+     * password.
+     *
+     * @return bool
+     */
+    function can_change_password() {
+        return true;
+    }
+
+    /**
      * Sign up a new user ready for confirmation.
      * Password is passed in plaintext.
      *
