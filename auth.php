@@ -77,6 +77,15 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     }
 
     /**
+     * Returns true if the user can reset their password.
+     *
+     * @return bool
+     */
+    public function can_reset_password() {
+        return true;
+    }
+
+    /**
      * Sign up a new user ready for confirmation.
      * Password is passed in plaintext.
      *
