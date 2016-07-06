@@ -30,14 +30,26 @@ It is possible to force the the enrolment key as a required element for signing 
 
 # Usage (admin)
 
-Enable a new self enrolment instance in the course required. 
+## Course enrolment keys
+
+Enable a new Self enrolment method in the course required. 
     `(Course administration > Users > Enrolment methods > Add method > Self enrolment)`
 
 The Enrolment key field that is visible will be used for the automatic enrolment on signup.
 
-When creating new instances of the Self enrolment method, provide a custom instance name that is descriptive enough to determine how and when this specific instance will be used for enrolling.
+When creating new Self enrolment method, provide a custom instance name that is descriptive enough to determine how and when this specific instance will be used for enrolling.
 
-Please add additional enrolment instances for the subjects that you require automatic enrolment access for.
+Please add additional Self enrolment methods for the course that you require automatic enrolment access for.
+
+## Group enrolment keys
+
+If you select `Use group enrolment keys: Yes` during creating of a new Self enrolment method, it enables a functionality of automatic adding self enrolled students to the groups created in the course.
+
+In order for that to work, create a group in the course and specify `Enrolment key`. 
+
+Please note, that this key must be different from the course enrollment key which you set in the course Self enrolment method.
+
+As a result, students will be able to subscribe using the group enrolment key. That will enrol them to the course where the group was created and also will add them to that group.
 
 # Usage (client)
 
