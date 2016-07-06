@@ -91,6 +91,23 @@ class enrolkey_signup_form extends login_signup_form {
 
             // There may be more than one enrolment instance configured with various dates to check against.
             foreach ($instances as $instance) {
+                // DO we ever want to pass feedback to user?
+                if ($enrolplugin->can_self_enrol($instance) === true) {
+                    $selfenrolinstance = true;
+                }
+            }
+
+            // Lookup group enrol keys.
+            $instances = $DB->get_records_sql("
+                    SELECT e.*
+                      FROM {groups} g
+                      JOIN {enrol} e ON e.courseid = g.courseid
+                                    AND e.enrol = 'self'
+                                    AND e.customint1 = 1
+                     WHERE g.enrolmentkey = ?
+            ", array($token));
+            foreach ($instances as $instance) {
+                // DO we ever want to pass feedback to user?
                 if ($enrolplugin->can_self_enrol($instance) === true) {
                     $selfenrolinstance = true;
                 }

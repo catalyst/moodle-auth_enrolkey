@@ -145,6 +145,26 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             }
         }
 
+        // Lookup group enrol keys. Not forgetting that group enrolment key is kept in {group}.enrolmentkey.
+        $enrolplugins = $DB->get_records_sql("
+                SELECT e.*, g.enrolmentkey
+                  FROM {groups} g
+                  JOIN {enrol} e ON e.courseid = g.courseid
+                                AND e.enrol = 'self'
+                                AND e.customint1 = 1
+                 WHERE g.enrolmentkey = ?
+        ", array($user->signup_token));
+        foreach ($enrolplugins as $enrolplugin) {
+            if ($enrol->can_self_enrol($enrolplugin) === true) {
+
+                $data = new stdClass();
+                // $data should keep the group enrolment key according to implementation of method $enrol_self_plugin->enrol_self
+                $data->enrolpassword = $enrolplugin->enrolmentkey;
+                $enrol->enrol_self($enrolplugin, $data);
+                $availableenrolids[] = $enrolplugin->id;
+            }
+        }
+
         if ($notify) {
             redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
         }
