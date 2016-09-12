@@ -108,6 +108,9 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $user->policyagreed = 0;
         $user->id = user_create_user($user, false, false);
 
+        // Save any custom profile field information.
+        profile_save_data($user);
+
         // Trigger event.
         \core\event\user_created::create_from_userid($user->id)->trigger();
 
