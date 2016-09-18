@@ -181,7 +181,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     public function loginpage_hook() {
         global $CFG;
 
-        if ($CFG->registerauth == $this->authtype) {
+        if ($CFG->registerauth == $this->authtype and empty($CFG->auth_instructions)) {
             $url = '/login/signup.php';
             $CFG->auth_instructions = get_string('signup_auth_instructions', 'auth_enrolkey', $url);
         }
