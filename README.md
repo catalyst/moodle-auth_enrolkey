@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/CatalystIT-AU/moodle-auth_enrolkey.svg?branch=master)](https://travis-ci.org/CatalystIT-AU/moodle-auth_enrolkey)
+[![Build Status](https://travis-ci.org/catalyst/moodle-auth_enrolkey.svg?branch=master)](https://travis-ci.org/catalyst/moodle-auth_enrolkey)
 
 Moodle Enrolment key based self-registration
 ========================
