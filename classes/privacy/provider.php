@@ -13,20 +13,31 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Version information.
+ * Privacy provider.
  *
- * @package    auth_enrolkey
- * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   auth_enrolkey
+ * @author    Ilya Tregubov (ilyatregubov@catalyst-au.net)
+ * @copyright 2018 Catalyst IT
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+namespace auth_enrolkey\privacy;
 defined('MOODLE_INTERNAL') || die;
-
-$plugin->version   = 2018061900;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->release   = 2018061900;        // Match release exactly to version.
-$plugin->requires  = 2014051200;        // Requires this Moodle version. (2.7+)
-$plugin->component = 'auth_enrolkey';      // Full name of the plugin (used for diagnostics).
-$plugin->maturity  = MATURITY_STABLE;
-
+use core_privacy\local\metadata\null_provider;
+use core_privacy\local\legacy_polyfill;
+/**
+ * Class provider
+ * @package auth_enrolkey\privacy
+ */
+class provider implements null_provider {
+    use legacy_polyfill;
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function _get_reason() {
+        return 'privacy:metadata';
+    }
+}
