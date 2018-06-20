@@ -59,4 +59,4 @@ and access any course you have enrolled in.</li>
 $string['recaptcha'] = 'Adds a visual/audio confirmation form element to the sign-up page for self-registering users. This protects your site against spammers and contributes to a worthwhile cause. See <a href="http://www.google.com/recaptcha">http://www.google.com/recaptcha</a> for more details.';
 $string['recaptcha_key'] = 'Enable reCAPTCHA element';
 $string['pluginname'] = 'Enrolment key based self-registration';
-
+$string['privacy:metadata'] = 'The auth enrolkey plugin does not store any personal data.';
