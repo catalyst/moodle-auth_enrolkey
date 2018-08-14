@@ -121,24 +121,23 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             }
         }
 
-        if (!empty($CFG->auth_enrolkey_legacy)) {
-            if (PHPUNIT_TEST) {
-                $USER->username = $user->username;
-                $USER->id = $user->id;
-                $USER->email = $user->email;
-            } else {
-                complete_user_login($user);
-            }
-            $USER->loggedin = true;
-            $USER->site = $CFG->wwwroot;
-            set_moodle_cookie($USER->username);
+        if (PHPUNIT_TEST) {
+            $USER->username = $user->username;
+            $USER->id = $user->id;
+            $USER->email = $user->email;
+        } else {
+            complete_user_login($user);
         }
+        $USER->loggedin = true;
+        $USER->site = $CFG->wwwroot;
+        set_moodle_cookie($USER->username);
 
         // Password is the Enrolment key that is specified in the Self enrolment instance.
         $enrolplugins = $DB->get_records('enrol', array('enrol' => 'self', 'password' => $user->signup_token));
 
         $availableenrolids = [];
 
+        /** @var enrol_self_plugin $enrol */
         $enrol = enrol_get_plugin('self');
         foreach ($enrolplugins as $enrolplugin) {
             if ($enrol->can_self_enrol($enrolplugin) === true) {
