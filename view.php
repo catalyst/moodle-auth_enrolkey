@@ -26,7 +26,7 @@ require_once('../../config.php');
 
 require_login();
 
-$availableenrolids = required_param('ids', PARAM_RAW);
+$availableenrolids = required_param('ids', PARAM_TEXT);
 $availableenrolids = explode(',', $availableenrolids);
 
 $PAGE->set_url(new moodle_url('/auth/enrolkey/view.php'));
