@@ -172,7 +172,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
 
         if ($notify) {
 
-            if (empty($CFG->auth_enrolkey_legacy)) {
+            if (get_config('auth_enrolkey', 'emailconfirmation')) {
                 require_logout();
                 $emailconfirm = get_string('emailconfirm');
                 $PAGE->navbar->add($emailconfirm);
