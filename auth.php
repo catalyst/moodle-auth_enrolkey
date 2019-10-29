@@ -59,6 +59,15 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     }
 
     /**
+     * Method for changing password in the system
+     *
+     */
+    public function user_update_password($user, $newpassword) {
+        $user = get_complete_user_data('id', $user->id);
+        return update_internal_user_password($user, $newpassword);
+    }
+
+    /**
      * Adds this authentication method to the self registration list.
      *
      */
