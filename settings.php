@@ -43,4 +43,8 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configselect('auth_enrolkey/recaptcha',
             get_string('recaptcha_key', 'auth_enrolkey'),
             get_string('recaptcha', 'auth_enrolkey'), 0, $options));
+
+    $settings->add(new admin_setting_configselect('auth_enrolkey/emailconfirmation',
+            get_string('settings_email_title', 'auth_enrolkey'),
+            get_string('settings_email_description', 'auth_enrolkey'), 1, $options));
 }

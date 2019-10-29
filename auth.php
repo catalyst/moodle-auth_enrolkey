@@ -93,7 +93,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @param boolean $notify print notice with link and terminate
      */
     public function user_signup($user, $notify=true) {
-        global $CFG, $DB, $SESSION, $USER;
+        global $CFG, $DB, $SESSION, $USER, $PAGE, $OUTPUT;
         require_once($CFG->dirroot . '/user/profile/lib.php');
         require_once($CFG->dirroot . '/user/lib.php');
         require_once($CFG->dirroot . '/enrol/self/lib.php');
@@ -137,6 +137,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
 
         $availableenrolids = [];
 
+        /** @var enrol_self_plugin $enrol */
         $enrol = enrol_get_plugin('self');
         foreach ($enrolplugins as $enrolplugin) {
             if ($enrol->can_self_enrol($enrolplugin) === true) {
@@ -161,7 +162,8 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             if ($enrol->can_self_enrol($enrolplugin) === true) {
 
                 $data = new stdClass();
-                // $data should keep the group enrolment key according to implementation of method $enrol_self_plugin->enrol_self
+                // A $data should keep the group enrolment key according to implementation of,
+                // Method $enrol_self_plugin->enrol_self.
                 $data->enrolpassword = $enrolplugin->enrolmentkey;
                 $enrol->enrol_self($enrolplugin, $data);
                 $availableenrolids[] = $enrolplugin->id;
@@ -169,10 +171,21 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         }
 
         if ($notify) {
+
+            if (get_config('auth_enrolkey', 'emailconfirmation')) {
+                require_logout();
+                $emailconfirm = get_string('emailconfirm');
+                $PAGE->navbar->add($emailconfirm);
+                $PAGE->set_title($emailconfirm);
+                $PAGE->set_heading($PAGE->course->fullname);
+                echo $OUTPUT->header();
+                notice(get_string('emailconfirmsent', '', $user->email), "$CFG->wwwroot/index.php");
+                return;
+            }
+
             redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
         }
 
-        return true;
     }
 
     /**
