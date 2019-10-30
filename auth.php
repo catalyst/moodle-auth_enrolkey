@@ -191,8 +191,12 @@ class auth_plugin_enrolkey extends auth_plugin_base {
                 notice(get_string('emailconfirmsent', '', $user->email), "$CFG->wwwroot/index.php");
                 return;
             }
-
-            redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
+            // if no courses found (empty key) go to dashboard
+            if (empty($availableenrolids)) {
+                redirect(new moodle_url('/my/'));
+            } else {
+                redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
+            }
         }
 
     }
