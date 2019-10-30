@@ -32,6 +32,8 @@
  */
 namespace auth_enrolkey\form;
 
+defined('MOODLE_INTERNAL') || die;
+
 require_once($CFG->dirroot . '/login/signup_form.php');
 
 class enrolkey_signup_form extends \login_signup_form {
@@ -47,25 +49,22 @@ class enrolkey_signup_form extends \login_signup_form {
 
         $mform = $this->_form;
 
-        if ($this->signup_token_enabled()) {
-            $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
+        $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
 
-            // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
-            $mform->setType('signup_token', PARAM_TEXT);
+        // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
+        $mform->setType('signup_token', PARAM_TEXT);
 
-            // Make the course token field visible earlier.
-            $mform->insertElementBefore($element, 'email');
+        // Make the course token field visible earlier.
+        $mform->insertElementBefore($element, 'email');
 
-            if ($this->signup_token_required()) {
-                $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'server');
-            }
+        if ($this->signup_token_required()) {
+            $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'server');
+        }
 
-            if ($this->signup_captcha_enabled()) {
-                $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'));
-                $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
-                $mform->closeHeaderBefore('recaptcha_element');
-            }
-
+        if ($this->signup_captcha_enabled()) {
+            $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'));
+            $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
+            $mform->closeHeaderBefore('recaptcha_element');
         }
     }
 
@@ -122,14 +121,6 @@ class enrolkey_signup_form extends \login_signup_form {
         }
 
         return $errors;
-    }
-
-    /**
-     * Returns if the enrolment key field is enabled.
-     * @return bool
-     */
-    public function signup_token_enabled() {
-        return get_config('auth_enrolkey', 'tokenvisible');
     }
 
     /**
