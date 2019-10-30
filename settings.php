@@ -32,10 +32,6 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('auth_enrolkey_heading', get_string('settings_heading', 'auth_enrolkey'),
             get_string('settings_content', 'auth_enrolkey')));
 
-    $settings->add(new admin_setting_configselect('auth_enrolkey/tokenvisible',
-            get_string('settings_visible_title', 'auth_enrolkey'),
-            get_string('settings_visible_description', 'auth_enrolkey'), 1, $options));
-
     $settings->add(new admin_setting_configselect('auth_enrolkey/tokenrequired',
             get_string('settings_required_title', 'auth_enrolkey'),
             get_string('settings_required_description', 'auth_enrolkey'), 1, $options));
