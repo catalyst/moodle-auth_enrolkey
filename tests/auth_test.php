@@ -174,4 +174,75 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
 
         $this->assertFalse(is_enrolled($context8, $user2, ''));
     }
+
+    public function test_group_enrolkey() {
+        $this->resetAfterTest(true);
+        global $DB, $CFG;
+
+        // generate users for test
+        $user1 = $this->getDataGenerator()->create_user();
+        $user2 = $this->getDataGenerator()->create_user();
+        $user3 = $this->getDataGenerator()->create_user();
+
+        // Setup course and enrolment
+        $course = $this->getDataGenerator()->create_course();
+        $context = context_course::instance($course->id);
+        // Create selfenrolment instance
+        $instance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => 'self'), '*', MUST_EXIST);
+        $instance->password = 'key';
+        // Set customint that controls groupkeys
+        $instance->customint1 = 1;
+
+        // Register instance with plugin
+        $selfenrol = enrol_get_plugin('self');
+        $DB->update_record('enrol', $instance);
+        $selfenrol->update_status($instance, ENROL_INSTANCE_ENABLED);
+        // Check self-enrolment is setup properly
+        $this->assertTrue($selfenrol->can_self_enrol($instance));
+
+        // Create group enrolment
+        $group = $this->getDataGenerator()->create_group(array('courseid' => $course->id, 'enrolmentkey' => 'groupkey'));
+
+        // Remove users from database to re-enrol
+        // So we will remove the user record from the database. As we want to test $auth->user_signup().
+        $user1record = array('username' => $user1->username, 'mnethostid' => $user1->mnethostid);
+        $user2record = array('username' => $user2->username, 'mnethostid' => $user2->mnethostid);
+        $user3record = array('username' => $user3->username, 'mnethostid' => $user3->mnethostid);
+
+        $DB->delete_records('user', $user1record);
+        $DB->delete_records('user', $user2record);
+        $DB->delete_records('user', $user3record);
+
+        // Self signup to course
+        $user1->signup_token = 'key';
+        // Self signup to group
+        $user2->signup_token = 'groupkey';
+        // Self signup non-valid key
+        $user3->signup_token = 'fakekey';
+
+        // Setup plugin to enrol
+        $tokenauth = get_auth_plugin('enrolkey');
+
+        // Now signing up correctly. No email notification (false).
+        $sink = $this->redirectEvents();
+        $tokenauth->user_signup($user1, false);
+        $tokenauth->user_signup($user2, false);
+        $tokenauth->user_signup($user3, false);
+
+        // Even though we don't send emails, the 'self' plugin may.
+        $sink->close();
+
+        // Check that $user1 is enrolled in $course but not $group
+        $this->assertTrue(is_enrolled($context, $user1, ''));
+        $this->assertFalse(groups_is_member($group->id, $user1->id));
+
+        // Check that $user2 is enrolled in $course and in $group
+        $this->assertTrue(is_enrolled($context, $user2, ''));
+        $this->assertTrue(groups_is_member($group->id, $user2->id));
+
+        // Check that $user3 is a valid user, but not enrolled in $course or $group
+        $this->assertTrue($DB->record_exists('user', array('id' => $user3->id)));
+        $this->assertFalse(is_enrolled($context, $user3, ''));
+        $this->assertFalse(groups_is_member($group->id, $user3->id));
+    }
 }
