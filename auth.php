@@ -260,11 +260,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @return moodle_form A form which edits a record from the user table.
      */
     public function signup_form() {
-        global $CFG;
-
-        require_once($CFG->dirroot . '/login/signup_form.php');
-        require_once('enrolkey_signup_form.php');
-        return new enrolkey_signup_form(null, null, 'post', '', array('autocomplete' => 'on'));
+        return new \auth_enrolkey\form\enrolkey_signup_form(null, null, 'post', '', array('autocomplete' => 'on'));
     }
 }
 

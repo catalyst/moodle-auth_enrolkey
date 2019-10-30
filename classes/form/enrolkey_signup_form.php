@@ -30,7 +30,11 @@
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class enrolkey_signup_form extends login_signup_form {
+namespace auth_enrolkey\form;
+
+require_once($CFG->dirroot . '/login/signup_form.php');
+
+class enrolkey_signup_form extends \login_signup_form {
 
     /**
      * Creates the Moodle singup form, calls parent::definition();
