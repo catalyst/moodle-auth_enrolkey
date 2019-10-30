@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.org/catalyst/moodle-auth_enrolkey.svg?branch=master)](https://travis-ci.org/catalyst/moodle-auth_enrolkey)
 
-Moodle Enrolment key based self-registration
-============================================
+# Moodle Enrolment key based self-registration
 
 This auth plugin combines the best of both email based signup and self enrolment keys into a streamlined process making it much faster for students to get into a course. For the student it saves around 9-10 clicks and avoids context switching between a browser and their email client where they can become easily become disengaged or run into issues if their email is unavailable.
 
@@ -11,14 +10,31 @@ Courses that provide self enrolment can restrict access to them with a key. If t
 
 Found in the Moodle plugins directory at [https://moodle.org/plugins/auth_enrolkey](https://moodle.org/plugins/auth_enrolkey)
 
-# Installation
+
+* [Branches](#branches)
+* [Installation](#installation)
+* [Setup](#setup)
+* [Settings](#settings)
+* [Admin Usage](#admin-usage)
+* [Client Usage](#client-usage)
+* [TODO](#todo)
+* [Support](#support)
+
+
+Branches
+--------
+
+For all current moodle installations, use the master branch.
+
+Installation
+------------ 
 
 Add the plugin to /auth/enrolkey/
 
 Run the Moodle upgrade.
 
-# Setup
-
+Setup
+-----
 First enable the Enrolment key based self-registration plugin for use.
 
 `Site administration > Plugins > Authentication > Manage Authentication`
@@ -29,11 +45,13 @@ Enable the Self enrolment plugin.
 
 `Site administration > Plugins > Enrolments > Manage enrol plugins`
     
-# Settings
+Settings
+--------
 
 It is possible to force the the enrolment key as a required element for signing up.
 
-# Usage (admin)
+Admin Usage
+-----------
 
 ## Course enrolment keys
 
@@ -57,7 +75,8 @@ Please note, that this key must be different from the course enrollment key whic
 
 As a result, students will be able to subscribe using the group enrolment key. That will enrol them to the course where the group was created and also will add them to that group.
 
-# Usage (client)
+Client Usage
+------------
 
 When a user tries to log in they are given the option to create an account.
 
@@ -67,7 +86,27 @@ There is an optional setting that can force this field to be required.
 
 If the token matches **any** valid instance of self enrolment, then the user will be enrolled to those courses.  
 
-# TODO
+TODO
+----
 
 Add option to bypass view.php, this may not be required if only enroling into one course.
+
+Support
+-------
+For any issue with the plugin, please log the in the github repository here:
+
+https://github.com/catalyst/moodle-auth_enrolkey/issues
+
+Please note our time is limited, so if you need urgent support or want to
+sponsor a new feature then please contact Catalyst IT Australia:
+
+https://www.catalyst-au.net/contact-us
+
+
+
+This plugin was developed by Catalyst IT Australia:
+
+https://www.catalyst-au.net/
+
+<a href="https://www.catalyst-au.net/"><img alt="Catalyst IT" src="https://cdn.rawgit.com/CatalystIT-AU/moodle-auth_saml2/master/pix/catalyst-logo.svg" width="400"></a>
 
