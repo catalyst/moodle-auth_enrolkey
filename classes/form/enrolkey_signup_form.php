@@ -48,8 +48,7 @@ class enrolkey_signup_form extends \login_signup_form {
         $mform = $this->_form;
 
         if ($this->signup_token_enabled()) {
-            $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'),
-                    array('https' => $CFG->loginhttps));
+            $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
 
             // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
             $mform->setType('signup_token', PARAM_TEXT);
@@ -62,8 +61,7 @@ class enrolkey_signup_form extends \login_signup_form {
             }
 
             if ($this->signup_captcha_enabled()) {
-                $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'),
-                        array('https' => $CFG->loginhttps));
+                $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'));
                 $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
                 $mform->closeHeaderBefore('recaptcha_element');
             }
