@@ -97,9 +97,11 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     /**
      * Sign up a new user ready for confirmation.
      * Password is passed in plaintext.
-     *
-     * @param object $user new user object
-     * @param boolean $notify print notice with link and terminate
+     * @param object $user
+     * @param bool $notify
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     public function user_signup($user, $notify=true) {
         global $CFG, $DB, $SESSION, $USER, $PAGE, $OUTPUT;
@@ -140,65 +142,89 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $USER->loggedin = true;
         $USER->site = $CFG->wwwroot;
         set_moodle_cookie($USER->username);
-
-        // Password is the Enrolment key that is specified in the Self enrolment instance.
-        $enrolplugins = $DB->get_records('enrol', array('enrol' => 'self', 'password' => $user->signup_token));
-
-        $availableenrolids = [];
-
         /** @var enrol_self_plugin $enrol */
         $enrol = enrol_get_plugin('self');
-        foreach ($enrolplugins as $enrolplugin) {
-            if ($enrol->can_self_enrol($enrolplugin) === true) {
 
-                $data = new stdClass();
-                $data->enrolpassword = $enrolplugin->password;
-                $enrol->enrol_self($enrolplugin, $data);
-                $availableenrolids[] = $enrolplugin->id;
-            }
-        }
+        // Password is the Enrolment key that is specified in the Self enrolment instance.
+        $enrolplugins = $this->get_enrol_plugins($DB, $user->signup_token);
+        $availableenrolids = $this->enrol_user($enrol, $enrolplugins);
 
         // Lookup group enrol keys. Not forgetting that group enrolment key is kept in {group}.enrolmentkey.
-        $enrolplugins = $DB->get_records_sql("
+        $enrolplugins = $this->get_enrol_plugins($DB, $user->signup_token, true);
+        $availableenrolidsresult = array_merge($availableenrolids, $this->enrol_user($enrol, $enrolplugins));
+
+        $this->enrolkey_notify($notify, $availableenrolidsresult, $user->email);
+    }
+
+    /**
+     * @param bool $notify
+     * @param array $availableenrolids
+     * @param string $email
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
+     */
+    public function enrolkey_notify(bool $notify, array $availableenrolids, string $email) {
+        global $PAGE, $OUTPUT, $CFG;
+        if ($notify === false) {
+            return;
+        }
+        if (get_config('auth_enrolkey', 'emailconfirmation')) {
+            require_logout();
+            $emailconfirm = get_string('emailconfirm');
+            $PAGE->navbar->add($emailconfirm);
+            $PAGE->set_title($emailconfirm);
+            $PAGE->set_heading($PAGE->course->fullname);
+            echo $OUTPUT->header();
+            notice(get_string('emailconfirmsent', '', $email), "$CFG->wwwroot/index.php");
+            return;
+        }
+        // if no courses found (empty key) go to dashboard
+        if (empty($availableenrolids)) {
+            redirect(new moodle_url('/my/'));
+        } else {
+            redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
+        }
+    }
+
+    /**
+     * @param moodle_database $db
+     * @param string $enrolkey
+     * @param bool $groupenrolkeys
+     * @return array
+     * @throws dml_exception
+     */
+    public function get_enrol_plugins(moodle_database $db, string $enrolkey, bool $groupenrolkeys = false) {
+        if ($groupenrolkeys === false) {
+            return $db->get_records('enrol', ['enrol' => 'self', 'password' => $enrolkey]);
+        }
+
+        return $db->get_records_sql("
                 SELECT e.*, g.enrolmentkey
                   FROM {groups} g
                   JOIN {enrol} e ON e.courseid = g.courseid
                                 AND e.enrol = 'self'
                                 AND e.customint1 = 1
                  WHERE g.enrolmentkey = ?
-        ", array($user->signup_token));
+        ", [$enrolkey]);
+    }
+
+    /**
+     * @param enrol_self_plugin $enrol
+     * @param array $enrolplugins
+     * @return array
+     */
+    public function enrol_user(enrol_self_plugin $enrol, array $enrolplugins = []): array {
+        $availableenrolids = [];
         foreach ($enrolplugins as $enrolplugin) {
             if ($enrol->can_self_enrol($enrolplugin) === true) {
-
                 $data = new stdClass();
-                // A $data should keep the group enrolment key according to implementation of,
-                // Method $enrol_self_plugin->enrol_self.
-                $data->enrolpassword = $enrolplugin->enrolmentkey;
+                $data->enrolpassword = $enrolplugin->password;
                 $enrol->enrol_self($enrolplugin, $data);
                 $availableenrolids[] = $enrolplugin->id;
             }
         }
-
-        if ($notify) {
-
-            if (get_config('auth_enrolkey', 'emailconfirmation')) {
-                require_logout();
-                $emailconfirm = get_string('emailconfirm');
-                $PAGE->navbar->add($emailconfirm);
-                $PAGE->set_title($emailconfirm);
-                $PAGE->set_heading($PAGE->course->fullname);
-                echo $OUTPUT->header();
-                notice(get_string('emailconfirmsent', '', $user->email), "$CFG->wwwroot/index.php");
-                return;
-            }
-            // if no courses found (empty key) go to dashboard
-            if (empty($availableenrolids)) {
-                redirect(new moodle_url('/my/'));
-            } else {
-                redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
-            }
-        }
-
+        return $availableenrolids;
     }
 
     /**
@@ -267,5 +293,3 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         return new \auth_enrolkey\form\enrolkey_signup_form(null, null, 'post', '', array('autocomplete' => 'on'));
     }
 }
-
-
