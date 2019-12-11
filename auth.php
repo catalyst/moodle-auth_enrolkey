@@ -142,17 +142,25 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $USER->loggedin = true;
         $USER->site = $CFG->wwwroot;
         set_moodle_cookie($USER->username);
-        $this->enrol_user($user->signup_token, $notify);
+        $availableenrolids = $this->enrol_user($user->signup_token, $notify);
+
+        // if no courses found (empty key) go to dashboard
+        if (empty($availableenrolids)) {
+            redirect(new moodle_url('/my/'));
+        } else {
+            redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
+        }
     }
 
     /**
      * @param string $enrolkey
      * @param bool $notify
+     * @return array
      * @throws coding_exception
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public function enrol_user(string $enrolkey, bool $notify = true) {
+    public function enrol_user(string $enrolkey, bool $notify = true):array {
         global $DB;
         /** @var enrol_self_plugin $enrol */
         $enrol = enrol_get_plugin('self');
@@ -167,9 +175,10 @@ class auth_plugin_enrolkey extends auth_plugin_base {
                 $availableenrolids[] = $enrolplugin->id;
             }
         }
-        if ($notify) {
-            $this->enrolkey_notify($availableenrolids);
+        if ($notify & !empty($availableenrolids)) {
+            $this->email_confirmation();
         }
+        return $availableenrolids;
     }
 
     /**
@@ -239,12 +248,10 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     }
 
     /**
-     * @param array $availableenrolids
      * @throws coding_exception
      * @throws dml_exception
-     * @throws moodle_exception
      */
-    private function enrolkey_notify(array $availableenrolids) {
+    private function email_confirmation() {
         global $PAGE, $OUTPUT, $CFG, $USER;
         if ($USER->confirmed !== '1' && get_config('auth_enrolkey', 'emailconfirmation')) {
             require_logout();
@@ -255,12 +262,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             echo $OUTPUT->header();
             notice(get_string('emailconfirmsent', '', $USER->email), "$CFG->wwwroot/index.php");
             return;
-        }
-        // if no courses found (empty key) go to dashboard
-        if (empty($availableenrolids)) {
-            redirect(new moodle_url('/my/'));
-        } else {
-            redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
         }
     }
 
