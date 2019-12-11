@@ -167,7 +167,9 @@ class auth_plugin_enrolkey extends auth_plugin_base {
                 $availableenrolids[] = $enrolplugin->id;
             }
         }
-        $this->enrolkey_notify($notify, $availableenrolids, $USER->email);
+        if ($notify) {
+            $this->enrolkey_notify($availableenrolids, $USER->email);
+        }
     }
 
     /**
@@ -237,18 +239,14 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     }
 
     /**
-     * @param bool $notify
      * @param array $availableenrolids
      * @param string $email
      * @throws coding_exception
      * @throws dml_exception
      * @throws moodle_exception
      */
-    private function enrolkey_notify(bool $notify, array $availableenrolids, string $email) {
+    private function enrolkey_notify(array $availableenrolids, string $email) {
         global $PAGE, $OUTPUT, $CFG;
-        if ($notify === false) {
-            return;
-        }
         if (get_config('auth_enrolkey', 'emailconfirmation')) {
             require_logout();
             $emailconfirm = get_string('emailconfirm');
