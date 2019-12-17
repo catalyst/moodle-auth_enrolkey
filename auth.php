@@ -144,7 +144,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         set_moodle_cookie($USER->username);
         $availableenrolids = $this->enrol_user($user->signup_token, $notify);
 
-        // if no courses found (empty key) go to dashboard
+        // If no courses found (empty key) go to dashboard
         if (empty($availableenrolids)) {
             redirect(new moodle_url('/my/'));
         } else {
@@ -160,7 +160,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public function enrol_user(string $enrolkey, bool $notify = true):array {
+    public function enrol_user(string $enrolkey, bool $notify = true) : array {
         global $DB;
         /** @var enrol_self_plugin $enrol */
         $enrol = enrol_get_plugin('self');
@@ -271,10 +271,9 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @return array
      * @throws dml_exception
      */
-    private function get_enrol_plugins(moodle_database $db, string $enrolkey): array {
+    private function get_enrol_plugins(moodle_database $db, string $enrolkey) : array {
         // Password is the Enrolment key that is specified in the Self enrolment instance.
         $enrolplugins = $db->get_records('enrol', ['enrol' => 'self', 'password' => $enrolkey]);
-
 
         return array_merge($enrolplugins, $db->get_records_sql("
                 SELECT e.*, g.enrolmentkey
