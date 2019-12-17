@@ -143,8 +143,10 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $USER->site = $CFG->wwwroot;
         set_moodle_cookie($USER->username);
         $availableenrolids = $this->enrol_user($user->signup_token, $notify);
-
-        // If no courses found (empty key) go to dashboard
+        if (!$notify) {
+            return;
+        }
+        // If no courses found (empty key) go to dashboard.
         if (empty($availableenrolids)) {
             redirect(new moodle_url('/my/'));
         } else {

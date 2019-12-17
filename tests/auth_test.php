@@ -187,20 +187,20 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         // Setup course and enrolment.
         $course = $this->getDataGenerator()->create_course();
         $context = context_course::instance($course->id);
-        // Create selfenrolment instance
+        // Create selfenrolment instance.
         $instance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => 'self'), '*', MUST_EXIST);
         $instance->password = 'key';
-        // Set customint that controls groupkeys
+        // Set customint that controls groupkeys.
         $instance->customint1 = 1;
 
         // Register instance with plugin.
         $selfenrol = enrol_get_plugin('self');
         $DB->update_record('enrol', $instance);
         $selfenrol->update_status($instance, ENROL_INSTANCE_ENABLED);
-        // Check self-enrolment is setup properly
+        // Check self-enrolment is setup properly.
         $this->assertTrue($selfenrol->can_self_enrol($instance));
 
-        // Create group enrolment
+        // Create group enrolment.
         $group = $this->getDataGenerator()->create_group(array('courseid' => $course->id, 'enrolmentkey' => 'groupkey'));
 
         // Remove users from database to re-enrol.
@@ -220,7 +220,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         // Self signup non-valid key.
         $user3->signup_token = 'fakekey';
 
-        // Setup plugin to enrol
+        // Setup plugin to enrol.
         $tokenauth = get_auth_plugin('enrolkey');
 
         // Now signing up correctly. No email notification (false).
