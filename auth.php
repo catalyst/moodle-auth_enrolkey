@@ -167,12 +167,11 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         /** @var enrol_self_plugin $enrol */
         $enrol = enrol_get_plugin('self');
         $enrolplugins = $this->get_enrol_plugins($DB, $enrolkey);
-
         $availableenrolids = [];
         foreach ($enrolplugins as $enrolplugin) {
             if ($enrol->can_self_enrol($enrolplugin) === true) {
                 $data = new stdClass();
-                $data->enrolpassword = $enrolplugin->password;
+                $data->enrolpassword = $enrolplugin->enrolmentkey ?? $enrolplugin->password;
                 $enrol->enrol_self($enrolplugin, $data);
                 $availableenrolids[] = $enrolplugin->id;
             }
