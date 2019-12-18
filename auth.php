@@ -97,9 +97,11 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     /**
      * Sign up a new user ready for confirmation.
      * Password is passed in plaintext.
-     *
-     * @param object $user new user object
-     * @param boolean $notify print notice with link and terminate
+     * @param object $user
+     * @param bool $notify
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     public function user_signup($user, $notify=true) {
         global $CFG, $DB, $SESSION, $USER, $PAGE, $OUTPUT;
@@ -140,65 +142,44 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $USER->loggedin = true;
         $USER->site = $CFG->wwwroot;
         set_moodle_cookie($USER->username);
+        $availableenrolids = $this->enrol_user($user->signup_token, $notify);
+        if (!$notify) {
+            return;
+        }
+        // If no courses found (empty key) go to dashboard.
+        if (empty($availableenrolids)) {
+            redirect(new moodle_url('/my/'));
+        } else {
+            redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
+        }
+    }
 
-        // Password is the Enrolment key that is specified in the Self enrolment instance.
-        $enrolplugins = $DB->get_records('enrol', array('enrol' => 'self', 'password' => $user->signup_token));
-
-        $availableenrolids = [];
-
+    /**
+     * @param string $enrolkey
+     * @param bool $notify
+     * @return array
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
+     */
+    public function enrol_user(string $enrolkey, bool $notify = true) : array {
+        global $DB;
         /** @var enrol_self_plugin $enrol */
         $enrol = enrol_get_plugin('self');
+        $enrolplugins = $this->get_enrol_plugins($DB, $enrolkey);
+        $availableenrolids = [];
         foreach ($enrolplugins as $enrolplugin) {
             if ($enrol->can_self_enrol($enrolplugin) === true) {
-
                 $data = new stdClass();
-                $data->enrolpassword = $enrolplugin->password;
+                $data->enrolpassword = $enrolplugin->enrolmentkey ?? $enrolplugin->password;
                 $enrol->enrol_self($enrolplugin, $data);
                 $availableenrolids[] = $enrolplugin->id;
             }
         }
-
-        // Lookup group enrol keys. Not forgetting that group enrolment key is kept in {group}.enrolmentkey.
-        $enrolplugins = $DB->get_records_sql("
-                SELECT e.*, g.enrolmentkey
-                  FROM {groups} g
-                  JOIN {enrol} e ON e.courseid = g.courseid
-                                AND e.enrol = 'self'
-                                AND e.customint1 = 1
-                 WHERE g.enrolmentkey = ?
-        ", array($user->signup_token));
-        foreach ($enrolplugins as $enrolplugin) {
-            if ($enrol->can_self_enrol($enrolplugin) === true) {
-
-                $data = new stdClass();
-                // A $data should keep the group enrolment key according to implementation of,
-                // Method $enrol_self_plugin->enrol_self.
-                $data->enrolpassword = $enrolplugin->enrolmentkey;
-                $enrol->enrol_self($enrolplugin, $data);
-                $availableenrolids[] = $enrolplugin->id;
-            }
+        if ($notify & !empty($availableenrolids)) {
+            $this->email_confirmation();
         }
-
-        if ($notify) {
-
-            if (get_config('auth_enrolkey', 'emailconfirmation')) {
-                require_logout();
-                $emailconfirm = get_string('emailconfirm');
-                $PAGE->navbar->add($emailconfirm);
-                $PAGE->set_title($emailconfirm);
-                $PAGE->set_heading($PAGE->course->fullname);
-                echo $OUTPUT->header();
-                notice(get_string('emailconfirmsent', '', $user->email), "$CFG->wwwroot/index.php");
-                return;
-            }
-            // if no courses found (empty key) go to dashboard
-            if (empty($availableenrolids)) {
-                redirect(new moodle_url('/my/'));
-            } else {
-                redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
-            }
-        }
-
+        return $availableenrolids;
     }
 
     /**
@@ -266,6 +247,42 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     public function signup_form() {
         return new \auth_enrolkey\form\enrolkey_signup_form(null, null, 'post', '', array('autocomplete' => 'on'));
     }
+
+    /**
+     * @throws coding_exception
+     * @throws dml_exception
+     */
+    private function email_confirmation() {
+        global $PAGE, $OUTPUT, $CFG, $USER;
+        if ($USER->confirmed !== '1' && get_config('auth_enrolkey', 'emailconfirmation')) {
+            require_logout();
+            $emailconfirm = get_string('emailconfirm');
+            $PAGE->navbar->add($emailconfirm);
+            $PAGE->set_title($emailconfirm);
+            $PAGE->set_heading($PAGE->course->fullname);
+            echo $OUTPUT->header();
+            notice(get_string('emailconfirmsent', '', $USER->email), "$CFG->wwwroot/index.php");
+            return;
+        }
+    }
+
+    /**
+     * @param moodle_database $db
+     * @param string $enrolkey
+     * @return array
+     * @throws dml_exception
+     */
+    private function get_enrol_plugins(moodle_database $db, string $enrolkey) : array {
+        // Password is the Enrolment key that is specified in the Self enrolment instance.
+        $enrolplugins = $db->get_records('enrol', ['enrol' => 'self', 'password' => $enrolkey]);
+
+        return array_merge($enrolplugins, $db->get_records_sql("
+                SELECT e.*, g.enrolmentkey
+                  FROM {groups} g
+                  JOIN {enrol} e ON e.courseid = g.courseid
+                                AND e.enrol = 'self'
+                                AND e.customint1 = 1
+                 WHERE g.enrolmentkey = ?
+            ", [$enrolkey]));
+    }
 }
-
-
