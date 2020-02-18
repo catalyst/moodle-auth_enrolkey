@@ -116,7 +116,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $user->picture = 0;
         $user->imagealt = 0;
         $user->deleted = 0;
-        $user->policyagreed = 0;
+        // $user->policyagreed = 0; // Agreement to policy is triggered before the signup form, this would reset it 
         $user->id = user_create_user($user, false, false);
 
         // Save any custom profile field information.
