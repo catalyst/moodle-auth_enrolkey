@@ -10,6 +10,11 @@ Courses that provide self enrolment can restrict access to them with a key. If t
 
 Found in the Moodle plugins directory at [https://moodle.org/plugins/auth_enrolkey](https://moodle.org/plugins/auth_enrolkey)
 
+This also has a companion block plugin:
+
+https://github.com/catalyst/moodle-block_enrolkey
+
+https://moodle.org/plugins/block_enrolkey
 
 * [Branches](#branches)
 * [Installation](#installation)
