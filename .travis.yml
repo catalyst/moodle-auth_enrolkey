@@ -48,18 +48,14 @@ before_install:
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]; then export BRANCH="MOODLE_38_STABLE"; else export BRANCH="master"; fi
   - echo $BRANCH
   - git clone --branch "$BRANCH" --mirror 'https://github.com/moodlehq/moodle-behat-extension.git' '/home/travis/.composer/cache/vcs/git-github.com-moodlehq-moodle-behat-extension.git/' || true
-  - ls -halt /home/travis/.composer/cache/vcs/git-github.com-moodlehq-moodle-behat-extension.git/
-  - cd /home/travis/.composer/cache/vcs/git-github.com-moodlehq-moodle-behat-extension.git/ && git branch
-  - cd /home/travis/build
-  - ls -halt
   - composer selfupdate
   - composer create-project -n --no-dev moodlerooms/moodle-plugin-ci ci ^1
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
 
 install:
   - if [ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]; then
-      moodle-plugin-ci add-plugin --branch MOODLE_38_STABLE moodlehq/behat-extension;
-      moodle-plugin-ci add-plugin --branch 4.4 symfony/filesystem;
+#      moodle-plugin-ci add-plugin --branch MOODLE_38_STABLE --clone https://github.com/moodlehq/moodle-behat-extension.git;
+      moodle-plugin-ci add-plugin --branch 4.4  --clone https://github.com/symfony/filesystem.git;
     fi
   - moodle-plugin-ci install
 
