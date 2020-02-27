@@ -146,6 +146,10 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         if (!$notify) {
             return;
         }
+        if (!empty($availableenrolids)) {
+            $this->email_confirmation($user->email);
+        }
+
         // If no courses found (empty key) go to dashboard.
         if (empty($availableenrolids)) {
             redirect(new moodle_url('/my/'));
@@ -158,7 +162,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @param string $enrolkey
      * @param bool $notify
      * @return array
-     * @throws coding_exception
      * @throws dml_exception
      * @throws moodle_exception
      */
@@ -175,9 +178,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
                 $enrol->enrol_self($enrolplugin, $data);
                 $availableenrolids[] = $enrolplugin->id;
             }
-        }
-        if ($notify & !empty($availableenrolids)) {
-            $this->email_confirmation();
         }
         return $availableenrolids;
     }
@@ -249,10 +249,11 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     }
 
     /**
+     * @param string $email
      * @throws coding_exception
      * @throws dml_exception
      */
-    private function email_confirmation() {
+    private function email_confirmation(string $email = '') {
         global $PAGE, $OUTPUT, $CFG, $USER;
         if ($USER->confirmed !== '1' && get_config('auth_enrolkey', 'emailconfirmation')) {
             require_logout();
@@ -261,7 +262,8 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             $PAGE->set_title($emailconfirm);
             $PAGE->set_heading($PAGE->course->fullname);
             echo $OUTPUT->header();
-            notice(get_string('emailconfirmsent', '', $USER->email), "$CFG->wwwroot/index.php");
+            $email = $USER->email ?? $email;
+            notice(get_string('emailconfirmsent', '', $email), "$CFG->wwwroot/index.php");
             return;
         }
     }
