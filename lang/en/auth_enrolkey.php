@@ -30,7 +30,7 @@ $string['settings_required_description'] = 'The enrolment key will be a required
 $string['settings_visible_title'] = 'Enable enrolment key element';
 $string['settings_required_title'] = 'Require enrolment key for validation';
 $string['settings_email_title'] = 'Require email confirmation';
-$string['settings_email_description'] = 'Require users confirm their account with an email before accessing enrolled courses.';
+$string['settings_email_description'] = 'Force users to confirm their account with an email before accessing enrolled courses.';
 $string['signup_failure'] = 'Opps! Something went wrong, and you may not have been enrolled properly. Go to <a href="{$a->href}">Home</a>';
 $string['signup_field_title'] = 'Enrolment key';
 $string['signup_token_invalid'] = 'The enrolment key you have entered is invalid';

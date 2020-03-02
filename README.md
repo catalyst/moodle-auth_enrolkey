@@ -55,6 +55,8 @@ Settings
 
 It is possible to force the the enrolment key as a required element for signing up.
 
+Users can be forced to confirm their account via email even when entering a valid token.
+
 Admin Usage
 -----------
 
