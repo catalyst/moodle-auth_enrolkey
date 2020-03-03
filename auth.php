@@ -116,7 +116,18 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $user->picture = 0;
         $user->imagealt = 0;
         $user->deleted = 0;
-        $user->policyagreed = (int)!get_config('auth_enrolkey', 'emailconfirmation');
+        $emailconfirmation = get_config('auth_enrolkey', 'emailconfirmation');
+        // Default setting confirmation not required.
+        $user->policyagreed = 1;
+        $user->confirmed = 1;
+        if ('1' === $emailconfirmation) {
+            // No access until account confirmed via email.
+            $user->policyagreed = 0;
+            $user->confirmed = 0;
+        } else if ('2' === $emailconfirmation) {
+            // Access to course, but confirmation required before next login attempt.
+            $user->confirmed = 0;
+        }
         $user->id = user_create_user($user, false, false);
 
         // Save any custom profile field information.
@@ -146,7 +157,8 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         if (!$notify) {
             return;
         }
-        if (!empty($availableenrolids)) {
+
+        if (!empty($availableenrolids) && $user->confirmed === 0 && $user->policyagreed === 0) {
             $this->email_confirmation($user->email);
         }
 
@@ -251,21 +263,17 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     /**
      * @param string $email
      * @throws coding_exception
-     * @throws dml_exception
      */
     private function email_confirmation(string $email = '') {
         global $PAGE, $OUTPUT, $CFG, $USER;
-        if ($USER->confirmed !== '1' && get_config('auth_enrolkey', 'emailconfirmation')) {
-            require_logout();
-            $emailconfirm = get_string('emailconfirm');
-            $PAGE->navbar->add($emailconfirm);
-            $PAGE->set_title($emailconfirm);
-            $PAGE->set_heading($PAGE->course->fullname);
-            echo $OUTPUT->header();
-            $email = $USER->email ?? $email;
-            notice(get_string('emailconfirmsent', '', $email), "$CFG->wwwroot/index.php");
-            return;
-        }
+        require_logout();
+        $emailconfirm = get_string('emailconfirm');
+        $PAGE->navbar->add($emailconfirm);
+        $PAGE->set_title($emailconfirm);
+        $PAGE->set_heading($PAGE->course->fullname);
+        echo $OUTPUT->header();
+        $email = $USER->email ?? $email;
+        notice(get_string('emailconfirmsent', '', $email), "$CFG->wwwroot/index.php");
     }
 
     /**
