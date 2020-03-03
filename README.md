@@ -29,7 +29,9 @@ https://moodle.org/plugins/block_enrolkey
 Branches
 --------
 
-For all current moodle installations, use the master branch.
+| Moodle verion     | Branch      | PHP   |
+| ----------------- | ----------- | ----- |
+| Moodle 3.5 to 3.9 | master      | 7.1+  |
 
 Installation
 ------------ 
