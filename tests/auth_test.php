@@ -44,6 +44,8 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
 
         $tokenauth = get_auth_plugin('enrolkey');
         $selfenrol = enrol_get_plugin('self');
+        $user = $this->getDataGenerator()->create_user();
+        $this->setUser($user);
 
         $course1 = $this->getDataGenerator()->create_course();
         $course2 = $this->getDataGenerator()->create_course();
