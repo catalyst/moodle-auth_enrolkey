@@ -200,6 +200,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $DB->update_record('enrol', $instance);
         $selfenrol->update_status($instance, ENROL_INSTANCE_ENABLED);
         // Check self-enrolment is setup properly.
+        $this->setUser($user1);
         $this->assertTrue($selfenrol->can_self_enrol($instance));
 
         // Create group enrolment.
@@ -228,7 +229,9 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         // Now signing up correctly. No email notification (false).
         $sink = $this->redirectEvents();
         $tokenauth->user_signup($user1, false);
+        $this->setUser($user2);
         $tokenauth->user_signup($user2, false);
+        $this->setUser($user3);
         $tokenauth->user_signup($user3, false);
 
         // Even though we don't send emails, the 'self' plugin may.
