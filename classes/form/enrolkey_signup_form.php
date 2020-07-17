@@ -94,7 +94,7 @@ class enrolkey_signup_form extends \login_signup_form {
             foreach ($instances as $instance) {
                 // There may be things that prevent self enrol, such as requiring a capability, or full course.
                 // This should not be a blocker to account creation. The creation should pass, then report the error.
-                if ($instance->status === ENROL_INSTANCE_ENABLED) {
+                if ($instance->status == ENROL_INSTANCE_ENABLED) {
                     $selfenrolinstance = true;
                 }
             }
@@ -109,7 +109,7 @@ class enrolkey_signup_form extends \login_signup_form {
                      WHERE g.enrolmentkey = ?
             ", array($token));
             foreach ($instances as $instance) {
-                if ($instance->status === ENROL_INSTANCE_ENABLED) {
+                if ($instance->status == ENROL_INSTANCE_ENABLED) {
                     $selfenrolinstance = true;
                 }
             }
