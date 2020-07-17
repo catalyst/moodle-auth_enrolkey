@@ -92,8 +92,9 @@ class enrolkey_signup_form extends \login_signup_form {
 
             // There may be more than one enrolment instance configured with various dates to check against.
             foreach ($instances as $instance) {
-                // DO we ever want to pass feedback to user?
-                if ($enrolplugin->can_self_enrol($instance) === true) {
+                // There may be things that prevent self enrol, such as requiring a capability, or full course.
+                // This should not be a blocker to account creation. The creation should pass, then report the error.
+                if ($instance->status === ENROL_INSTANCE_ENABLED) {
                     $selfenrolinstance = true;
                 }
             }
@@ -108,8 +109,7 @@ class enrolkey_signup_form extends \login_signup_form {
                      WHERE g.enrolmentkey = ?
             ", array($token));
             foreach ($instances as $instance) {
-                // DO we ever want to pass feedback to user?
-                if ($enrolplugin->can_self_enrol($instance) === true) {
+                if ($instance->status === ENROL_INSTANCE_ENABLED) {
                     $selfenrolinstance = true;
                 }
             }

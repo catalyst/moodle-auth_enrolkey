@@ -153,13 +153,19 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $USER->loggedin = true;
         $USER->site = $CFG->wwwroot;
         set_moodle_cookie($USER->username);
-        $availableenrolids = $this->enrol_user($user->signup_token, $notify);
+        list($availableenrolids, $errors) = $this->enrol_user($user->signup_token, $notify);
         if (!$notify) {
             return;
         }
 
         if (!empty($availableenrolids) && $user->confirmed === 0 && $user->policyagreed === 0) {
             $this->email_confirmation($user->email);
+        }
+
+        // If there were errors detected, output on target page.
+        foreach ($errors as $courseid => $errmsg) {
+            $course = get_course($courseid);
+            \core\notification::error(get_string('errorenrolling', 'auth_enrolkey', ['course' => $course->fullname, 'err' => $errmsg]));
         }
 
         // If no courses found (empty key) go to dashboard.
@@ -183,15 +189,19 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $enrol = enrol_get_plugin('self');
         $enrolplugins = $this->get_enrol_plugins($DB, $enrolkey);
         $availableenrolids = [];
+        $errors = [];
         foreach ($enrolplugins as $enrolplugin) {
             if ($enrol->can_self_enrol($enrolplugin) === true) {
                 $data = new stdClass();
                 $data->enrolpassword = $enrolplugin->enrolmentkey ?? $enrolplugin->password;
                 $enrol->enrol_self($enrolplugin, $data);
                 $availableenrolids[] = $enrolplugin->id;
+            } else {
+                // Store error to output.
+                $errors[$enrolplugin->courseid] = $enrol->can_self_enrol($enrolplugin);
             }
         }
-        return $availableenrolids;
+        return [$availableenrolids, $errors];
     }
 
     /**
