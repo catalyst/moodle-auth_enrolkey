@@ -44,4 +44,10 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configselect('auth_enrolkey/emailconfirmation',
             get_string('settings_email_title', 'auth_enrolkey'),
             get_string('settings_email_description', 'auth_enrolkey'), 0, $options));
+
+    if (moodle_major_version() >= '3.3') {
+            $authplugin = get_auth_plugin('enrolkey');
+            display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields,
+                get_string('auth_fieldlocks_help', 'auth'), false, false, $authplugin->get_custom_user_profile_fields());
+    }
 }
