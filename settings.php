@@ -45,6 +45,12 @@ if ($ADMIN->fulltree) {
             get_string('settings_email_title', 'auth_enrolkey'),
             get_string('settings_email_description', 'auth_enrolkey'), 0, $options));
 
+    if (function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
+        $settings->add(new admin_setting_configcheckbox('auth_enrolkey/totaracohortsync',
+            get_string('cohortsync', 'auth_enrolkey'),
+            get_string('cohortsync_description', 'auth_enrolkey'), 0));
+    }
+
     if (moodle_major_version() >= '3.3') {
             $authplugin = get_auth_plugin('enrolkey');
             display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields,
