@@ -26,6 +26,11 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/authlib.php');
 
+// If totara cohort lib exists, import it.
+if (file_exists($CFG->dirroot . '/totara/cohort/lib.php')) {
+    require_once($CFG->dirroot . '/totara/cohort/lib.php');
+}
+
 /**
  * Enrolment key based self-registration.
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
@@ -156,6 +161,15 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         list($availableenrolids, $errors) = $this->enrol_user($user->signup_token, $notify);
         if (!$notify) {
             return;
+        }
+
+        // At this point signup and enrolment is finished.
+        // If enabled, run a cohort sync to force dynamic cohorts to update.
+        if (get_config('auth_enrolkey', 'totaracohortsync') &&
+            function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
+            $trace = new \null_progress_trace();
+            // This may be a perfomance hog.
+            totara_cohort_check_and_update_dynamic_cohort_members(null, $trace);
         }
 
         if (!empty($availableenrolids) && $user->confirmed === 0 && $user->policyagreed === 0) {

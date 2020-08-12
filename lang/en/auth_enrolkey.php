@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['cohortsync'] = 'Sync audiences on signup';
+$string['cohortsync_description'] = 'Sync system audiences when a user signs up. This removes the delay from cron running and doing this task. Warning: this may cause the signup process to be slower.';
 $string['description'] = 'This provides Enrolment key based self-registration';
 $string['errorenrolling'] = 'There was an error enrolling in course \'{$a->course}\'. The error message is: {$a->err}';
 $string['settings_heading'] = 'General settings';
