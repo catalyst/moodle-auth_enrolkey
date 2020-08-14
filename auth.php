@@ -235,8 +235,8 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         global $CFG;
 
         if ($CFG->registerauth == $this->authtype and empty($CFG->auth_instructions)) {
-            $url = '/login/signup.php';
-            $CFG->auth_instructions = get_string('signup_auth_instructions', 'auth_enrolkey', $url);
+            $url = new moodle_url('/login/signup.php');
+            $CFG->auth_instructions = get_string('signup_auth_instructions', 'auth_enrolkey', $url->out());
         }
 
     }
