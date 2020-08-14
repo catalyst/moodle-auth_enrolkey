@@ -81,8 +81,6 @@ class enrolkey_signup_form extends \login_signup_form {
         global $DB;
         $errors = parent::validation($data, $files);
 
-        $enrolplugin = enrol_get_plugin('self');
-
         $token = $data['signup_token'];
 
         if (!empty($token)) {
