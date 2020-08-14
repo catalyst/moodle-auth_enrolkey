@@ -109,7 +109,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @throws moodle_exception
      */
     public function user_signup($user, $notify=true) {
-        global $CFG, $DB, $SESSION, $USER, $PAGE, $OUTPUT;
+        global $CFG, $USER, $DB;
         require_once($CFG->dirroot . '/user/profile/lib.php');
         require_once($CFG->dirroot . '/user/lib.php');
         require_once($CFG->dirroot . '/enrol/self/lib.php');
