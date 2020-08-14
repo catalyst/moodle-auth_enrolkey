@@ -48,6 +48,7 @@ $string['signup_field_title'] = 'Enrolment key';
 $string['signup_token_invalid'] = 'The enrolment key you have entered is invalid';
 $string['signup_missing'] = 'Missing enrolment key';
 $string['noemail'] = 'Tried to send you an email but failed!';
+$string['signup_notification_single'] = 'You have enrolled into this course using an Enrolment key';
 $string['signup_view'] = 'Course enrolment';
 $string['signup_view_message_basic'] = 'You have been enrolled as a {$a->role} into the course \'<a href="{$a->href}">{$a->course}</a>\'';
 $string['signup_view_message_basic_dates'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a><br />Course starts: {$a->startdate}<br />Course ends: {$a->enddate}';

@@ -185,7 +185,17 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         // If no courses found (empty key) go to dashboard.
         if (empty($availableenrolids)) {
             redirect(new moodle_url('/my/'));
-        } else {
+        }
+
+        // Setting redirect_if_one_match will send the user directly to the course page if it matches one enrolkey only.
+        $onematch = get_config('auth_enrolkey', 'redirect_if_one_match');
+        $enrolcount = sizeof($availableenrolids);
+        if (($enrolcount === 1) && $onematch) {
+            $record = $DB->get_record('enrol', array('enrol' => 'self', 'id' => $availableenrolids[0]));
+            \core\notification::success(get_string('signup_notification_single', 'auth_enrolkey'));
+            redirect(new moodle_url("/course/view.php", array('id' => $record->courseid)));
+        }
+        else {
             redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
         }
     }
