@@ -41,6 +41,8 @@ $string['settings_email_description'] = 'Force users to confirm their account wi
 </ul>
 ';
 $string['settings_partial'] = 'Partial';
+$string['settings_redirect_if_one_match'] = 'Direct to course with one matching key';
+$string['settings_redirect_if_one_match_description'] = 'If there is only one match for an enrolment key, the user should be redirected to that course and not be displayed any interstitial notification.';
 $string['signup_failure'] = 'Opps! Something went wrong, and you may not have been enrolled properly. Go to <a href="{$a->href}">Home</a>';
 $string['signup_field_title'] = 'Enrolment key';
 $string['signup_token_invalid'] = 'The enrolment key you have entered is invalid';

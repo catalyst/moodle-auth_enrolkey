@@ -36,6 +36,10 @@ if ($ADMIN->fulltree) {
             get_string('settings_required_title', 'auth_enrolkey'),
             get_string('settings_required_description', 'auth_enrolkey'), 1, $options));
 
+    $settings->add(new admin_setting_configcheckbox('auth_enrolkey/redirect_if_one_match',
+            get_string('settings_redirect_if_one_match', 'auth_enrolkey'),
+            get_string('settings_redirect_if_one_match_description', 'auth_enrolkey'), 1));
+
     $settings->add(new admin_setting_configselect('auth_enrolkey/recaptcha',
             get_string('recaptcha_key', 'auth_enrolkey'),
             get_string('recaptcha', 'auth_enrolkey'), 0, $options));
