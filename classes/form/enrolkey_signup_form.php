@@ -58,7 +58,7 @@ class enrolkey_signup_form extends \login_signup_form {
         $mform->insertElementBefore($element, 'email');
 
         if ($this->signup_token_required()) {
-            $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'server');
+            $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'client');
         }
 
         if ($this->signup_captcha_enabled()) {
