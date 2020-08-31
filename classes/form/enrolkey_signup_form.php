@@ -84,7 +84,7 @@ class enrolkey_signup_form extends \login_signup_form {
 
         if ($signuptoken !== '') {
             // For any case where the token is populated, perform a lookup.
-            $tokenisvalid = $this->check_database_for_enrolkey($signuptoken);
+            $tokenisvalid = $this->check_database_for_signuptoken($signuptoken);
 
             if ($tokenisvalid === false) {
                 $errors['signup_token'] = get_string('signup_token_invalid', 'auth_enrolkey');
@@ -106,7 +106,7 @@ class enrolkey_signup_form extends \login_signup_form {
      * @param $token Returns true on success. False on failure.
      * @return bool
      */
-    private function check_database_for_enrolkey($token) {
+    private function check_database_for_signuptoken($token) {
         global $DB;
 
         $selfenrolinstance = false;
