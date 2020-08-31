@@ -58,7 +58,7 @@ class enrolkey_signup_form extends \login_signup_form {
         $mform->insertElementBefore($element, 'email');
 
         if ($this->signup_token_required()) {
-            $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'server');
+            $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'client');
         }
 
         if ($this->signup_captcha_enabled()) {
@@ -78,29 +78,52 @@ class enrolkey_signup_form extends \login_signup_form {
      *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
     public function validation($data, $files) {
-        global $DB;
         $errors = parent::validation($data, $files);
 
-        $enrolplugin = enrol_get_plugin('self');
+        $signuptoken = $data['signup_token'];
 
-        $token = $data['signup_token'];
+        if ($signuptoken !== '') {
+            // For any case where the token is populated, perform a lookup.
+            $tokenisvalid = $this->check_database_for_signuptoken($signuptoken);
 
-        if (!empty($token)) {
-            $selfenrolinstance = false;
-
-            $instances = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
-
-            // There may be more than one enrolment instance configured with various dates to check against.
-            foreach ($instances as $instance) {
-                // There may be things that prevent self enrol, such as requiring a capability, or full course.
-                // This should not be a blocker to account creation. The creation should pass, then report the error.
-                if ($instance->status == ENROL_INSTANCE_ENABLED) {
-                    $selfenrolinstance = true;
-                }
+            if ($tokenisvalid === false) {
+                $errors['signup_token'] = get_string('signup_token_invalid', 'auth_enrolkey');
             }
 
-            // Lookup group enrol keys.
-            $instances = $DB->get_records_sql("
+        } else {
+            // The form submission is an empty string, double check if the token is required.
+            if ($this->signup_token_required()) {
+                $errors['signup_token'] = get_string('signup_missing', 'auth_enrolkey');
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Checks the enrolment records for any matching self enrolment key.
+     *
+     * @param $token Returns true on success. False on failure.
+     * @return bool
+     */
+    private function check_database_for_signuptoken($token) {
+        global $DB;
+
+        $selfenrolinstance = false;
+
+        $instances = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
+
+        // There may be more than one enrolment instance configured with various dates to check against.
+        foreach ($instances as $instance) {
+            // There may be things that prevent self enrol, such as requiring a capability, or full course.
+            // This should not be a blocker to account creation. The creation should pass, then report the error.
+            if ($instance->status == ENROL_INSTANCE_ENABLED) {
+                $selfenrolinstance = true;
+            }
+        }
+
+        // Lookup group enrol keys.
+        $instances = $DB->get_records_sql("
                     SELECT e.*
                       FROM {groups} g
                       JOIN {enrol} e ON e.courseid = g.courseid
@@ -108,19 +131,13 @@ class enrolkey_signup_form extends \login_signup_form {
                                     AND e.customint1 = 1
                      WHERE g.enrolmentkey = ?
             ", array($token));
-            foreach ($instances as $instance) {
-                if ($instance->status == ENROL_INSTANCE_ENABLED) {
-                    $selfenrolinstance = true;
-                }
-            }
-
-            // No token matched, this will produce an error message. There are concerns about bruteforcing.
-            if (!$selfenrolinstance) {
-                $errors['signup_token'] = get_string('signup_token_invalid', 'auth_enrolkey');
+        foreach ($instances as $instance) {
+            if ($instance->status == ENROL_INSTANCE_ENABLED) {
+                $selfenrolinstance = true;
             }
         }
 
-        return $errors;
+        return $selfenrolinstance;
     }
 
     /**
