@@ -56,4 +56,8 @@ if ($ADMIN->fulltree) {
             display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields,
                 get_string('auth_fieldlocks_help', 'auth'), false, false, $authplugin->get_custom_user_profile_fields());
     }
+
+    $authplugin = get_auth_plugin('enrolkey');
+    display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields,
+            '', true, true, $authplugin->get_custom_user_profile_fields());
 }
