@@ -53,6 +53,10 @@ class enrolkey_signup_form extends \login_signup_form {
 
         // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
         $mform->setType('signup_token', PARAM_TEXT);
+        $token = optional_param('signup_token', '', PARAM_TEXT);
+        if (!empty($token)) {
+            $mform->setDefault('signup_token', $token);
+        }
 
         // Make the course token field visible earlier.
         $mform->insertElementBefore($element, 'email');
