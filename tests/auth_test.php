@@ -113,7 +113,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $this->assertTrue($selfenrol->can_self_enrol($instance5));
         $this->assertTrue($selfenrol->can_self_enrol($instance6));
         $this->assertTrue($selfenrol->can_self_enrol($instance7));
-        $this->assertContains('Enrolment is disabled or inactive', $selfenrol->can_self_enrol($instance8));
+        $this->assertStringContainsString('Enrolment is disabled or inactive', $selfenrol->can_self_enrol($instance8));
 
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course1->id, 'enrol' => 'self', 'password' => '')));
         $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course2->id, 'enrol' => 'self', 'password' => 'key_1')));
