@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/catalyst/moodle-auth_enrolkey.svg?branch=master)](https://travis-ci.org/catalyst/moodle-auth_enrolkey)
+[![Build Status](https://github.com/catalyst/moodle-auth_enrolkey/workflows/Moodle%20plugin%20CI%20for%20VERSION2/badge.svg)](https://github.com/catalyst/moodle-auth_enrolkey/actions)
 
 # Moodle Enrolment key based self-registration
 
@@ -31,7 +31,8 @@ Branches
 
 | Moodle verion     | Branch      | PHP   |
 | ----------------- | ----------- | ----- |
-| Moodle 3.5 to 3.9 | master      | 7.1+  |
+| Moodle 3.5 to 3.9 | VERSION2    | 7.1+  |
+| Moodle 3.10+      | VERSION3    | 7.2+  |
 
 Installation
 ------------ 
