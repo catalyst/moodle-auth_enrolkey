@@ -29,10 +29,19 @@ env:
   - DB=mysqli MOODLE_BRANCH=master
 
 matrix:
+  include:
+    - php: 7.3
+      env: DB=pgsql MOODLE_BRANCH=master
+    - php: 7.3
+      env: DB=mysqli MOODLE_BRANCH=master
   exclude:
     - php: 7.1
       env: DB=pgsql MOODLE_BRANCH=master
     - php: 7.1
+      env: DB=mysqli MOODLE_BRANCH=master
+    - php: 7.2
+      env: DB=pgsql MOODLE_BRANCH=master
+    - php: 7.2
       env: DB=mysqli MOODLE_BRANCH=master
     - php: 7.1
       env: DB=pgsql MOODLE_BRANCH=MOODLE_39_STABLE
