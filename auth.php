@@ -163,6 +163,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             return;
         }
 
+        \auth_enrolkey\persistent\enrolkey_profile_mapping::add_fields_during_signup($user, $availableenrolids);
         // At this point signup and enrolment is finished.
         // If enabled, run a cohort sync to force dynamic cohorts to update.
         if (get_config('auth_enrolkey', 'totaracohortsync') &&

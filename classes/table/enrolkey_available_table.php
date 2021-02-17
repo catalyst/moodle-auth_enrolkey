@@ -136,7 +136,35 @@ class enrolkey_available_table extends table_sql implements renderable {
 
         $content = '';
 
-        // TODO: Profile Content.
+        $persistents = enrolkey_profile_mapping::get_records_by_enrolid($row->id);
+        $fields = [];
+
+        foreach ($persistents as $persistent) {
+            $fields[] = [
+                'name' => $persistent->get_readable_name(),
+                'value' => $persistent->get_readable_value()
+            ];
+        }
+
+        $context = [
+            'data' => [
+                'fields' => $fields
+            ]
+        ];
+
+        $content .= $OUTPUT->render_from_template('auth_enrolkey/enrolkey_profiletable', $context);
+
+        $icon = $OUTPUT->render(new \pix_icon('i/edit', ''))
+            . get_string('edit_profile', 'auth_enrolkey')
+            . \html_writer::empty_tag('br');
+        $url = new moodle_url('edit_profile.php', ['id' => $row->id]);
+        $content .= \html_writer::link($url, $icon, array(
+            'class' => 'action-icon edit',
+            'id' => 'admin-enrolkey-profile-' . $row->id,
+            'data-toggle' => 'tooltip',
+            'data-placement' => 'top',
+            'title' => 'Profile'
+        ));
 
         return $content;
     }
