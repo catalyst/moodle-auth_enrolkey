@@ -62,19 +62,11 @@ class enrolkey_redirect_mapping extends persistent {
      * @return enrolkey_redirect_mapping
      */
     public static function get_record_by_enrolid($enrolid) {
-        global $DB;
+        $persistent = self::get_record(['enrolid' => $enrolid]);
 
-        $sql = 'SELECT *
-                  FROM {' . static::TABLE . '} umap
-                 WHERE umap.enrolid = :enrolid';
-
-        $record = $DB->get_record_sql($sql, ['enrolid' => $enrolid]);
-
-        if (!$record) {
+        if (!$persistent) {
             // Create the record for this enrolid if it does not exist.
-            $persistent = new enrolkey_redirect_mapping(0, (object)['enrolid' => $enrolid]);
-        } else {
-            $persistent = new enrolkey_redirect_mapping(0, $record);
+            $persistent = new enrolkey_redirect_mapping(0, (object) ['enrolid' => $enrolid]);
         }
         return $persistent;
     }
@@ -89,8 +81,10 @@ class enrolkey_redirect_mapping extends persistent {
         // TODO: Redirect weight.
         foreach ($availableenrolids as $enid) {
             $persistent = self::get_record_by_enrolid($enid);
-            $url = new \moodle_url($persistent->get('url'));
-            redirect($url);
+            $url = $persistent->get('url');
+            if ($url != "") {
+                redirect($persistent->get_moodle_url());
+            }
         }
     }
 

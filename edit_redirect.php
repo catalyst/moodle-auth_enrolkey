@@ -61,7 +61,11 @@ if ($form && $form->is_cancelled()) {
             $persistent->create();
         } else {
             $persistent->from_record($data);
-            $persistent->update();
+            if ($data->url == "") {
+                $persistent->delete();
+            } else {
+                $persistent->update();
+            }
         }
         \core\notification::success(get_string('changessaved'));
     } catch (Exception $e) {
