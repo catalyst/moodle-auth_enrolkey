@@ -101,6 +101,13 @@ class enrolkey_signup_form extends \login_signup_form {
             }
         }
 
+        // Validation if the selected element is 'Choose...'.
+        if (isset($data['profile_field_learningcohort']) && $data['profile_field_learningcohort'] == 1) {
+            if (isset($data['profile_field_post']) && $data['profile_field_post'] == '') {
+                $errors['profile_field_post'] = 'Please select a value';
+            }
+        }
+
         return $errors;
     }
 

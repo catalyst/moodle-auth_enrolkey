@@ -163,6 +163,9 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             return;
         }
 
+        \auth_enrolkey\persistent\enrolkey_profile_mapping::add_fields_during_signup($user, $availableenrolids);
+        \auth_enrolkey\persistent\enrolkey_cohort_mapping::add_cohorts_during_signup($user, $availableenrolids);
+
         // At this point signup and enrolment is finished.
         // If enabled, run a cohort sync to force dynamic cohorts to update.
         if (get_config('auth_enrolkey', 'totaracohortsync') &&
@@ -179,8 +182,12 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         // If there were errors detected, output on target page.
         foreach ($errors as $courseid => $errmsg) {
             $course = get_course($courseid);
-            \core\notification::error(get_string('errorenrolling', 'auth_enrolkey', ['course' => $course->fullname, 'err' => $errmsg]));
+            \core\notification::error(
+                get_string('errorenrolling', 'auth_enrolkey', ['course' => $course->fullname, 'err' => $errmsg])
+            );
         }
+
+        \auth_enrolkey\persistent\enrolkey_redirect_mapping::redirect_during_signup($availableenrolids);
 
         // If no courses found (empty key) go to dashboard.
         if (empty($availableenrolids)) {
