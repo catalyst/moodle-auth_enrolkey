@@ -200,11 +200,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     public function enrol_user(string $enrolkey, bool $notify = true) : array {
         global $DB;
 
-        // $enrolkey = trim($enrolkey);
-        // if (empty($enrolkey)) {
-        //     return [];
-        // }
-
         /** @var enrol_self_plugin $enrol */
         $enrol = enrol_get_plugin('self');
         $enrolplugins = $this->get_enrol_plugins($DB, $enrolkey);
