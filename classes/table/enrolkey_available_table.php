@@ -226,17 +226,35 @@ class enrolkey_available_table extends table_sql implements renderable {
     }
 
     /**
-     * This function is used for the extra user fields.
+     * Get content for enrolkeyname column.
      *
-     * These are being dynamically added to the table so there are no functions 'col_<userfieldname>' as
-     * the list has the potential to increase in the future and we don't want to have to remember to add
-     * a new method to this class. We also don't want to pollute this class with unnecessary methods.
-     *
-     * @param string $colname The column name
-     * @param \stdClass $data
-     * @return string
+     * @param \stdClass $row
+     * @return string html used to display the field.
      */
-    public function other_cols($colname, $data) {
-        return s($data->{$colname});
+    public function col_enrolkeyname($row) {
+        $param = [
+            'courseid' => $row->courseid,
+            'id' => $row->id,
+            'type' => 'self',
+        ];
+        $url = new moodle_url('/enrol/editinstance.php', $param);
+
+        return  \html_writer::link($url, $row->enrolkeyname);
     }
+
+    /**
+     * Get content for coursefullname column.
+     *
+     * @param \stdClass $row
+     * @return string html used to display the field.
+     */
+    public function col_coursefullname($row) {
+        $param = [
+            'id' => $row->courseid,
+        ];
+        $url = new moodle_url('/course/view.php', $param);
+
+        return  \html_writer::link($url, $row->coursefullname);
+    }
+
 }
