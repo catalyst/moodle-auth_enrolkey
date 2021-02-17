@@ -119,7 +119,29 @@ class enrolkey_available_table extends table_sql implements renderable {
 
         $content = '';
 
-        // TODO: Cohort content.
+        $cohortlist = enrolkey_cohort_mapping::get_records_by_enrolid($row->id);
+
+        foreach ($cohortlist as $cohortid => $persistent) {
+            if (array_key_exists($cohortid, $this->allcohorts['cohorts'])) {
+                $cohort = $this->allcohorts['cohorts'][$cohortid];
+                $cohortname = $cohort->name . ' (' . $cohort->idnumber . ')';
+                $url = $persistent->get_moodle_url();
+                $link = \html_writer::link($url, $cohortname);
+                $content .= \html_writer::div($link);
+            }
+        }
+
+        $icon = $OUTPUT->render(new \pix_icon('i/edit', ''))
+            . get_string('edit_cohort', 'auth_enrolkey')
+            . \html_writer::empty_tag('br');
+        $url = new moodle_url('edit_cohort.php', ['id' => $row->id]);
+        $content .= \html_writer::link($url, $icon, array(
+            'class' => 'action-icon edit',
+            'id' => 'admin-enrolkey-edit-' . $row->id,
+            'data-toggle' => 'tooltip',
+            'data-placement' => 'top',
+            'title' => 'Edit'
+        ));
 
         return $content;
     }
