@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Configure Enrolkey mapping
+ * Configure Enrolkey redirect mapping
  *
  * @package    auth_enrolkey
  * @author     Nicholas Hoobin <nicholashoobin@catalyst-au.net>
@@ -35,6 +35,8 @@ $id = required_param('id', PARAM_INT);
 $baseurl = new moodle_url('/auth/enrolkey/edit_redirect.php', ['id' => $id]);
 
 $PAGE->set_url($baseurl);
+$PAGE->set_title(get_string('title_redirect', 'auth_enrolkey'));
+$PAGE->set_heading(get_string('title_redirect', 'auth_enrolkey'));
 $output = $PAGE->get_renderer('auth_enrolkey');
 
 $persistent = enrolkey_redirect_mapping::get_record_by_enrolid($id);
@@ -70,5 +72,6 @@ if ($form && $form->is_cancelled()) {
 }
 
 echo $output->header();
+echo $output->heading(get_string('title_redirect', 'auth_enrolkey'));
 $form->display();
 echo $output->footer();

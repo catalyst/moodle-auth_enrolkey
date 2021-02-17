@@ -39,14 +39,13 @@ use plugin_renderer_base;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class renderer extends plugin_renderer_base {
-
     /**
      * Render the HTML for the student quiz table.
      *
      * @param string $baseurl the base url to render the table on.
      * @return string $output HTML for the table.
      */
-    public static function render_available_table(string $baseurl): string {
+    public static function render_available_table($baseurl) {
         $renderable = new enrolkey_available_table($baseurl);
         ob_start();
         $renderable->out(50, false);

@@ -29,6 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/auth/enrolkey/auth.php');
+require_once($CFG->dirroot . '/cohort/lib.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
 
 /**
  * Token Authentication tests.
@@ -255,6 +257,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
     }
 
     public function test_add_cohorts_during_signup() {
+        $this->resetAfterTest(true);
         global $DB;
 
         // Setup the cohort data structure.
@@ -285,6 +288,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
     }
 
     public function test_add_fields_during_signup() {
+        $this->resetAfterTest(true);
         global $DB;
 
         // Create user info fields.

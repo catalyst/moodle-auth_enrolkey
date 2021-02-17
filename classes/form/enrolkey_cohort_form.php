@@ -54,6 +54,7 @@ class enrolkey_cohort_form extends \moodleform {
             'noselectionstring' => get_string('label_cohortselect_empty', 'auth_enrolkey'),
         );
         $mform->addElement('autocomplete', 'cohortids', get_string('label_cohortselect', 'auth_enrolkey'), $cohortnames, $options);
+        $mform->addHelpButton('cohortids', 'label_cohortselect', 'auth_enrolkey');
 
         $this->add_action_buttons(true);
     }

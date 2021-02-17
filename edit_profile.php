@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Configure Enrolkey mapping
+ * Configure Enrolkey profile mapping
  *
  * @package    auth_enrolkey
  * @author     Nicholas Hoobin <nicholashoobin@catalyst-au.net>
@@ -36,6 +36,7 @@ $enrolid = required_param('id', PARAM_INT);
 $baseurl = new moodle_url('/auth/enrolkey/edit_profile.php', ['id' => $enrolid]);
 
 $PAGE->set_url($baseurl);
+$PAGE->set_title(get_string('title_profile', 'auth_enrolkey'));
 $output = $PAGE->get_renderer('auth_enrolkey');
 
 $records = enrolkey_profile_mapping::get_records_by_enrolid($enrolid);
@@ -109,6 +110,7 @@ if ($form && $form->is_cancelled()) {
 
 
 echo $output->header();
+echo $output->heading(get_string('title_profile', 'auth_enrolkey'));
 $form->set_autocomplete_data($records);
 $form->display();
 echo $output->footer();

@@ -48,8 +48,9 @@ class enrolkey_redirect_form extends persistent {
         $persistent = $this->get_persistent();
 
         // External.
-        $mform->addElement('text', 'url', 'Redirection URL',  ['size' => '100']);
+        $mform->addElement('text', 'url', get_string('label_redirection', 'auth_enrolkey'),  ['size' => '100']);
         $mform->setType('url', PARAM_TEXT);
+        $mform->addHelpButton('url', 'label_redirection', 'auth_enrolkey');
 
         $mform->addElement('hidden', 'enrolid', $persistent->get('enrolid'));
         $mform->setType('enrolid', PARAM_INT);

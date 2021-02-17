@@ -35,9 +35,8 @@ use core\persistent;
  */
 class enrolkey_redirect_mapping extends persistent {
 
-    const TABLE = 'auth_enrolkey_redirect';
-
     /** Table name for the persistent. */
+    const TABLE = 'auth_enrolkey_redirect';
 
     /**
      * Return the definition of the properties of this model.

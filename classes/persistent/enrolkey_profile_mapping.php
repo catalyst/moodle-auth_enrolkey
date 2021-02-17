@@ -25,6 +25,8 @@ namespace auth_enrolkey\persistent;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/user/profile/lib.php');
+
 use core\persistent;
 /**
  * Class for mapping enrolkey to corhots.
@@ -35,9 +37,8 @@ use core\persistent;
  */
 class enrolkey_profile_mapping extends persistent {
 
-    const TABLE = 'auth_enrolkey_profile';
-
     /** Table name for the persistent. */
+    const TABLE = 'auth_enrolkey_profile';
 
     /**
      * Return the definition of the properties of this model.

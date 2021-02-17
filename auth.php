@@ -163,7 +163,10 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             return;
         }
 
+        // New Enrolkey hook, will force/add user profile fields user based on the enrolkey used.
         \auth_enrolkey\persistent\enrolkey_profile_mapping::add_fields_during_signup($user, $availableenrolids);
+
+        // New Enrolkey hook, will assign and enrol this user to corhots based on the enrolkey used.
         \auth_enrolkey\persistent\enrolkey_cohort_mapping::add_cohorts_during_signup($user, $availableenrolids);
 
         // At this point signup and enrolment is finished.
@@ -182,7 +185,9 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         // If there were errors detected, output on target page.
         foreach ($errors as $courseid => $errmsg) {
             $course = get_course($courseid);
-            \core\notification::error(get_string('errorenrolling', 'auth_enrolkey', ['course' => $course->fullname, 'err' => $errmsg]));
+            \core\notification::error(
+                get_string('errorenrolling', 'auth_enrolkey', ['course' => $course->fullname, 'err' => $errmsg])
+            );
         }
 
         // New Enrolkey hook, if configured will redirect the user based on the enrolkey used.

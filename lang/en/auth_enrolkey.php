@@ -29,7 +29,18 @@ $string['edit_profile'] = 'Edit fields';
 $string['edit_redirect'] = 'Edit URL';
 $string['errorenrolling'] = 'There was an error enrolling in course \'{$a->course}\'. The error message is: {$a->err}';
 $string['label_cohortselect'] = 'Select Cohorts';
+$string['label_cohortselect_help'] = 'Search cohort names and IDs in this field.';
 $string['label_cohortselect_empty'] = 'No cohorts selected';
+$string['label_redirection'] = 'Redirection URL';
+$string['label_redirection_help'] = 'The URL entered here will redirect the user at the end of their self sign-up.<br/>
+This field will accept absolute and relative urls.<br/>
+Please remember to include the initial slash / when using a relative URL.
+<ul>
+<li>Relative: /course/view.php?id=5</li>
+<li>Absolute: http://perhaps.your.intranet/some/page</li>
+</ul>
+
+';
 $string['settings_heading'] = 'General settings';
 $string['settings_content'] = '<p>Enrolment key based self-registration enables a user to create their own account via a \'Create new account\' button on the login page. The user then receives an email containing a secure link to a page where they can confirm their account. Future logins just check the username and password against the stored values in the Moodle database.</p><p>During self-registration if an enrolment key is entered in the enrolment key field then it will proceed to automatically enrol the new user into any course that it matches. The keys are enabled in (Course administration > Users > Enrolment methods > Add method > Self enrolment).</p><p>Note: In addition to enabling the plugin, Enrolment key based self-registration must also be selected from the self registration drop-down menu on the \'Manage authentication\' page.</p>';
 $string['settings_visible_description'] = 'Adds a new form element to the sign-up page for self-registration users. This will be checked against available enrolment keys and enrol the user to the matching courses';
@@ -79,6 +90,9 @@ $string['th_enrolkeyname'] = 'Enrolkey Name';
 $string['th_fullname'] = 'Course Fullname';
 $string['th_profilefields'] = 'Profile Fields';
 $string['th_redirecturl'] = 'Redirection URL';
+$string['title_cohort'] = 'Edit Cohort assignment';
+$string['title_profile'] = 'Edit Profile fields';
+$string['title_redirect'] = 'Edit Redirection URL';
 $string['edit_cohort'] = 'Edit assignment';
 $string['recaptcha'] = 'Adds a visual/audio confirmation form element to the sign-up page for self-registering users. This protects your site against spammers and contributes to a worthwhile cause. See <a href="http://www.google.com/recaptcha">http://www.google.com/recaptcha</a> for more details.';
 $string['recaptcha_key'] = 'Enable reCAPTCHA element';

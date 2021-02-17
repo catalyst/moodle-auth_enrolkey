@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Configure Enrolkey mapping
+ * Configure Enrolkey cohort mapping
  *
  * @package    auth_enrolkey
  * @author     Nicholas Hoobin <nicholashoobin@catalyst-au.net>
@@ -36,6 +36,7 @@ $id = required_param('id', PARAM_INT);
 $baseurl = new moodle_url('/auth/enrolkey/edit_cohort.php', ['id' => $id]);
 
 $PAGE->set_url($baseurl);
+$PAGE->set_title(get_string('title_cohort', 'auth_enrolkey'));
 $output = $PAGE->get_renderer('auth_enrolkey');
 
 $cohortlist = cohort_get_all_cohorts(0, 5000, '');
@@ -80,6 +81,7 @@ if ($form && $form->is_cancelled()) {
 }
 
 echo $output->header();
+echo $output->heading(get_string('title_cohort', 'auth_enrolkey'));
 $form->set_autocomplete_data($records);
 $form->display();
 echo $output->footer();
