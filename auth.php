@@ -182,6 +182,9 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             \core\notification::error(get_string('errorenrolling', 'auth_enrolkey', ['course' => $course->fullname, 'err' => $errmsg]));
         }
 
+        // New Enrolkey hook, if configured will redirect the user based on the enrolkey used.
+        \auth_enrolkey\persistent\enrolkey_redirect_mapping::redirect_during_signup($availableenrolids);
+
         // If no courses found (empty key) go to dashboard.
         if (empty($availableenrolids)) {
             redirect(new moodle_url('/my/'));

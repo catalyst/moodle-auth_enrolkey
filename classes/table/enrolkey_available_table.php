@@ -153,7 +153,24 @@ class enrolkey_available_table extends table_sql implements renderable {
 
         $content = '';
 
-        // TODO: URL Content.
+        $persistent = enrolkey_redirect_mapping::get_record_by_enrolid($row->id);
+        $url = $persistent->get_moodle_url();
+        if ($url != '') {
+            $content .= \html_writer::link($url, $url)
+                . \html_writer::empty_tag('br');
+        }
+
+        $icon = $OUTPUT->render(new \pix_icon('i/edit', ''))
+            . get_string('edit_redirect', 'auth_enrolkey')
+            . \html_writer::empty_tag('br');
+        $editurl = new moodle_url('edit_redirect.php', ['id' => $row->id]);
+        $content .= \html_writer::link($editurl, $icon, array(
+            'class' => 'action-icon edit',
+            'id' => 'admin-enrolkey-redirect-' . $row->id,
+            'data-toggle' => 'tooltip',
+            'data-placement' => 'top',
+            'title' => 'Redirect'
+        ));
 
         return $content;
     }
