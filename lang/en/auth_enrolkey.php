@@ -25,7 +25,22 @@
 $string['cohortsync'] = 'Sync audiences on signup';
 $string['cohortsync_description'] = 'Sync system audiences when a user signs up. This removes the delay from cron running and doing this task. Warning: this may cause the signup process to be slower.';
 $string['description'] = 'This provides Enrolment key based self-registration';
+$string['edit_profile'] = 'Edit fields';
+$string['edit_redirect'] = 'Edit URL';
 $string['errorenrolling'] = 'There was an error enrolling in course \'{$a->course}\'. The error message is: {$a->err}';
+$string['label_cohortselect'] = 'Select Cohorts';
+$string['label_cohortselect_help'] = 'Search cohort names and IDs in this field.';
+$string['label_cohortselect_empty'] = 'No cohorts selected';
+$string['label_redirection'] = 'Redirection URL';
+$string['label_redirection_help'] = 'The URL entered here will redirect the user at the end of their self sign-up.<br/>
+This field will accept absolute and relative urls.<br/>
+Please remember to include the initial slash / when using a relative URL.
+<ul>
+<li>Relative: /course/view.php?id=5</li>
+<li>Absolute: http://perhaps.your.intranet/some/page</li>
+</ul>
+
+';
 $string['settings_heading'] = 'General settings';
 $string['settings_content'] = '<p>Enrolment key based self-registration enables a user to create their own account via a \'Create new account\' button on the login page. The user then receives an email containing a secure link to a page where they can confirm their account. Future logins just check the username and password against the stored values in the Moodle database.</p><p>During self-registration if an enrolment key is entered in the enrolment key field then it will proceed to automatically enrol the new user into any course that it matches. The keys are enabled in (Course administration > Users > Enrolment methods > Add method > Self enrolment).</p><p>Note: In addition to enabling the plugin, Enrolment key based self-registration must also be selected from the self registration drop-down menu on the \'Manage authentication\' page.</p>';
 $string['settings_visible_description'] = 'Adds a new form element to the sign-up page for self-registration users. This will be checked against available enrolment keys and enrol the user to the matching courses';
@@ -45,6 +60,8 @@ $string['signup_failure'] = 'Opps! Something went wrong, and you may not have be
 $string['signup_field_title'] = 'Enrolment key';
 $string['signup_token_invalid'] = 'The enrolment key you have entered is invalid';
 $string['signup_missing'] = 'Missing enrolment key';
+$string['menumanage'] = 'Manage enrolkey cohort rules';
+$string['menusettings'] = 'Enrolkey Settings';
 $string['noemail'] = 'Tried to send you an email but failed!';
 $string['signup_view'] = 'Course enrolment';
 $string['signup_view_message_basic'] = 'You have been enrolled as a {$a->role} into the course \'<a href="{$a->href}">{$a->course}</a>\'';
@@ -68,6 +85,15 @@ course.</li>
 username and password (in the form on this page) to log in
 and access any course you have enrolled in.</li>
 </ol>';
+$string['th_cohorts'] = 'Assigned Cohorts';
+$string['th_enrolkeyname'] = 'Enrolkey Name';
+$string['th_fullname'] = 'Course Fullname';
+$string['th_profilefields'] = 'Profile Fields';
+$string['th_redirecturl'] = 'Redirection URL';
+$string['title_cohort'] = 'Edit Cohort assignment';
+$string['title_profile'] = 'Edit Profile fields';
+$string['title_redirect'] = 'Edit Redirection URL';
+$string['edit_cohort'] = 'Edit assignment';
 $string['recaptcha'] = 'Adds a visual/audio confirmation form element to the sign-up page for self-registering users. This protects your site against spammers and contributes to a worthwhile cause. See <a href="http://www.google.com/recaptcha">http://www.google.com/recaptcha</a> for more details.';
 $string['recaptcha_key'] = 'Enable reCAPTCHA element';
 $string['pluginname'] = 'Enrolment key based self-registration';

@@ -24,10 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-if ($ADMIN->fulltree) {
+if ($hassiteconfig) {
     require_once($CFG->dirroot . '/auth/enrolkey/auth.php');
 
     $options = array(get_string('no'), get_string('yes'));
+
+    $settings->visiblename = get_string('menusettings', 'auth_enrolkey');
 
     $settings->add(new admin_setting_heading('auth_enrolkey_heading', get_string('settings_heading', 'auth_enrolkey'),
             get_string('settings_content', 'auth_enrolkey')));
@@ -60,4 +62,19 @@ if ($ADMIN->fulltree) {
     $authplugin = get_auth_plugin('enrolkey');
     display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields,
             '', true, true, $authplugin->get_custom_user_profile_fields());
+
+    // Create category for Enrolkey.
+    $ADMIN->add('authsettings', new admin_category('auth_enrolkey', get_string('pluginname', 'auth_enrolkey')));
+    // Add settings page toconfigure defaults.
+    $ADMIN->add('auth_enrolkey', $settings);
+    // Clear '$settings' to prevent adding again our site category.
+    $settings = null;
+    // Add options.
+    $ADMIN->add('auth_enrolkey',
+        new admin_externalpage(
+            'auth_enrolkey_manage',
+            get_string('menumanage', 'auth_enrolkey'),
+            new moodle_url($CFG->wwwroot.'/auth/enrolkey/manage.php')
+        )
+    );
 }

@@ -15,17 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information.
+ * Configure Enrolkey mapping
  *
  * @package    auth_enrolkey
- * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
+ * @author     Nicholas Hoobin <nicholashoobin@catalyst-au.net>
+ * @copyright  2021 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
 
-$plugin->version   = 2021021700.03;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->release   = 2021021700.03;        // Match release exactly to version.
-$plugin->requires  = 2014051200;        // Requires this Moodle version. (2.7+)
-$plugin->component = 'auth_enrolkey';      // Full name of the plugin (used for diagnostics).
-$plugin->maturity  = MATURITY_STABLE;
+require_once(__DIR__.'/../../config.php');
+require_once($CFG->libdir.'/adminlib.php');
+
+
+admin_externalpage_setup('auth_enrolkey_manage');
+$baseurl = new moodle_url('/auth/enrolkey/manage.php');
+
+$PAGE->set_url($baseurl);
+$output = $PAGE->get_renderer('auth_enrolkey');
+
+echo $output->header();
+
+$o = $output->render_available_table($baseurl);
+echo $o;
+
+echo $output->footer();

@@ -22,10 +22,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use auth_enrolkey\persistent\enrolkey_cohort_mapping;
+use auth_enrolkey\persistent\enrolkey_profile_mapping;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/auth/enrolkey/auth.php');
+require_once($CFG->dirroot . '/cohort/lib.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
 
 /**
  * Token Authentication tests.
@@ -249,5 +254,93 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $this->assertTrue($DB->record_exists('user', array('id' => $user3->id)));
         $this->assertFalse(is_enrolled($context, $user3, ''));
         $this->assertFalse(groups_is_member($group->id, $user3->id));
+    }
+
+    public function test_add_cohorts_during_signup() {
+        $this->resetAfterTest(true);
+        global $DB;
+
+        // Setup the cohort data structure.
+        $cohort = new stdClass();
+        $cohort->contextid = context_system::instance()->id;
+        $cohort->name = 'test cohort';
+        $cohort->idnumber = 'testid';
+        $cohort->description = 'test cohort desc';
+        $cohort->descriptionformat = FORMAT_HTML;
+        $cohortid = cohort_add_cohort($cohort);
+        $this->assertNotEmpty($cohortid);
+
+        // Build the persistent to use with cohort mapping.
+        $cdata = [
+            'enrolid' => 1,
+            'cohortid' => $cohortid
+        ];
+        $cohortmapping = new enrolkey_cohort_mapping(0, (object) $cdata);
+        $cohortmapping->save();
+        $this->assertTrue($DB->record_exists('auth_enrolkey_cohort', $cdata));
+
+        $user1 = $this->getDataGenerator()->create_user();
+
+        $availableenrolids = [1];
+        enrolkey_cohort_mapping::add_cohorts_during_signup($user1, $availableenrolids);
+
+        $this->assertTrue($DB->record_exists('cohort_members', ['cohortid' => $cohort->id, 'userid' => $user1->id]));
+    }
+
+    public function test_add_fields_during_signup() {
+        $this->resetAfterTest(true);
+        global $DB;
+
+        // Create user info fields.
+        if (!$DB->record_exists('user_info_category', array())) {
+            // Copied from user/profile/index.php.
+            $defaultcategory = new stdClass();
+            $defaultcategory->name = 'Default category';
+            $defaultcategory->sortorder = 1;
+
+            $DB->insert_record('user_info_category', $defaultcategory);
+        }
+
+        $field = [
+            'shortname' => 'test1',
+            'name' => 'test field 1',
+            'categoryid' => 1,
+            'datatype' => 'text'
+        ];
+        $DB->insert_record('user_info_field', (object) $field);
+
+        // Build the persistent to use with cohort mapping.
+        $pdata = [
+            'enrolid' => 1,
+            'profilefieldname' => 'profile_field_test1',
+            'profilefielddata' => 'this is a string'
+        ];
+        $fieldmapping = new enrolkey_profile_mapping(0, (object) $pdata);
+        $fieldmapping->save();
+
+        $select = $DB->sql_compare_text('profilefieldname') . ' = ' . $DB->sql_compare_text(':profilefieldname');
+        $select .= ' AND ' . $DB->sql_compare_text('profilefielddata') . ' = ' . $DB->sql_compare_text(':profilefielddata');
+        $this->assertTrue($DB->record_exists_select('auth_enrolkey_profile', $select, $pdata));
+
+        $user1 = $this->getDataGenerator()->create_user();
+        $user1->profile_field_test1 = 'this data is force overwritten';
+        profile_save_data($user1, true);
+
+        $availableenrolids = [1];
+        enrolkey_profile_mapping::add_fields_during_signup($user1, $availableenrolids);
+
+        // Obtain the fieldid reference.
+        $field = $DB->get_record('user_info_field', ['shortname' => 'test1']);
+        $params = [
+            'fieldid' => $field->id,
+            'userid' => $user1->id,
+            'data' => 'this is a string'
+        ];
+
+        // Check to see if the data is saved.
+        $select = $DB->sql_compare_text('data') . ' = ' . $DB->sql_compare_text(':data');
+        $select .= ' AND fieldid = :fieldid';
+        $select .= ' AND userid = :userid';
+        $this->assertTrue($DB->record_exists_select('user_info_data', $select, $params));
     }
 }
