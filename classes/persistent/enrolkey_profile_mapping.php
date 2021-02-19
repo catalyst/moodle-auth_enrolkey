@@ -122,20 +122,37 @@ class enrolkey_profile_mapping extends persistent {
         $shortname = str_replace('profile_field_', '', $key);
 
         $select = $DB->sql_compare_text('shortname') . ' = ' . $DB->sql_compare_text(':shortname');
-        $select .= ' AND ' . $DB->sql_compare_text('datatype') . ' = ' . $DB->sql_compare_text(':datatype');
+        $select .= ' AND (' . $DB->sql_compare_text('datatype') . ' = ' . $DB->sql_compare_text(':datatype1');
+        $select .= ' OR ' . $DB->sql_compare_text('datatype') . ' = ' . $DB->sql_compare_text(':datatype2') . ')';
         $params = [
             'shortname' => $shortname,
-            'datatype' => 'menu'
+            'datatype1' => 'menu',
+            'datatype2' => 'branching'
         ];
 
         $record = $DB->get_record_select('user_info_field', $select, $params);
 
         if ($record) {
-            // The param1 is a \n delimited list of dropdown choices.
-            $values = explode("\n", $record->param1);
+
+            $values = '';
+            switch ($record->datatype) {
+                case 'menu':
+                    // The param1 is a \n delimited list of dropdown choices.
+                    $values = explode("\n", $record->param1);
+                    break;
+
+                case 'branching':
+                    $values = explode("<br />", $record->param2);
+                    break;
+
+                default:
+                    break;
+            }
+
             if (array_key_exists((int)$value, $values)) {
                 return $values[$value];
             }
+
         }
 
         // Else.
