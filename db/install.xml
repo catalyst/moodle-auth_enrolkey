@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="auth_enrolkey_redirect" COMMENT="">
+    <TABLE NAME="auth_enrolkey_redirect" COMMENT="auth_enrolkey_redirect">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="usermodified" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
@@ -18,7 +18,7 @@
         <KEY NAME="usermodified_key" TYPE="foreign" FIELDS="usermodified" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="auth_enrolkey_profile" COMMENT="">
+    <TABLE NAME="auth_enrolkey_profile" COMMENT="auth_enrolkey_profile">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="usermodified" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
@@ -33,7 +33,7 @@
         <KEY NAME="usermodified_key" TYPE="foreign" FIELDS="usermodified" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="auth_enrolkey_cohort" COMMENT="">
+    <TABLE NAME="auth_enrolkey_cohort" COMMENT="auth_enrolkey_cohort">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="usermodified" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="false"/>
