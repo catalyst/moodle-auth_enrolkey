@@ -89,7 +89,10 @@ class enrolkey_profile_mapping extends persistent {
                 $field = $persistent->get('profilefieldname');
                 $data = $persistent->get_readable_value();
 
-                $user->$field = $data;
+                // Prevent saving null data to the profile fields.
+                if (!is_null($data)) {
+                    $user->$field = $data;
+                }
             }
 
             // Do it.
