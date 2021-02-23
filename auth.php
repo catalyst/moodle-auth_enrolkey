@@ -63,6 +63,33 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         return false;
     }
 
+    public function pre_user_login_hook(&$user) {
+        global $CFG;
+
+        // Password is passed via the login.php page.
+        $password = optional_param('password', '', PARAM_RAW);
+        $valid = validate_internal_user_password($user, $password);
+
+        if ($user->auth != $this->authtype) {
+            return;
+        }
+
+        if (!empty($user->suspended)) {
+            $failurereason = AUTH_LOGIN_SUSPENDED;
+
+            // Trigger login failed event.
+            $event = \core\event\user_login_failed::create(array('userid' => $user->id,
+                'other' => array('username' => $user->username, 'reason' => $failurereason)));
+            $event->trigger();
+            error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Suspended Login:  $user->username  ".$_SERVER['HTTP_USER_AGENT']);
+
+            // Oh no. This user is suspended, but the password is all good. Lets take them to a self un-suspend page.
+            if ($valid) {
+                redirect(new moodle_url('/auth/enrolkey/unsuspend.php', ['sesskey' => sesskey()]));
+            }
+        }
+    }
+
     /**
      * Method for changing password in the system
      *
