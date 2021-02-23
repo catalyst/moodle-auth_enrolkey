@@ -83,6 +83,14 @@ class enrolkey_profile_mapping extends persistent {
      * @param $availableenrolids
      */
     public static function add_fields_during_signup($user, $availableenrolids) {
+        // Obtain the existing user profile fields.
+        $userfields = (array) profile_user_record($user->id);
+
+        foreach ($userfields as $field => $value) {
+            $key = 'profile_field_' . $field;
+            $user->$key = $value;
+        }
+
         foreach ($availableenrolids as $enid) {
             $records = self::get_records_by_enrolid($enid);
             foreach ($records as $persistent) {
@@ -95,10 +103,10 @@ class enrolkey_profile_mapping extends persistent {
                 }
             }
 
-            // Do it.
-            profile_save_data($user, true);
         }
 
+        // Do it.
+        profile_save_data($user, true);
     }
 
     /**

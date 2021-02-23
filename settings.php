@@ -42,10 +42,15 @@ if ($hassiteconfig) {
             get_string('recaptcha_key', 'auth_enrolkey'),
             get_string('recaptcha', 'auth_enrolkey'), 0, $options));
 
-    $options[] = get_string('settings_partial', 'auth_enrolkey');
+    $optionspartial = $options;
+    $optionspartial[] = get_string('settings_partial', 'auth_enrolkey');
     $settings->add(new admin_setting_configselect('auth_enrolkey/emailconfirmation',
             get_string('settings_email_title', 'auth_enrolkey'),
-            get_string('settings_email_description', 'auth_enrolkey'), 0, $options));
+            get_string('settings_email_description', 'auth_enrolkey'), 0, $optionspartial));
+
+    $settings->add(new admin_setting_configselect('auth_enrolkey/unsuspendaccounts',
+        get_string('unsuspendaccounts', 'auth_enrolkey'),
+        get_string('unsuspendaccounts_description', 'auth_enrolkey'), 0, $options));
 
     if (function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
         $settings->add(new admin_setting_configcheckbox('auth_enrolkey/totaracohortsync',
