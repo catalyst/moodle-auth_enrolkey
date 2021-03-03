@@ -106,8 +106,7 @@ class enrolkey_signup_form extends \login_signup_form {
             }
         }
 
-        $suspended = utility::search_for_suspended_user($data);
-        if ($suspended) {
+        if (get_config('auth_enrolkey', 'unsuspendaccounts') && utility::search_for_suspended_user($data)) {
 
             $stringdata = (object) ['href' => (new moodle_url('/auth/enrolkey/unsuspend.php'))->out()];
             if (empty($CFG->createuserwithemail)) {
