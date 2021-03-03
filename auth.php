@@ -85,7 +85,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
 
             // Oh no. This user is suspended, but the password is all good. Lets take them to a self un-suspend page.
             if ($valid) {
-                redirect(new moodle_url('/auth/enrolkey/unsuspend.php', ['sesskey' => sesskey()]));
+                redirect(new moodle_url('/auth/enrolkey/unsuspend.php'));
             }
         }
     }
