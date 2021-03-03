@@ -81,7 +81,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             $event = \core\event\user_login_failed::create(array('userid' => $user->id,
                 'other' => array('username' => $user->username, 'reason' => $failurereason)));
             $event->trigger();
-            error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Suspended Login:  $user->username  ".$_SERVER['HTTP_USER_AGENT']);
 
             // Oh no. This user is suspended, but the password is all good. Lets take them to a self un-suspend page.
             if ($valid) {

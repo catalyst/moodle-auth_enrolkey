@@ -86,7 +86,6 @@ if ($form->is_cancelled()) {
 
         } catch (Exception $e) {
             require_logout();
-            error_log('auth_enrolkey expection:' . $e->getMessage());
         }
 
     }
