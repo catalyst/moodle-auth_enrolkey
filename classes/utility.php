@@ -24,6 +24,8 @@
 
 namespace auth_enrolkey;
 
+use moodle_database;
+
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -81,5 +83,120 @@ class utility {
         }
 
         return false;
+    }
+
+    /**
+     * @param string $enrolkey
+     * @param bool $checkuserenrolment
+     * @return array
+     */
+    public static function unsuspend_and_enrol_user(string $enrolkey, bool $checkuserenrolment = true) : array {
+        global $DB;
+
+        /** @var enrol_self_plugin $enrol */
+        $enrol = enrol_get_plugin('self');
+        $enrolplugins = self::get_enrol_plugins($DB, $enrolkey);
+        $availableenrolids = [];
+        $errors = [];
+        foreach ($enrolplugins as $enrolplugin) {
+            if (self::can_self_enrol($enrolplugin, $checkuserenrolment) === true) {
+                $data = new \stdClass();
+                $data->enrolpassword = $enrolplugin->enrolmentkey ?? $enrolplugin->password;
+                $enrol->enrol_self($enrolplugin, $data);
+                $availableenrolids[] = $enrolplugin->id;
+            } else {
+                // Store error to output.
+                $errors[$enrolplugin->courseid] = $enrol->can_self_enrol($enrolplugin);
+            }
+        }
+        return [$availableenrolids, $errors];
+    }
+
+    /**
+     * @param moodle_database $db
+     * @param string $enrolkey
+     * @return array
+     */
+    public static function get_enrol_plugins(moodle_database $db, string $enrolkey) : array {
+        // Password is the Enrolment key that is specified in the Self enrolment instance.
+        $enrolplugins = $db->get_records('enrol', ['enrol' => 'self', 'password' => $enrolkey]);
+
+        return array_merge($enrolplugins, $db->get_records_sql("
+                SELECT e.*, g.enrolmentkey
+                  FROM {groups} g
+                  JOIN {enrol} e ON e.courseid = g.courseid
+                                AND e.enrol = 'self'
+                                AND e.customint1 = 1
+                 WHERE g.enrolmentkey = ?
+            ", [$enrolkey]));
+    }
+
+    /**
+     * Checks if user can self enrol. Copied from enrol/self/lib.php. Modified to remove the check if user is already enroled
+     *
+     * @param \stdClass $instance enrolment instance
+     * @param bool $checkuserenrolment if true will check if user enrolment is inactive.
+     *             used by navigation to improve performance.
+     * @return bool|string true if successful, else error message or false.
+     */
+    public static function can_self_enrol(\stdClass $instance, $checkuserenrolment = true) {
+        global $CFG, $DB, $USER;
+
+        if ($checkuserenrolment) {
+            if (isguestuser() || !isloggedin()) {
+                // Can not enrol guests or unauthenticated users.
+                return get_string('noguestaccess', 'enrol') . ' ' . html_writer::link(get_login_url(), get_string('login', 'core'), array('class' => 'btn btn-default'));
+            }
+            // Check if user is already enroled.
+            if ($DB->get_record('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
+                return get_string('canntenrol', 'enrol_self');
+            }
+        }
+
+        if ($instance->status != ENROL_INSTANCE_ENABLED) {
+            return get_string('canntenrol', 'enrol_self');
+        }
+
+        if ($instance->enrolstartdate != 0 and $instance->enrolstartdate > time()) {
+            return get_string('canntenrolearly', 'enrol_self', userdate($instance->enrolstartdate));
+        }
+
+        if ($instance->enrolenddate != 0 and $instance->enrolenddate < time()) {
+            return get_string('canntenrollate', 'enrol_self', userdate($instance->enrolenddate));
+        }
+
+        if (!$instance->customint6) {
+            // New enrols not allowed.
+            return get_string('canntenrol', 'enrol_self');
+        }
+
+        if ($checkuserenrolment) {
+            if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
+                return get_string('canntenrol', 'enrol_self');
+            }
+        }
+
+        if ($instance->customint3 > 0) {
+            // Max enrol limit specified.
+            $count = $DB->count_records('user_enrolments', array('enrolid' => $instance->id));
+            if ($count >= $instance->customint3) {
+                // Bad luck, no more self enrolments here.
+                return get_string('maxenrolledreached', 'enrol_self');
+            }
+        }
+
+        if ($instance->customint5) {
+            require_once("$CFG->dirroot/cohort/lib.php");
+            if (!cohort_is_member($instance->customint5, $USER->id)) {
+                $cohort = $DB->get_record('cohort', array('id' => $instance->customint5));
+                if (!$cohort) {
+                    return null;
+                }
+                $a = format_string($cohort->name, true, array('context' => context::instance_by_id($cohort->contextid)));
+                return markdown_to_html(get_string('cohortnonmemberinfo', 'enrol_self', $a));
+            }
+        }
+
+        return true;
     }
 }

@@ -34,7 +34,7 @@ $context = context_system::instance();
 $baseurl = new moodle_url('/auth/enrolkey/unsuspend.php');
 
 if (!get_config('auth_enrolkey', 'unsuspendaccounts') || isloggedin()) {
-    redirect(new moodle_url('/'));;
+    redirect(new moodle_url('/'));
 }
 
 $PAGE->set_url($baseurl);
@@ -62,13 +62,11 @@ if ($form->is_cancelled()) {
 
     if ($valid) {
 
-        $auth = get_auth_plugin('enrolkey');
-
         // Setting the userid can imitate logging in. Be careful with this.
-        // This is used with the can_enrol_user() call.
+        // This is used with the enrol_self() call.
         $USER->id = $user->id;
         try {
-            list($availableenrolids, $errors) = $auth->enrol_user($data->signup_token);
+            list($availableenrolids, $errors) = utility::unsuspend_and_enrol_user($data->signup_token, false);
 
             // Only enrol a user to enrolkeys and courses which they are not already enrolled in.
             if ($availableenrolids) {
@@ -87,6 +85,7 @@ if ($form->is_cancelled()) {
             }
 
         } catch (Exception $e) {
+            require_logout();
             error_log('auth_enrolkey expection:' . $e->getMessage());
         }
 
