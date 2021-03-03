@@ -61,16 +61,18 @@ if ($form->is_cancelled()) {
     }
 
     if ($valid) {
-        // We must log the user in to the $USER object for enrolling them, or call the can_self_enrol() function.
-        complete_user_login($user);
 
         $auth = get_auth_plugin('enrolkey');
 
+        // Setting the userid can imitate logging in. Be careful with this.
+        // This is used with the can_enrol_user() call.
+        $USER->id = $user->id;
         try {
             list($availableenrolids, $errors) = $auth->enrol_user($data->signup_token);
 
             // Only enrol a user to enrolkeys and courses which they are not already enrolled in.
             if ($availableenrolids) {
+                complete_user_login($user);
                 utility::unsuspend_user($user);
 
                 // They are now unsuspended. We can actually called the real auth login function.
@@ -88,9 +90,9 @@ if ($form->is_cancelled()) {
             error_log('auth_enrolkey expection:' . $e->getMessage());
         }
 
-        // Well, something messed up. Lets not let the user in.
-        require_logout();
     }
+    // Well, we're not really logged in at all.
+    $USER->id = 0;
 }
 
 echo $output->header();
