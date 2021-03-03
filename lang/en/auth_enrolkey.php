@@ -87,6 +87,7 @@ course.</li>
 username and password (in the form on this page) to log in
 and access any course you have enrolled in.</li>
 </ol>';
+$string['suspendeduseratsignup'] = '<br />Perhaps your account exists but was suspended? <a href="{$a->href}">Please sign up with a new enrolkey here</a>';
 $string['th_cohorts'] = 'Assigned cohorts';
 $string['th_enrolkeyname'] = 'Enrolkey name';
 $string['th_fullname'] = 'Course fullname';
