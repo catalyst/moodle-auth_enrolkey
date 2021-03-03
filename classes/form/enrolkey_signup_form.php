@@ -32,6 +32,9 @@
  */
 namespace auth_enrolkey\form;
 
+use auth_enrolkey\utility;
+use moodle_url;
+
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/login/signup_form.php');
@@ -82,6 +85,8 @@ class enrolkey_signup_form extends \login_signup_form {
      *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
     public function validation($data, $files) {
+        global $CFG;
+
         $errors = parent::validation($data, $files);
 
         $signuptoken = $data['signup_token'];
@@ -98,6 +103,17 @@ class enrolkey_signup_form extends \login_signup_form {
             // The form submission is an empty string, double check if the token is required.
             if ($this->signup_token_required()) {
                 $errors['signup_token'] = get_string('signup_missing', 'auth_enrolkey');
+            }
+        }
+
+        $suspended = utility::search_for_suspended_user($data);
+        if ($suspended) {
+
+            $stringdata = (object) ['href' => (new moodle_url('/auth/enrolkey/unsuspend.php'))->out()];
+            if (empty($CFG->createuserwithemail)) {
+                $errors['username'] = $errors['username'] . get_string('suspendeduseratsignup', 'auth_enrolkey', $stringdata);
+            } else {
+                $errors['email'] = $errors['email' ] . get_string('suspendeduseratsignup', 'auth_enrolkey', $stringdata);
             }
         }
 
