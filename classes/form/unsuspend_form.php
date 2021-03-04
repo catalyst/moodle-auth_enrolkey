@@ -15,31 +15,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Signup form that provides additional enrolment key field.
+ * Form which will unsuspend users with valid enrolkeys.
  *
  * @package    auth_enrolkey
- * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
+ * @copyright  2021 Nicholas Hoobin <nicholashoobin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * A new signup form that extends login_signup_form.
+ * Form which will unsuspend users with valid enrolkeys.
  *
  * This provides an additional enrolment key field that will be validated upon signup.
  *
- * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
+ * @copyright  2021 Nicholas Hoobin <nicholashoobin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace auth_enrolkey\form;
 
 use auth_enrolkey\utility;
-use moodle_url;
+use core_user;
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot . '/login/signup_form.php');
-
-class enrolkey_signup_form extends \login_signup_form {
+class unsuspend_form extends \moodleform {
 
     /**
      * Creates the Moodle singup form, calls parent::definition();
@@ -47,37 +45,51 @@ class enrolkey_signup_form extends \login_signup_form {
     public function definition() {
         global $CFG;
 
-        // Generates the default signup form.
-        parent::definition();
-
         $mform = $this->_form;
 
-        $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
+        $mform->addElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
 
-        // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
         $mform->setType('signup_token', PARAM_TEXT);
         $token = optional_param('signup_token', '', PARAM_TEXT);
         if (!empty($token)) {
             $mform->setDefault('signup_token', $token);
         }
 
-        // Make the course token field visible earlier.
-        $mform->insertElementBefore($element, 'email');
+        $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'client');
 
-        if ($this->signup_token_required()) {
-            $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'client');
+        if (empty($CFG->createuserwithemail)) {
+            $mform->addElement('text', 'username', get_string('username'), 'maxlength="100" size="12" autocapitalize="none"');
+            $mform->setType('username', PARAM_RAW);
+            $mform->addRule('username', get_string('missingusername'), 'required', null, 'client');
+        } else {
+            $mform->addElement('text', 'email', get_string('email'), 'maxlength="100" size="25"');
+            $mform->setType('email', core_user::get_property_type('email'));
+            $mform->addRule('email', get_string('missingemail'), 'required', null, 'client');
+            $mform->setForceLtr('email');
         }
 
-        if ($this->signup_captcha_enabled()) {
-            $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'));
-            $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
-            $mform->closeHeaderBefore('recaptcha_element');
+        $mform->addElement('passwordunmask', 'password', get_string('password'), 'size="12"');
+        $mform->setType('password', core_user::get_property_type('password'));
+        $mform->addRule('password', get_string('missingpassword'), 'required', null, 'client');
+
+        if (empty($CFG->createuserwithemail)) {
+            $mform->addElement('text', 'email', get_string('email'), 'maxlength="100" size="25"');
+            $mform->setType('email', core_user::get_property_type('email'));
+            $mform->addRule('email', get_string('missingemail'), 'required', null, 'client');
+            $mform->setForceLtr('email');
+
+            $mform->addElement('text', 'email2', get_string('emailagain'), 'maxlength="100" size="25"');
+            $mform->setType('email2', core_user::get_property_type('email'));
+            $mform->addRule('email2', get_string('missingemail'), 'required', null, 'client');
+            $mform->setForceLtr('email2');
         }
+
+        $this->add_action_buttons(true, get_string('enrolkeyuse', 'auth_enrolkey'));
     }
 
     /**
      * Returns an array with fields that are invalid during signup.
-     * This is used in /login/signup.php.
+     * This is used in /auth/enrolkey/unsuspend.php.
      *
      * @param array $data array of ("fieldname"=>value) of submitted data
      * @param array $files array of uploaded files "element_name"=>tmp_file_path
@@ -85,11 +97,10 @@ class enrolkey_signup_form extends \login_signup_form {
      *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
     public function validation($data, $files) {
-        global $CFG;
-
         $errors = parent::validation($data, $files);
 
         $signuptoken = $data['signup_token'];
+        $tokenisvalid = false;
 
         if ($signuptoken !== '') {
             // For any case where the token is populated, perform a lookup.
@@ -106,16 +117,42 @@ class enrolkey_signup_form extends \login_signup_form {
             }
         }
 
-        if (get_config('auth_enrolkey', 'unsuspendaccounts') && utility::search_for_suspended_user($data)) {
+        // This is the check to un-suspend users. This user must exist, be suspended, and not deleted.
+        // With a valid enrolkey token, and a user that exists, we will bypass the username/email form validation errors.
+        // The next major function which is called will be auth_enrolkey user_signup().
+        if ($tokenisvalid && get_config('auth_enrolkey', 'unsuspendaccounts')) {
+            $errors = $this->check_for_suspended_user_with_post_data($data, $errors);
+        }
 
-            $stringdata = (object) ['href' => (new moodle_url('/auth/enrolkey/unsuspend.php'))->out()];
+        return $errors;
+    }
+
+    /**
+     * During the user signup page, the POST data for username and email is compared to the DB.
+     *
+     * @param $data
+     * @param $errors
+     * @return array
+     */
+    private function check_for_suspended_user_with_post_data($data, $errors) {
+        global $CFG;
+
+        $user = utility::search_for_suspended_user($data);
+        // A user exists with the same email and username.
+        if (!$user) {
             if (empty($CFG->createuserwithemail)) {
-                $errors['username'] = $errors['username'] . get_string('suspendeduseratsignup', 'auth_enrolkey', $stringdata);
+                $errors['username'] = get_string('invalidusername');
             } else {
-                $errors['email'] = $errors['email' ] . get_string('suspendeduseratsignup', 'auth_enrolkey', $stringdata);
+                $errors['email'] = get_string('invalidemail');
             }
         }
 
+        if (!validate_internal_user_password($user, $data['password'])) {
+            // Fail internal mform validation. Do not prompt an issue with the password.
+            $errors['non_element00'] = 'invalid';
+        }
+
+        // Else can't sign up, whatever $errors is returning will fail. eg, the same username, or email.
         return $errors;
     }
 
@@ -158,22 +195,4 @@ class enrolkey_signup_form extends \login_signup_form {
 
         return $selfenrolinstance;
     }
-
-    /**
-     * Returns if the enrolment key field is required.
-     * @return bool
-     */
-    public function signup_token_required() {
-        return get_config('auth_enrolkey', 'tokenrequired');
-    }
-
-    /**
-     * Returns whether or not the captcha element is enabled, and the admin settings fulfil its requirements.
-     * @return bool
-     */
-    public function signup_captcha_enabled() {
-        global $CFG;
-        return !empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey) && get_config('auth_enrolkey', 'recaptcha');
-    }
-
 }
