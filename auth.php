@@ -66,6 +66,11 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     public function pre_user_login_hook(&$user) {
         global $CFG;
 
+        if (!get_config('auth_enrolkey', 'unsuspendaccounts')) {
+            // The option to unsuspend is not enabled. Do not redirect.
+            return;
+        }
+
         // Password is passed via the login.php page.
         $password = optional_param('password', '', PARAM_RAW);
         $valid = validate_internal_user_password($user, $password);
