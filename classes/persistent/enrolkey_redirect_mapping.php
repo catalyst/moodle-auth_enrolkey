@@ -74,8 +74,7 @@ class enrolkey_redirect_mapping extends persistent {
     /**
      * During auth.php->user_signup, this redirects the user to a specified url.
      *
-     * @param $user
-     * @param $availableenrolids
+     * @param array $availableenrolids
      */
     public static function redirect_during_signup($availableenrolids) {
         // TODO: Redirect weight.

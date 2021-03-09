@@ -37,6 +37,13 @@ use core_user;
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * Class for the unsuspend form.
+ *
+ * @package    auth_enrolkey
+ * @copyright  2021 Nicholas Hoobin <nicholashoobin@catalyst-au.net>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class unsuspend_form extends \moodleform {
 
     /**
@@ -130,8 +137,8 @@ class unsuspend_form extends \moodleform {
     /**
      * During the user signup page, the POST data for username and email is compared to the DB.
      *
-     * @param $data
-     * @param $errors
+     * @param array $data
+     * @param array $errors
      * @return array
      */
     private function check_for_suspended_user_with_post_data($data, $errors) {
@@ -159,7 +166,7 @@ class unsuspend_form extends \moodleform {
     /**
      * Checks the enrolment records for any matching self enrolment key.
      *
-     * @param $token Returns true on success. False on failure.
+     * @param string $token Returns true on success. False on failure.
      * @return bool
      */
     private function check_database_for_signuptoken($token) {

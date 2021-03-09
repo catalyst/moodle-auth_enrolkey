@@ -24,6 +24,7 @@
 
 namespace auth_enrolkey\form;
 
+use core\persistent;
 use core_user;
 
 defined('MOODLE_INTERNAL') || die();
@@ -117,7 +118,7 @@ class enrolkey_profile_form extends \moodleform {
     /**
      * Helper function to set the form fields.
      *
-     * @param $currentdata
+     * @param persistent[] $currentdata
      */
     public function set_autocomplete_data($currentdata) {
         $toset = [];

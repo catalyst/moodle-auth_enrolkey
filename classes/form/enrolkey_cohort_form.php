@@ -24,6 +24,8 @@
 
 namespace auth_enrolkey\form;
 
+use core\persistent;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/formslib.php');
@@ -62,7 +64,7 @@ class enrolkey_cohort_form extends \moodleform {
     /**
      * Helper function to set the form fields.
      *
-     * @param $currentdata
+     * @param persistent[] $currentdata
      */
     public function set_autocomplete_data($currentdata) {
         $list = [];

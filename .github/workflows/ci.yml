@@ -2,11 +2,7 @@ name: Moodle plugin CI for VERSION3
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
-on:
-  push:
-    branches: [ VERSION3 ]
-  pull_request:
-    branches: [ VERSION3 ]
+on: push
 
 jobs:
   citest:
@@ -43,11 +39,20 @@ jobs:
       fail-fast: false
       matrix:
         database: ['pgsql', 'mariadb']
-        moodle-branch: ['MOODLE_310_STABLE', 'MOODLE_311_STABLE', 'master']
+        moodle-branch: ['MOODLE_39_STABLE', 'MOODLE_38_STABLE', 'MOODLE_37_STABLE']
         node: ['14.15.1']
-        php: ['7.3', '7.4']
-        exclude:
-          - {database: 'mariadb', moodle-branch: 'MOODLE_310_STABLE', node: '14.15.1', php: '7.4'}
+        php: ['7.2', '7.3']
+        include:
+          - {moodle-branch: 'MOODLE_35_STABLE', php: '7.1', node: '14.15.1', database: 'mariadb'}
+          - {moodle-branch: 'MOODLE_35_STABLE', php: '7.2', node: '14.15.1', database: 'mariadb'}
+          - {moodle-branch: 'MOODLE_37_STABLE', php: '7.1', node: '14.15.1', database: 'mariadb'}
+          - {moodle-branch: 'MOODLE_37_STABLE', php: '7.1', node: '14.15.1', database: 'pgsql'}
+          - {moodle-branch: 'MOODLE_38_STABLE', php: '7.1', node: '14.15.1', database: 'mariadb'}
+          - {moodle-branch: 'MOODLE_38_STABLE', php: '7.1', node: '14.15.1', database: 'pgsql'}
+          - {moodle-branch: 'MOODLE_38_STABLE', php: '7.4', node: '14.15.1', database: 'mariadb'}
+          - {moodle-branch: 'MOODLE_38_STABLE', php: '7.4', node: '14.15.1', database: 'pgsql'}
+          - {moodle-branch: 'MOODLE_39_STABLE', php: '7.4', node: '14.15.1', database: 'mariadb'}
+          - {moodle-branch: 'MOODLE_39_STABLE', php: '7.4', node: '14.15.1', database: 'pgsql'}
 
     steps:
       - name: Check out repository code

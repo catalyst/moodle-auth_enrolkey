@@ -39,6 +39,13 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/login/signup_form.php');
 
+/**
+ * Class for the enrolkey signup form.
+ *
+ * @package    auth_enrolkey
+ * @copyright  2021 Nicholas Hoobin <nicholashoobin@catalyst-au.net>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class enrolkey_signup_form extends \login_signup_form {
 
     /**
@@ -122,7 +129,7 @@ class enrolkey_signup_form extends \login_signup_form {
     /**
      * Checks the enrolment records for any matching self enrolment key.
      *
-     * @param $token Returns true on success. False on failure.
+     * @param string $token Returns true on success. False on failure.
      * @return bool
      */
     private function check_database_for_signuptoken($token) {

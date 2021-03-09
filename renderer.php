@@ -34,6 +34,8 @@ defined('MOODLE_INTERNAL') || die;
 class auth_enrolkey_renderer extends plugin_renderer_base {
 
     /**
+     * Render the signup form.
+     *
      * @param  login_signup_form $form
      * @return bool|string
      * @throws moodle_exception

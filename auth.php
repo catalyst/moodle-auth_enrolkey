@@ -63,9 +63,13 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         return false;
     }
 
+    /**
+     * Moodle hook 'pre_user_login_hook'.
+     *
+     * @param object $user
+     * @throws coding_exception
+     */
     public function pre_user_login_hook(&$user) {
-        global $CFG;
-
         if (!get_config('auth_enrolkey', 'unsuspendaccounts')) {
             // The option to unsuspend is not enabled. Do not redirect.
             return;
@@ -96,7 +100,9 @@ class auth_plugin_enrolkey extends auth_plugin_base {
 
     /**
      * Method for changing password in the system
-     *
+     * @param stdClass $user
+     * @param string $newpassword
+     * @return bool
      */
     public function user_update_password($user, $newpassword) {
         $user = get_complete_user_data('id', $user->id);
@@ -233,11 +239,10 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     }
 
     /**
+     * Enrols a $USER with valid a $enrolkey
      * @param string $enrolkey
      * @param bool $notify
      * @return array
-     * @throws dml_exception
-     * @throws moodle_exception
      */
     public function enrol_user(string $enrolkey, bool $notify = true) : array {
         global $DB;
@@ -328,6 +333,8 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     }
 
     /**
+     * Returns user to a logout page with notice for email confirmation.
+     *
      * @param string $email
      * @throws coding_exception
      */
@@ -344,10 +351,11 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     }
 
     /**
+     * Obtains a list of enrolment plugins which use the enrolkey.
+     *
      * @param moodle_database $db
      * @param string $enrolkey
      * @return array
-     * @throws dml_exception
      */
     private function get_enrol_plugins(moodle_database $db, string $enrolkey) : array {
         // Password is the Enrolment key that is specified in the Self enrolment instance.

@@ -40,7 +40,7 @@ class utility {
     /**
      * Find the username / email combination of a user that is, not deleted, but suspended.
      *
-     * @param $data
+     * @param array $data
      * @return \stdClass|bool The user record, or false.
      */
     public static function search_for_suspended_user($data) {
@@ -72,7 +72,7 @@ class utility {
     /**
      * Given a $user object, this will unsuspend them.
      *
-     * @param $user
+     * @param stdClass $user
      * @return bool Returns true if the user is unsuspended.
      */
     public static function unsuspend_user($user) {
@@ -86,6 +86,8 @@ class utility {
     }
 
     /**
+     * Unsuspends the and enrols the $USER with the $enrolkey
+     *
      * @param string $enrolkey
      * @param bool $checkuserenrolment
      * @return array
@@ -113,6 +115,8 @@ class utility {
     }
 
     /**
+     * Returns the list of enrolkey plugins which use the $enrolkey
+     *
      * @param moodle_database $db
      * @param string $enrolkey
      * @return array
