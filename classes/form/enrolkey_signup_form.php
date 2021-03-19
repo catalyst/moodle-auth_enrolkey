@@ -32,20 +32,11 @@
  */
 namespace auth_enrolkey\form;
 
-use auth_enrolkey\utility;
-use moodle_url;
-
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/login/signup_form.php');
 
-/**
- * Class for the enrolkey signup form.
- *
- * @package    auth_enrolkey
- * @copyright  2021 Nicholas Hoobin <nicholashoobin@catalyst-au.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+
 class enrolkey_signup_form extends \login_signup_form {
 
     /**
@@ -53,26 +44,27 @@ class enrolkey_signup_form extends \login_signup_form {
      */
     public function definition() {
         global $CFG;
+        global $PAGE;
+        $PAGE->requires->js('/auth/enrolkey/js/enrolkey_signup_form.js');
 
         // Generates the default signup form.
         parent::definition();
 
         $mform = $this->_form;
 
-        $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
+        //Field "course enrolment token":
+        if(get_config('auth_enrolkey', 'tokenrequired')) {
+            $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
 
-        // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
-        $mform->setType('signup_token', PARAM_TEXT);
-        $token = optional_param('signup_token', '', PARAM_TEXT);
-        if (!empty($token)) {
-            $mform->setDefault('signup_token', $token);
-        }
+            // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
+            $mform->setType('signup_token', PARAM_TEXT);
 
-        // Make the course token field visible earlier.
-        $mform->insertElementBefore($element, 'email');
+            // Make the course token field visible earlier.
+            $mform->insertElementBefore($element, 'email');
 
-        if ($this->signup_token_required()) {
-            $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'client');
+            if ($this->signup_token_required()) {
+                $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'server');
+            }
         }
 
         if ($this->signup_captcha_enabled()) {
@@ -80,6 +72,45 @@ class enrolkey_signup_form extends \login_signup_form {
             $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
             $mform->closeHeaderBefore('recaptcha_element');
         }
+        // If needed, remove additional elements "first name", "last name", "city" and "country"
+        // we hide it, not physically remove it, because we still fill it automatically (with javascript)
+        // with dummy data: "firstname" for field 'firstname', and "lastname" 
+        // for field 'lastname' (this is done to avoid breaking moodle since firstname
+        // and lastname are normally required.
+        if(!get_config('auth_enrolkey', 'enabledfirstname')) {
+            $mform->hideif('firstname', '');
+            $mform->setDefault('firstname', "firstname");
+        }
+        if(!get_config('auth_enrolkey', 'enabledlastname')) {
+            $mform->hideif('lastname', '');
+            $mform->setDefault('lastname', "lastname");
+        }
+        if(!get_config('auth_enrolkey', 'enabledcity')) {
+            $mform->removeElement('city');
+        }
+        if(!get_config('auth_enrolkey', 'enabledcountry')) {
+            $mform->removeElement('country');
+        }
+        
+        // Set the "required" rules. Note that "firstname" and "lastname"
+        // are already set to "required" in the original signup_form.php file.
+        if(!get_config('auth_enrolkey', 'enablefirstname') ||
+            !get_config('auth_enrolkey', 'requiredfirstname')){
+            unset($mform->_rules['firstname'], $mform->_errors['firstname'],
+                $mform->_required['4']);
+        }
+        if(!get_config('auth_enrolkey', 'enablelastname') ||
+            !get_config('auth_enrolkey', 'requiredlastname')){
+            unset($mform->_rules['lastname'], $mform->_errors['lastname'],
+                $mform->_required['5']);
+        }
+        if(get_config('auth_enrolkey', 'requiredcity')) {
+            $mform->addRule('city', get_string('missingcity', 'auth_enrolkey'), 'required', null, 'client');
+        }
+        if(get_config('auth_enrolkey', 'requiredcountry')) {
+            $mform->addRule('country', get_string('missingcountry', 'auth_enrolkey'), 'required', null, 'client');
+        }
+
     }
 
     /**
@@ -92,64 +123,28 @@ class enrolkey_signup_form extends \login_signup_form {
      *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
     public function validation($data, $files) {
-        global $CFG;
-
+        global $DB;
         $errors = parent::validation($data, $files);
 
-        $signuptoken = $data['signup_token'];
+        $enrolplugin = enrol_get_plugin('self');
 
-        if ($signuptoken !== '') {
-            // For any case where the token is populated, perform a lookup.
-            $tokenisvalid = $this->check_database_for_signuptoken($signuptoken);
+        $token = $data['signup_token'];
 
-            if ($tokenisvalid === false) {
-                $errors['signup_token'] = get_string('signup_token_invalid', 'auth_enrolkey');
+        if (!empty($token)) {
+            $selfenrolinstance = false;
+
+            $instances = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
+
+            // There may be more than one enrolment instance configured with various dates to check against.
+            foreach ($instances as $instance) {
+                // DO we ever want to pass feedback to user?
+                if ($enrolplugin->can_self_enrol($instance) === true) {
+                    $selfenrolinstance = true;
+                }
             }
 
-        } else {
-            // The form submission is an empty string, double check if the token is required.
-            if ($this->signup_token_required()) {
-                $errors['signup_token'] = get_string('signup_missing', 'auth_enrolkey');
-            }
-        }
-
-        if (get_config('auth_enrolkey', 'unsuspendaccounts') && utility::search_for_suspended_user($data)) {
-
-            $stringdata = (object) ['href' => (new moodle_url('/auth/enrolkey/unsuspend.php'))->out()];
-            if (empty($CFG->createuserwithemail)) {
-                $errors['username'] = $errors['username'] . get_string('suspendeduseratsignup', 'auth_enrolkey', $stringdata);
-            } else {
-                $errors['email'] = $errors['email' ] . get_string('suspendeduseratsignup', 'auth_enrolkey', $stringdata);
-            }
-        }
-
-        return $errors;
-    }
-
-    /**
-     * Checks the enrolment records for any matching self enrolment key.
-     *
-     * @param string $token Returns true on success. False on failure.
-     * @return bool
-     */
-    private function check_database_for_signuptoken($token) {
-        global $DB;
-
-        $selfenrolinstance = false;
-
-        $instances = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
-
-        // There may be more than one enrolment instance configured with various dates to check against.
-        foreach ($instances as $instance) {
-            // There may be things that prevent self enrol, such as requiring a capability, or full course.
-            // This should not be a blocker to account creation. The creation should pass, then report the error.
-            if ($instance->status == ENROL_INSTANCE_ENABLED) {
-                $selfenrolinstance = true;
-            }
-        }
-
-        // Lookup group enrol keys.
-        $instances = $DB->get_records_sql("
+            // Lookup group enrol keys.
+            $instances = $DB->get_records_sql("
                     SELECT e.*
                       FROM {groups} g
                       JOIN {enrol} e ON e.courseid = g.courseid
@@ -157,13 +152,20 @@ class enrolkey_signup_form extends \login_signup_form {
                                     AND e.customint1 = 1
                      WHERE g.enrolmentkey = ?
             ", array($token));
-        foreach ($instances as $instance) {
-            if ($instance->status == ENROL_INSTANCE_ENABLED) {
-                $selfenrolinstance = true;
+            foreach ($instances as $instance) {
+                // DO we ever want to pass feedback to user?
+                if ($enrolplugin->can_self_enrol($instance) === true) {
+                    $selfenrolinstance = true;
+                }
+            }
+
+            // No token matched, this will produce an error message. There are concerns about bruteforcing.
+            if (!$selfenrolinstance) {
+                $errors['signup_token'] = get_string('signup_token_invalid', 'auth_enrolkey');
             }
         }
 
-        return $selfenrolinstance;
+        return $errors;
     }
 
     /**
