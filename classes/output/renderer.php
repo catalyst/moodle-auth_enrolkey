@@ -54,4 +54,15 @@ class renderer extends plugin_renderer_base {
 
         return $output;
     }
+
+    /**
+     * @param  login_signup_form $form
+     * @return bool|string
+     * @throws moodle_exception
+     */
+    public function render_enrolkey_signup_form($form) {
+        $context = $form->export_for_template($this);
+
+        return $this->render_from_template('core/signup_form_layout', $context);
+    }
 }
