@@ -34,7 +34,6 @@ use core_privacy\local\request\userlist;
 
 /**
  * Class provider
- * @package auth_enrolkey\privacy
  */
 class provider implements \core_privacy\local\metadata\provider,
                           \core_privacy\local\request\core_userlist_provider,
