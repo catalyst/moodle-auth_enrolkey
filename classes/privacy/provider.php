@@ -17,20 +17,19 @@
  * Privacy provider.
  *
  * @package   auth_enrolkey
- * @author    Ilya Tregubov (ilyatregubov@catalyst-au.net)
- * @copyright 2018 Catalyst IT
+ * @author    Jason Lian (jasonlian@catalyst-au.net)
+ * @copyright 2021 Catalyst IT
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace auth_enrolkey\privacy;
 defined('MOODLE_INTERNAL') || die;
-use core_privacy\local\metadata\null_provider;
-use core_privacy\local\legacy_polyfill;
+
 use core_privacy\local\metadata\collection;
-use core_privacy\local\request\contextlist;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
-use core_privacy\local\request\writer;
+use core_privacy\local\request\contextlist;
 use core_privacy\local\request\userlist;
+use core_privacy\local\request\writer;
 
 /**
  * Class provider
@@ -44,7 +43,7 @@ class provider implements \core_privacy\local\metadata\provider,
      * Returns metadata about this plugin's privacy policy.
      *
      * @param collection $collection The initialised collection to add items to.
-     * @return  collection     A listing of user data stored through this system.
+     * @return collection A listing of user data stored through this system.
      */
     public static function get_metadata(collection $collection): collection {
         $collection->add_database_table(
@@ -79,20 +78,15 @@ class provider implements \core_privacy\local\metadata\provider,
      * @return contextlist the contexts in which data is contained.
      */
     public static function get_contexts_for_userid(int $userid): contextlist {
-        $sql = "SELECT ctx.id
-                  FROM {user_enrolments} ue
-                  JOIN {enrol} e
-                    ON e.id = ue.enrolid
-                   AND ue.userid = :userid
-                  JOIN {context} ctx
-                    ON ctx.instanceid = e.courseid
-                   AND ctx.contextlevel = :contextlevel
+        $sql = "SELECT ctx.id FROM {context} ctx
                   JOIN {auth_enrolkey_redirect} aer
-                    ON aer.usermodified = ue.userid
+                    ON aer.usermodified = ctx.instanceid
                   JOIN {auth_enrolkey_profile} aep
-                    ON aep.usermodified = ue.userid
+                    ON aep.usermodified = ctx.instanceid
                   JOIN {auth_enrolkey_cohort} aec
-                    ON aec.usermodified = ue.userid";
+                    ON aec.usermodified = ctx.instanceid
+                  WHERE ctx.instanceid = :userid
+                   AND ctx.contextlevel = :contextlevel";
         $params = [
                 'contextlevel' => CONTEXT_USER,
                 'userid'       => $userid
@@ -115,40 +109,32 @@ class provider implements \core_privacy\local\metadata\provider,
             return;
         }
 
-        // If current context is course, all users are contained within, get all users.
-        if ($context->contextlevel == CONTEXT_USER) {
-            $params = [
-                    'contextlevel' => CONTEXT_USER,
-                    'contextid' => $context->id,
-            ];
+        // If current context is user, all users are contained within, get all users.
+        $params = [
+                'contextlevel' => CONTEXT_USER,
+                'contextid' => $context->id,
+        ];
 
-            $sql = "SELECT usermodified AS userid FROM {auth_enrolkey_redirect} aer
-                        JOIN {enrol} e
-                            ON e.id = aer.enrolid
-                        JOIN {context} ctx
-                            ON ctx.instanceid = e.courseid
-                        WHERE ctx.contextlevel = :contextlevel
-                            AND ctx.instanceid = :contextid";
-            $userlist->add_from_sql('usermodified', $sql, $params);
+        $sql = "SELECT usermodified as userid FROM {auth_enrolkey_redirect} aer
+                    JOIN {context} ctx
+                        ON ctx.instanceid = aer.usermodified
+                        AND ctx.contextlevel = :contextlevel
+                    WHERE aer.usermodified = :contextid";
+        $userlist->add_from_sql('userid', $sql, $params);
 
-            $sql = "SELECT usermodified AS userid FROM {auth_enrolkey_profile} aep
-                        JOIN {enrol} e
-                            ON e.id = aep.enrolid
-                        JOIN {context} ctx
-                            ON ctx.instanceid = e.courseid
-                        WHERE ctx.contextlevel = :contextlevel
-                            AND ctx.instanceid = :contextid";
-            $userlist->add_from_sql('usermodified', $sql, $params);
+        $sql = "SELECT usermodified as userid FROM {auth_enrolkey_profile} aep
+                    JOIN {context} ctx
+                        ON ctx.instanceid = aep.usermodified
+                        AND ctx.contextlevel = :contextlevel
+                    WHERE aep.usermodified = :contextid";
+        $userlist->add_from_sql('userid', $sql, $params);
 
-            $sql = "SELECT usermodified AS userid FROM {auth_enrolkey_cohort} aec
-                        JOIN {enrol} e
-                            ON e.id = aec.enrolid
-                        JOIN {context} ctx
-                            ON ctx.instanceid = e.courseid
-                        WHERE ctx.contextlevel = :contextlevel
-                            AND ctx.instanceid = :contextid";
-            $userlist->add_from_sql('usermodified', $sql, $params);
-        }
+        $sql = "SELECT usermodified AS userid FROM {auth_enrolkey_cohort} aec
+                    JOIN {context} ctx
+                        ON ctx.instanceid = aec.usermodified
+                        AND ctx.contextlevel = :contextlevel
+                    WHERE aec.usermodified = :contextid";
+        $userlist->add_from_sql('userid', $sql, $params);
     }
 
     /**
@@ -168,13 +154,8 @@ class provider implements \core_privacy\local\metadata\provider,
                 'userid' => $userid
         ];
         $sql = "SELECT * FROM {user} u
-                  JOIN {user_enrolments} ue
-                    ON ue.userid = u.id
-                  JOIN {enrol} e
-                    ON e.id = ue.enrolid
-                   AND ue.userid = :userid
                   JOIN {context} ctx
-                    ON ctx.instanceid = e.courseid
+                    ON ctx.instanceid = u.id
                    AND ctx.contextlevel = :contextlevel
                   JOIN {auth_enrolkey_redirect} aer
                     ON aer.usermodified = ue.userid
@@ -182,7 +163,7 @@ class provider implements \core_privacy\local\metadata\provider,
                     ON aep.usermodified = ue.userid
                   JOIN {auth_enrolkey_cohort} aec
                     ON aec.usermodified = ue.userid
-                  GROUP BY u.id";
+                  WHERE u.id = :userid";
         if ($users = $DB->get_records_sql($sql, $params)) {
             foreach ($users as $user) {
                 $data = (object) [
@@ -242,21 +223,21 @@ class provider implements \core_privacy\local\metadata\provider,
                 continue;
             }
             if ($context->instanceid == $userid) {
-                // Because we only use user contexts the instance ID is the user ID.
+                // $context->instanceid gives you the user ID.
                 static::delete_user_data($context->instanceid);
             }
         }
     }
 
     /**
-     * This does the deletion of user data for the auth_oauth2.
+     * This does the deletion of user data for auth/enrolkey.
      *
      * @param  int $userid The user ID
      */
     protected static function delete_user_data(int $userid) {
         global $DB;
 
-        // Because we only use user contexts the instance ID is the user ID.
+        // $context->instanceid gives you the user ID.
         $DB->delete_records('auth_enrolkey_redirect', ['usermodified' => $userid]);
         $DB->delete_records('auth_enrolkey_profile', ['usermodified' => $userid]);
         $DB->delete_records('auth_enrolkey_cohort', ['usermodified' => $userid]);
