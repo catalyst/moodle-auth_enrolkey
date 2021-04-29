@@ -134,16 +134,17 @@ class enrolkey_signup_form extends \login_signup_form {
      */
     private function check_database_for_signuptoken($token) {
         global $DB;
-
+        // Explicit string cast to prevent int coercion shenanigans from numeric input.
+        $token = (string) $token;
         $selfenrolinstance = false;
-
         $instances = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
 
         // There may be more than one enrolment instance configured with various dates to check against.
         foreach ($instances as $instance) {
             // There may be things that prevent self enrol, such as requiring a capability, or full course.
             // This should not be a blocker to account creation. The creation should pass, then report the error.
-            if ($instance->status == ENROL_INSTANCE_ENABLED) {
+            // We should also sanity check the token for string/int coercion issues at the DB layer
+            if ($instance->status == ENROL_INSTANCE_ENABLED && $instance->password === $token) {
                 $selfenrolinstance = true;
             }
         }
@@ -158,7 +159,7 @@ class enrolkey_signup_form extends \login_signup_form {
                      WHERE g.enrolmentkey = ?
             ", array($token));
         foreach ($instances as $instance) {
-            if ($instance->status == ENROL_INSTANCE_ENABLED) {
+            if ($instance->status == ENROL_INSTANCE_ENABLED && $instance->password === $token) {
                 $selfenrolinstance = true;
             }
         }
@@ -182,5 +183,4 @@ class enrolkey_signup_form extends \login_signup_form {
         global $CFG;
         return !empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey) && get_config('auth_enrolkey', 'recaptcha');
     }
-
 }
