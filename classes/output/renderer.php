@@ -28,8 +28,8 @@ namespace auth_enrolkey\output;
 defined('MOODLE_INTERNAL') || die;
 
 use auth_enrolkey\table\enrolkey_available_table;
-use plugin_renderer_base;
-
+// We should extend the legacy renderer to maintain compatability with old style render function.
+require_once($CFG->dirroot . '/auth/enrolkey/renderer.php');
 
 /**
  * Auth Enrolkey renederer.
@@ -38,7 +38,7 @@ use plugin_renderer_base;
  * @copyright  2021 Nicholas Hoobin <nicholashoobin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class renderer extends plugin_renderer_base {
+class renderer extends \auth_enrolkey_renderer {
     /**
      * Render the HTML for the student quiz table.
      *
