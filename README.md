@@ -32,7 +32,7 @@ Branches
 | Moodle verion     | Branch      | PHP   |
 | ----------------- | ----------- | ----- |
 | Moodle 3.5 to 3.9 | master      | 7.1+  |
-| Moodle 3.10+      | VERSION3    | 7.2+  |
+| Moodle 3.10+      | master      | 7.2+  |
 
 
 Installation
