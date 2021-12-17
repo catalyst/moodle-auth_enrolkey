@@ -5,24 +5,17 @@ on: [push, pull_request]
 jobs:
   workflow_35_ci:
     uses: catalyst/catalyst-moodle-workflows/.github/workflows/35-ci.yml@main
-
   workflow_36_ci:
     uses: catalyst/catalyst-moodle-workflows/.github/workflows/36-ci.yml@main
-
   workflow_37_ci:
     uses: catalyst/catalyst-moodle-workflows/.github/workflows/37-ci.yml@main
-
   workflow_38_ci:
     uses: catalyst/catalyst-moodle-workflows/.github/workflows/38-ci.yml@main
-
   workflow_39_ci:
     uses: catalyst/catalyst-moodle-workflows/.github/workflows/39-ci.yml@main
-
   workflow_310_ci:
     uses: catalyst/catalyst-moodle-workflows/.github/workflows/310-ci.yml@main
-
   workflow_311_ci:
     uses: catalyst/catalyst-moodle-workflows/.github/workflows/311-ci.yml@main
-
   workflow_master_ci:
     uses: catalyst/catalyst-moodle-workflows/.github/workflows/master-ci.yml@main
