@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/catalyst/moodle-auth_enrolkey/workflows/Moodle%20plugin%20CI%20for%20VERSION3/badge.svg)](https://github.com/catalyst/moodle-auth_enrolkey/actions)
+[![Build Status](https://github.com/catalyst/moodle-auth_enrolkey/actions/workflows/ci.yml/badge.svg)](https://github.com/catalyst/moodle-auth_enrolkey/actions)
 
 # Moodle Enrolment key based self-registration
 
@@ -29,7 +29,7 @@ https://moodle.org/plugins/block_enrolkey
 Branches
 --------
 
-| Moodle verion         | Branch      | PHP   |
+| Moodle version        | Branch      | PHP   |
 | --------------------- | ----------- | ----- |
 | Moodle 3.5 to 3.11    | master      | 7.1+  |
 
