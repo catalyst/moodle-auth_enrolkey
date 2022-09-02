@@ -101,9 +101,9 @@ class enrolkey_profile_form extends \moodleform {
         $mform->setType('address', core_user::get_property_type('address'));
 
         $group = array();
-        $group[] = $mform->createElement('cancel');
-        $group[] = $mform->createElement('submit', 'resetbutton', get_string('reset'));
         $group[] = $mform->createElement('submit', 'submitbutton', get_string('submit'));
+        $group[] = $mform->createElement('submit', 'resetbutton', get_string('reset'));
+        $group[] = $mform->createElement('cancel');
         $mform->addGroup($group, 'buttons', '', ' ', false);
         $mform->closeHeaderBefore('buttons');
 
