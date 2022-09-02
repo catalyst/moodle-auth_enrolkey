@@ -23,8 +23,6 @@
  */
 namespace auth_enrolkey\persistent;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core\persistent;
 /**
  * Class for mapping enrolkey to redirection urls.
@@ -44,15 +42,13 @@ class enrolkey_redirect_mapping extends persistent {
      * @return array
      */
     protected static function define_properties() {
-        return array(
-            'enrolid' => array(
-                'type' => PARAM_INT,
-            ),
-            'url' => array(
+        return [
+            'enrolid' => ['type' => PARAM_INT],
+            'url' => [
                 'default' => '',
                 'type' => PARAM_URL,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -81,7 +77,7 @@ class enrolkey_redirect_mapping extends persistent {
         foreach ($availableenrolids as $enid) {
             $persistent = self::get_record_by_enrolid($enid);
             $url = $persistent->get('url');
-            if ($url != "") {
+            if ($url != '') {
                 redirect($persistent->get_moodle_url());
             }
         }

@@ -56,7 +56,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      */
     public function user_login($username, $password) {
         global $CFG, $DB;
-        if ($user = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id))) {
+        if ($user = $DB->get_record('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])) {
             return validate_internal_user_password($user, $password);
         }
 
@@ -87,8 +87,10 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             $failurereason = AUTH_LOGIN_SUSPENDED;
 
             // Trigger login failed event.
-            $event = \core\event\user_login_failed::create(array('userid' => $user->id,
-                'other' => array('username' => $user->username, 'reason' => $failurereason)));
+            $event = \core\event\user_login_failed::create([
+                'userid' => $user->id,
+                'other' => ['username' => $user->username, 'reason' => $failurereason],
+            ]);
             $event->trigger();
 
             // Oh no. This user is suspended, but the password is all good. Lets take them to a self un-suspend page.
@@ -234,7 +236,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         if (empty($availableenrolids)) {
             redirect(new moodle_url('/my/'));
         } else {
-            redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
+            redirect(new moodle_url("/auth/enrolkey/view.php", ['ids' => implode(',', $availableenrolids)]));
         }
     }
 
@@ -272,7 +274,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
     public function loginpage_hook() {
         global $CFG;
 
-        if ($CFG->registerauth == $this->authtype and empty($CFG->auth_instructions)) {
+        if ($CFG->registerauth == $this->authtype && empty($CFG->auth_instructions)) {
             $url = '/login/signup.php';
             $CFG->auth_instructions = get_string('signup_auth_instructions', 'auth_enrolkey', $url);
         }
@@ -301,10 +303,8 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         if (!empty($user)) {
             if ($user->auth != $this->authtype) {
                 return AUTH_CONFIRM_ERROR;
-
             } else if ($user->secret === $confirmsecret && $user->confirmed) {
                 return AUTH_CONFIRM_ALREADY;
-
             } else if ($user->secret === $confirmsecret) { // They have provided the secret key to get in.
                 $DB->set_field('user', 'confirmed', 1, ['id' => $user->id]);
                 return AUTH_CONFIRM_OK;
@@ -329,7 +329,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @return moodle_form A form which edits a record from the user table.
      */
     public function signup_form() {
-        return new \auth_enrolkey\form\enrolkey_signup_form(null, null, 'post', '', array('autocomplete' => 'on'));
+        return new \auth_enrolkey\form\enrolkey_signup_form(null, null, 'post', '', ['autocomplete' => 'on']);
     }
 
     /**

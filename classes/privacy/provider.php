@@ -22,8 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace auth_enrolkey\privacy;
-defined('MOODLE_INTERNAL') || die;
-
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
@@ -36,8 +34,8 @@ use core_privacy\local\request\writer;
  */
 class provider implements \core_privacy\local\metadata\provider,
                           \core_privacy\local\request\core_userlist_provider,
-                          \core_privacy\local\request\plugin\provider
-{
+                          \core_privacy\local\request\plugin\provider {
+
     /**
      * Returns metadata about this plugin's privacy policy.
      *
@@ -47,23 +45,17 @@ class provider implements \core_privacy\local\metadata\provider,
     public static function get_metadata(collection $collection): collection {
         $collection->add_database_table(
                 'auth_enrolkey_redirect',
-                [
-                        'usermodified' => 'privacy:metadata:auth_enrolkey_redirect:usermodified',
-                ],
+                ['usermodified' => 'privacy:metadata:auth_enrolkey_redirect:usermodified'],
                 'privacy:metadata:auth_enrolkey_redirect'
         );
         $collection->add_database_table(
                 'auth_enrolkey_profile',
-                [
-                        'usermodified' => 'privacy:metadata:auth_enrolkey_profile:usermodified',
-                ],
+                ['usermodified' => 'privacy:metadata:auth_enrolkey_profile:usermodified'],
                 'privacy:metadata:auth_enrolkey_profile'
         );
         $collection->add_database_table(
                 'auth_enrolkey_cohort',
-                [
-                        'usermodified' => 'privacy:metadata:auth_enrolkey_cohort:usermodified',
-                ],
+                ['usermodified' => 'privacy:metadata:auth_enrolkey_cohort:usermodified'],
                 'privacy:metadata:auth_enrolkey_cohort'
         );
 
@@ -87,8 +79,8 @@ class provider implements \core_privacy\local\metadata\provider,
                   WHERE ctx.instanceid = :userid
                    AND ctx.contextlevel = :contextlevel";
         $params = [
-                'contextlevel' => CONTEXT_USER,
-                'userid'       => $userid
+            'contextlevel' => CONTEXT_USER,
+            'userid'       => $userid,
         ];
         $contextlist = new contextlist();
         $contextlist->add_from_sql($sql, $params);
@@ -110,8 +102,8 @@ class provider implements \core_privacy\local\metadata\provider,
 
         // If current context is user, all users are contained within, get all users.
         $params = [
-                'contextlevel' => CONTEXT_USER,
-                'contextid' => $context->id,
+            'contextlevel' => CONTEXT_USER,
+            'contextid' => $context->id,
         ];
 
         $sql = "SELECT usermodified as userid FROM {auth_enrolkey_redirect} aer
@@ -148,9 +140,9 @@ class provider implements \core_privacy\local\metadata\provider,
         $userid = $contextlist->get_user()->id;
         $context = \context_user::instance($userid);
         $params = [
-                'contextlevel' => CONTEXT_USER,
-                'contextid' => $context->id,
-                'userid' => $userid
+            'contextlevel' => CONTEXT_USER,
+            'contextid' => $context->id,
+            'userid' => $userid,
         ];
         $sql = "SELECT * FROM {user} u
                   JOIN {context} ctx
@@ -166,15 +158,15 @@ class provider implements \core_privacy\local\metadata\provider,
         if ($users = $DB->get_records_sql($sql, $params)) {
             foreach ($users as $user) {
                 $data = (object) [
-                        'timecreated' => transform::datetime($user->timecreated),
-                        'timemodified' => transform::datetime($user->timemodified),
-                        'username' => $user->username,
-                        'email' => $user->email
+                    'timecreated' => transform::datetime($user->timecreated),
+                    'timemodified' => transform::datetime($user->timemodified),
+                    'username' => $user->username,
+                    'email' => $user->email,
                 ];
                 writer::with_context($context)->export_data(
                         [
-                                get_string('privacy:metadata:auth_enrolkey', 'auth_enrolkey'),
-                                $user->id
+                            get_string('privacy:metadata:auth_enrolkey', 'auth_enrolkey'),
+                            $user->id,
                         ],
                         $data
                 );
@@ -222,7 +214,7 @@ class provider implements \core_privacy\local\metadata\provider,
                 continue;
             }
             if ($context->instanceid == $userid) {
-                // $context->instanceid gives you the user ID.
+                // The $context->instanceid gives you the user ID.
                 static::delete_user_data($context->instanceid);
             }
         }
@@ -236,7 +228,7 @@ class provider implements \core_privacy\local\metadata\provider,
     protected static function delete_user_data(int $userid) {
         global $DB;
 
-        // $context->instanceid gives you the user ID.
+        // The $context->instanceid gives you the user ID.
         $DB->delete_records('auth_enrolkey_redirect', ['usermodified' => $userid]);
         $DB->delete_records('auth_enrolkey_profile', ['usermodified' => $userid]);
         $DB->delete_records('auth_enrolkey_cohort', ['usermodified' => $userid]);

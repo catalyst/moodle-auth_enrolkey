@@ -51,10 +51,10 @@ class enrolkey_cohort_form extends \moodleform {
         foreach ($cohortlist['cohorts'] as $cohort) {
             $cohortnames[$cohort->id] = $cohort->name . ' (' . $cohort->idnumber . ')';
         }
-        $options = array(
+        $options = [
             'multiple' => true,
             'noselectionstring' => get_string('label_cohortselect_empty', 'auth_enrolkey'),
-        );
+        ];
         $mform->addElement('autocomplete', 'cohortids', get_string('label_cohortselect', 'auth_enrolkey'), $cohortnames, $options);
         $mform->addHelpButton('cohortids', 'label_cohortselect', 'auth_enrolkey');
 
@@ -73,9 +73,7 @@ class enrolkey_cohort_form extends \moodleform {
             $list[] = $id;
         }
 
-        $this->set_data([
-            'cohortids' => $list
-        ]);
+        $this->set_data(['cohortids' => $list]);
     }
 }
 

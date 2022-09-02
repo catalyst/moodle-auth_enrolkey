@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace auth_enrolkey;
+
 use auth_enrolkey\persistent\enrolkey_cohort_mapping;
 use auth_enrolkey\persistent\enrolkey_profile_mapping;
 
@@ -37,7 +39,7 @@ require_once($CFG->dirroot . '/user/profile/lib.php');
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class auth_enrolkey_auth_testcase extends advanced_testcase {
+class auth_test extends \advanced_testcase {
 
     /**
      * Test test_auth_enrolkey()
@@ -64,25 +66,25 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         // Additional for the test db that exists.
         $this->assertEquals(9, $DB->count_records('course'));
 
-        $context1 = context_course::instance($course1->id);
-        $context2 = context_course::instance($course2->id);
-        $context3 = context_course::instance($course3->id);
-        $context4 = context_course::instance($course4->id);
-        $context5 = context_course::instance($course5->id);
-        $context6 = context_course::instance($course6->id);
-        $context7 = context_course::instance($course7->id);
-        $context8 = context_course::instance($course8->id);
+        $context1 = \context_course::instance($course1->id);
+        $context2 = \context_course::instance($course2->id);
+        $context3 = \context_course::instance($course3->id);
+        $context4 = \context_course::instance($course4->id);
+        $context5 = \context_course::instance($course5->id);
+        $context6 = \context_course::instance($course6->id);
+        $context7 = \context_course::instance($course7->id);
+        $context8 = \context_course::instance($course8->id);
 
-        $this->assertEquals(8, $DB->count_records('enrol', array('enrol' => 'self')));
+        $this->assertEquals(8, $DB->count_records('enrol', ['enrol' => 'self']));
 
-        $instance1 = $DB->get_record('enrol', array('courseid' => $course1->id, 'enrol' => 'self'), '*', MUST_EXIST);
-        $instance2 = $DB->get_record('enrol', array('courseid' => $course2->id, 'enrol' => 'self'), '*', MUST_EXIST);
-        $instance3 = $DB->get_record('enrol', array('courseid' => $course3->id, 'enrol' => 'self'), '*', MUST_EXIST);
-        $instance4 = $DB->get_record('enrol', array('courseid' => $course4->id, 'enrol' => 'self'), '*', MUST_EXIST);
-        $instance5 = $DB->get_record('enrol', array('courseid' => $course5->id, 'enrol' => 'self'), '*', MUST_EXIST);
-        $instance6 = $DB->get_record('enrol', array('courseid' => $course6->id, 'enrol' => 'self'), '*', MUST_EXIST);
-        $instance7 = $DB->get_record('enrol', array('courseid' => $course7->id, 'enrol' => 'self'), '*', MUST_EXIST);
-        $instance8 = $DB->get_record('enrol', array('courseid' => $course8->id, 'enrol' => 'self'), '*', MUST_EXIST);
+        $instance1 = $DB->get_record('enrol', ['courseid' => $course1->id, 'enrol' => 'self'], '*', MUST_EXIST);
+        $instance2 = $DB->get_record('enrol', ['courseid' => $course2->id, 'enrol' => 'self'], '*', MUST_EXIST);
+        $instance3 = $DB->get_record('enrol', ['courseid' => $course3->id, 'enrol' => 'self'], '*', MUST_EXIST);
+        $instance4 = $DB->get_record('enrol', ['courseid' => $course4->id, 'enrol' => 'self'], '*', MUST_EXIST);
+        $instance5 = $DB->get_record('enrol', ['courseid' => $course5->id, 'enrol' => 'self'], '*', MUST_EXIST);
+        $instance6 = $DB->get_record('enrol', ['courseid' => $course6->id, 'enrol' => 'self'], '*', MUST_EXIST);
+        $instance7 = $DB->get_record('enrol', ['courseid' => $course7->id, 'enrol' => 'self'], '*', MUST_EXIST);
+        $instance8 = $DB->get_record('enrol', ['courseid' => $course8->id, 'enrol' => 'self'], '*', MUST_EXIST);
 
         $instance1->password = '';
         $instance2->password = 'key_1';
@@ -120,14 +122,14 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $this->assertTrue($selfenrol->can_self_enrol($instance7));
         $this->assertContains('Enrolment is disabled or inactive', [$selfenrol->can_self_enrol($instance8)]);
 
-        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course1->id, 'enrol' => 'self', 'password' => '')));
-        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course2->id, 'enrol' => 'self', 'password' => 'key_1')));
-        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course3->id, 'enrol' => 'self', 'password' => 'key_1')));
-        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course4->id, 'enrol' => 'self', 'password' => 'key_2')));
-        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course5->id, 'enrol' => 'self', 'password' => 'key_2')));
-        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course6->id, 'enrol' => 'self', 'password' => 'key_1')));
-        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course7->id, 'enrol' => 'self', 'password' => 'key_1')));
-        $this->assertTrue($DB->record_exists('enrol', array('courseid' => $course8->id, 'enrol' => 'self', 'password' => 'key_1')));
+        $this->assertTrue($DB->record_exists('enrol', ['courseid' => $course1->id, 'enrol' => 'self', 'password' => '']));
+        $this->assertTrue($DB->record_exists('enrol', ['courseid' => $course2->id, 'enrol' => 'self', 'password' => 'key_1']));
+        $this->assertTrue($DB->record_exists('enrol', ['courseid' => $course3->id, 'enrol' => 'self', 'password' => 'key_1']));
+        $this->assertTrue($DB->record_exists('enrol', ['courseid' => $course4->id, 'enrol' => 'self', 'password' => 'key_2']));
+        $this->assertTrue($DB->record_exists('enrol', ['courseid' => $course5->id, 'enrol' => 'self', 'password' => 'key_2']));
+        $this->assertTrue($DB->record_exists('enrol', ['courseid' => $course6->id, 'enrol' => 'self', 'password' => 'key_1']));
+        $this->assertTrue($DB->record_exists('enrol', ['courseid' => $course7->id, 'enrol' => 'self', 'password' => 'key_1']));
+        $this->assertTrue($DB->record_exists('enrol', ['courseid' => $course8->id, 'enrol' => 'self', 'password' => 'key_1']));
 
         // During create_user() it will insert the user into the database, we just want to generate the user object.
         $user1 = $this->getDataGenerator()->create_user();
@@ -139,9 +141,9 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $user3->signup_token = 'key_1';
 
         // So we will remove the user record from the database. As we want to test $auth->user_signup().
-        $user1record = array('username' => $user1->username, 'mnethostid' => $user1->mnethostid);
-        $user2record = array('username' => $user2->username, 'mnethostid' => $user2->mnethostid);
-        $user3record = array('username' => $user3->username, 'mnethostid' => $user3->mnethostid);
+        $user1record = ['username' => $user1->username, 'mnethostid' => $user1->mnethostid];
+        $user2record = ['username' => $user2->username, 'mnethostid' => $user2->mnethostid];
+        $user3record = ['username' => $user3->username, 'mnethostid' => $user3->mnethostid];
 
         $DB->delete_records('user', $user1record);
         $DB->delete_records('user', $user2record);
@@ -193,9 +195,9 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
 
         // Setup course and enrolment.
         $course = $this->getDataGenerator()->create_course();
-        $context = context_course::instance($course->id);
+        $context = \context_course::instance($course->id);
         // Create selfenrolment instance.
-        $instance = $DB->get_record('enrol', array('courseid' => $course->id, 'enrol' => 'self'), '*', MUST_EXIST);
+        $instance = $DB->get_record('enrol', ['courseid' => $course->id, 'enrol' => 'self'], '*', MUST_EXIST);
         $instance->password = 'key';
         // Set customint that controls groupkeys.
         $instance->customint1 = 1;
@@ -209,13 +211,13 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $this->assertTrue($selfenrol->can_self_enrol($instance));
 
         // Create group enrolment.
-        $group = $this->getDataGenerator()->create_group(array('courseid' => $course->id, 'enrolmentkey' => 'groupkey'));
+        $group = $this->getDataGenerator()->create_group(['courseid' => $course->id, 'enrolmentkey' => 'groupkey']);
 
         // Remove users from database to re-enrol.
         // So we will remove the user record from the database. As we want to test $auth->user_signup().
-        $user1record = array('username' => $user1->username, 'mnethostid' => $user1->mnethostid);
-        $user2record = array('username' => $user2->username, 'mnethostid' => $user2->mnethostid);
-        $user3record = array('username' => $user3->username, 'mnethostid' => $user3->mnethostid);
+        $user1record = ['username' => $user1->username, 'mnethostid' => $user1->mnethostid];
+        $user2record = ['username' => $user2->username, 'mnethostid' => $user2->mnethostid];
+        $user3record = ['username' => $user3->username, 'mnethostid' => $user3->mnethostid];
 
         $DB->delete_records('user', $user1record);
         $DB->delete_records('user', $user2record);
@@ -251,7 +253,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $this->assertTrue(groups_is_member($group->id, $user2->id));
 
         // Check that $user3 is a valid user, but not enrolled in $course or $group.
-        $this->assertTrue($DB->record_exists('user', array('id' => $user3->id)));
+        $this->assertTrue($DB->record_exists('user', ['id' => $user3->id]));
         $this->assertFalse(is_enrolled($context, $user3, ''));
         $this->assertFalse(groups_is_member($group->id, $user3->id));
     }
@@ -261,8 +263,8 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         global $DB;
 
         // Setup the cohort data structure.
-        $cohort = new stdClass();
-        $cohort->contextid = context_system::instance()->id;
+        $cohort = new \stdClass();
+        $cohort->contextid = \context_system::instance()->id;
         $cohort->name = 'test cohort';
         $cohort->idnumber = 'testid';
         $cohort->description = 'test cohort desc';
@@ -273,7 +275,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         // Build the persistent to use with cohort mapping.
         $cdata = [
             'enrolid' => 1,
-            'cohortid' => $cohortid
+            'cohortid' => $cohortid,
         ];
         $cohortmapping = new enrolkey_cohort_mapping(0, (object) $cdata);
         $cohortmapping->save();
@@ -292,9 +294,9 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         global $DB;
 
         // Create user info fields.
-        if (!$DB->record_exists('user_info_category', array())) {
+        if (!$DB->record_exists('user_info_category', [])) {
             // Copied from user/profile/index.php.
-            $defaultcategory = new stdClass();
+            $defaultcategory = new \stdClass();
             $defaultcategory->name = 'Default category';
             $defaultcategory->sortorder = 1;
 
@@ -305,7 +307,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
             'shortname' => 'test1',
             'name' => 'test field 1',
             'categoryid' => 1,
-            'datatype' => 'text'
+            'datatype' => 'text',
         ];
         $DB->insert_record('user_info_field', (object) $field);
 
@@ -313,7 +315,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $pdata = [
             'enrolid' => 1,
             'profilefieldname' => 'profile_field_test1',
-            'profilefielddata' => 'this is a string'
+            'profilefielddata' => 'this is a string',
         ];
         $fieldmapping = new enrolkey_profile_mapping(0, (object) $pdata);
         $fieldmapping->save();
@@ -334,7 +336,7 @@ class auth_enrolkey_auth_testcase extends advanced_testcase {
         $params = [
             'fieldid' => $field->id,
             'userid' => $user1->id,
-            'data' => 'this is a string'
+            'data' => 'this is a string',
         ];
 
         // Check to see if the data is saved.

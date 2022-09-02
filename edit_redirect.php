@@ -44,7 +44,7 @@ $persistent = enrolkey_redirect_mapping::get_record_by_enrolid($id);
 // Create the form instance. We need to use the current URL and the custom data.
 $customdata = [
     'persistent' => $persistent,
-    'enrolid' => $id
+    'enrolid' => $id,
 ];
 
 $form = new enrolkey_redirect_form($baseurl, $customdata);
@@ -53,7 +53,6 @@ $form = new enrolkey_redirect_form($baseurl, $customdata);
 if ($form && $form->is_cancelled()) {
     redirect(new moodle_url('/auth/enrolkey/manage.php'));
 } else if (($data = $form->get_data())) {
-
     try {
         if (empty($data->id)) {
             $persistent = enrolkey_redirect_mapping::get_record_by_enrolid($id);
@@ -61,7 +60,7 @@ if ($form && $form->is_cancelled()) {
             $persistent->create();
         } else {
             $persistent->from_record($data);
-            if ($data->url == "") {
+            if ($data->url == '') {
                 $persistent->delete();
             } else {
                 $persistent->update();

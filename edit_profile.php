@@ -47,14 +47,12 @@ $form = new enrolkey_profile_form($baseurl, $customdata);
 // Get the data. This ensures that the form was validated.
 if ($form && $form->is_cancelled()) {
     redirect(new moodle_url('/auth/enrolkey/manage.php'));
-
 } else if (optional_param('resetbutton', 0, PARAM_ALPHA)) {
     foreach ($records as $persistent) {
         $persistent->delete();
         unset($records, $persistent);
     }
     redirect($baseurl);
-
 } else if (($data = $form->get_data())) {
     $ignore = [
         'submitbutton',
@@ -73,25 +71,22 @@ if ($form && $form->is_cancelled()) {
             continue;
         }
 
-        if ($value == "") {
+        if ($value == '') {
             // Delete the persistent if it exists.
             if (array_key_exists($key, $records)) {
                 $persistent = $records[$key];
                 $persistent->delete();
             }
-
         } else if (is_array($value)) {
             // Special case for 'interests' tag list and potentially others.
             // TODO: Revisit this?
             null;
-
         } else {
             // Update an existing persistent record.
             if (array_key_exists($key, $records)) {
                 $persistent = $records[$key];
                 $persistent->set('profilefielddata', $value);
                 $persistent->update();
-
             } else {
                 // Create the persistent.
                 $pdata = (object) [

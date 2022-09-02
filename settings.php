@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 if ($hassiteconfig) {
     require_once($CFG->dirroot . '/auth/enrolkey/auth.php');
 
-    $options = array(get_string('no'), get_string('yes'));
+    $options = [get_string('no'), get_string('yes')];
 
     $settings->visiblename = get_string('menusettings', 'auth_enrolkey');
 

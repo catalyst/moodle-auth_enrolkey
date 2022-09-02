@@ -35,8 +35,6 @@ namespace auth_enrolkey\form;
 use auth_enrolkey\utility;
 use core_user;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Class for the unsuspend form.
  *
@@ -116,7 +114,6 @@ class unsuspend_form extends \moodleform {
             if ($tokenisvalid === false) {
                 $errors['signup_token'] = get_string('signup_token_invalid', 'auth_enrolkey');
             }
-
         } else {
             // The form submission is an empty string, double check if the token is required.
             if ($this->signup_token_required()) {
@@ -174,7 +171,7 @@ class unsuspend_form extends \moodleform {
 
         $selfenrolinstance = false;
 
-        $instances = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
+        $instances = $DB->get_records('enrol', ['password' => $token, 'enrol' => 'self']);
 
         // There may be more than one enrolment instance configured with various dates to check against.
         foreach ($instances as $instance) {
@@ -193,7 +190,7 @@ class unsuspend_form extends \moodleform {
                                     AND e.enrol = 'self'
                                     AND e.customint1 = 1
                      WHERE g.enrolmentkey = ?
-            ", array($token));
+            ", [$token]);
         foreach ($instances as $instance) {
             if ($instance->status == ENROL_INSTANCE_ENABLED) {
                 $selfenrolinstance = true;

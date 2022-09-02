@@ -100,7 +100,7 @@ class enrolkey_profile_form extends \moodleform {
         $mform->addElement('text', 'address', get_string('address'), 'maxlength="255" size="25"');
         $mform->setType('address', core_user::get_property_type('address'));
 
-        $group = array();
+        $group = [];
         $group[] = $mform->createElement('submit', 'submitbutton', get_string('submit'));
         $group[] = $mform->createElement('submit', 'resetbutton', get_string('reset'));
         $group[] = $mform->createElement('cancel');
@@ -132,6 +132,5 @@ class enrolkey_profile_form extends \moodleform {
 
         $this->set_data($toset);
     }
-
 }
 

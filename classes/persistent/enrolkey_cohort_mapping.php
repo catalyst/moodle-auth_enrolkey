@@ -47,14 +47,10 @@ class enrolkey_cohort_mapping extends persistent {
      * @return array
      */
     protected static function define_properties() {
-        return array(
-            'enrolid' => array(
-                'type' => PARAM_INT,
-            ),
-            'cohortid' => array(
-                'type' => PARAM_INT,
-            ),
-        );
+        return [
+            'enrolid' => ['type' => PARAM_INT],
+            'cohortid' => ['type' => PARAM_INT],
+        ];
     }
 
     /**

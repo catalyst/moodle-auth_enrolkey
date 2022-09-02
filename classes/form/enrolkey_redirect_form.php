@@ -24,8 +24,6 @@
 
 namespace auth_enrolkey\form;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core\form\persistent;
 
 /**

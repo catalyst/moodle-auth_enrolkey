@@ -26,8 +26,6 @@ namespace auth_enrolkey;
 
 use moodle_database;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Helper class for auth_enrolkey
  *
@@ -50,7 +48,7 @@ class utility {
             'suspended' => 1,
             'deleted' => 0,
             'mnethostid' => $CFG->mnet_localhost_id,
-            'auth' => 'enrolkey'
+            'auth' => 'enrolkey',
         ];
 
         if (array_key_exists('email', $data)) {
@@ -149,10 +147,14 @@ class utility {
         if ($checkuserenrolment) {
             if (isguestuser() || !isloggedin()) {
                 // Can not enrol guests or unauthenticated users.
-                return get_string('noguestaccess', 'enrol') . ' ' . html_writer::link(get_login_url(), get_string('login', 'core'), array('class' => 'btn btn-default'));
+                return get_string('noguestaccess', 'enrol') . ' ' . \html_writer::link(
+                    get_login_url(),
+                    get_string('login', 'core'),
+                    ['class' => 'btn btn-default']
+                );
             }
             // Check if user is already enroled.
-            if ($DB->get_record('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
+            if ($DB->get_record('user_enrolments', ['userid' => $USER->id, 'enrolid' => $instance->id])) {
                 return get_string('canntenrol', 'enrol_self');
             }
         }
@@ -161,11 +163,11 @@ class utility {
             return get_string('canntenrol', 'enrol_self');
         }
 
-        if ($instance->enrolstartdate != 0 and $instance->enrolstartdate > time()) {
+        if ($instance->enrolstartdate != 0 && $instance->enrolstartdate > time()) {
             return get_string('canntenrolearly', 'enrol_self', userdate($instance->enrolstartdate));
         }
 
-        if ($instance->enrolenddate != 0 and $instance->enrolenddate < time()) {
+        if ($instance->enrolenddate != 0 && $instance->enrolenddate < time()) {
             return get_string('canntenrollate', 'enrol_self', userdate($instance->enrolenddate));
         }
 
@@ -175,14 +177,14 @@ class utility {
         }
 
         if ($checkuserenrolment) {
-            if ($DB->record_exists('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
+            if ($DB->record_exists('user_enrolments', ['userid' => $USER->id, 'enrolid' => $instance->id])) {
                 return get_string('canntenrol', 'enrol_self');
             }
         }
 
         if ($instance->customint3 > 0) {
             // Max enrol limit specified.
-            $count = $DB->count_records('user_enrolments', array('enrolid' => $instance->id));
+            $count = $DB->count_records('user_enrolments', ['enrolid' => $instance->id]);
             if ($count >= $instance->customint3) {
                 // Bad luck, no more self enrolments here.
                 return get_string('maxenrolledreached', 'enrol_self');
@@ -192,11 +194,11 @@ class utility {
         if ($instance->customint5) {
             require_once("$CFG->dirroot/cohort/lib.php");
             if (!cohort_is_member($instance->customint5, $USER->id)) {
-                $cohort = $DB->get_record('cohort', array('id' => $instance->customint5));
+                $cohort = $DB->get_record('cohort', ['id' => $instance->customint5]);
                 if (!$cohort) {
                     return null;
                 }
-                $a = format_string($cohort->name, true, array('context' => context::instance_by_id($cohort->contextid)));
+                $a = format_string($cohort->name, true, ['context' => context::instance_by_id($cohort->contextid)]);
                 return markdown_to_html(get_string('cohortnonmemberinfo', 'enrol_self', $a));
             }
         }
