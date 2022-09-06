@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Upgrade function
  *
@@ -48,8 +46,8 @@ function xmldb_auth_enrolkey_upgrade($oldversion) {
         $table->add_field('url', XMLDB_TYPE_TEXT, null, null, null, null, null);
 
         // Adding keys to table auth_enrolkey_redirect.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('usermodified_key', XMLDB_KEY_FOREIGN, array('usermodified'), 'user', array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('usermodified_key', XMLDB_KEY_FOREIGN, ['usermodified'], 'user', ['id']);
 
         // Conditionally launch create table for auth_enrolkey_redirect.
         if (!$dbman->table_exists($table)) {
@@ -74,8 +72,8 @@ function xmldb_auth_enrolkey_upgrade($oldversion) {
         $table->add_field('profilefielddata', XMLDB_TYPE_TEXT, null, null, null, null, null);
 
         // Adding keys to table auth_enrolkey_redirect.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('usermodified_key', XMLDB_KEY_FOREIGN, array('usermodified'), 'user', array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('usermodified_key', XMLDB_KEY_FOREIGN, ['usermodified'], 'user', ['id']);
 
         // Conditionally launch create table for auth_enrolkey_redirect.
         if (!$dbman->table_exists($table)) {
@@ -99,8 +97,8 @@ function xmldb_auth_enrolkey_upgrade($oldversion) {
         $table->add_field('cohortid', XMLDB_TYPE_INTEGER, '18', null, null, null, null);
 
         // Adding keys to table auth_enrolkey_redirect.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('usermodified_key', XMLDB_KEY_FOREIGN, array('usermodified'), 'user', array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('usermodified_key', XMLDB_KEY_FOREIGN, ['usermodified'], 'user', ['id']);
 
         // Conditionally launch create table for auth_enrolkey_redirect.
         if (!$dbman->table_exists($table)) {

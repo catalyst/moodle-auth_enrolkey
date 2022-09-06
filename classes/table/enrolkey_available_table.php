@@ -32,8 +32,8 @@ use auth_enrolkey\persistent\enrolkey_cohort_mapping;
 use auth_enrolkey\persistent\enrolkey_profile_mapping;
 use auth_enrolkey\persistent\enrolkey_redirect_mapping;
 use moodle_url;
-use \table_sql;
-use \renderable;
+use table_sql;
+use renderable;
 
 /**
  * Renderable table for quiz dashboard users.
@@ -76,7 +76,7 @@ class enrolkey_available_table extends table_sql implements renderable {
         $where .= " AND en.password != ''
                     AND en.password IS NOT NULL ";
 
-        $this->set_sql($fields, $from, $where, array());
+        $this->set_sql($fields, $from, $where, []);
 
         // Define the headers and columns.
         $headers = [];
@@ -104,7 +104,7 @@ class enrolkey_available_table extends table_sql implements renderable {
         $this->pageable(false);
         $this->sortable(false);
         $this->collapsible(false);
-        $this->column_nosort = array('actions');
+        $this->column_nosort = ['actions'];
     }
 
     /**
@@ -135,13 +135,13 @@ class enrolkey_available_table extends table_sql implements renderable {
             . get_string('edit_cohort', 'auth_enrolkey')
             . \html_writer::empty_tag('br');
         $url = new moodle_url('edit_cohort.php', ['id' => $row->id]);
-        $content .= \html_writer::link($url, $icon, array(
+        $content .= \html_writer::link($url, $icon, [
             'class' => 'action-icon edit',
             'id' => 'admin-enrolkey-edit-' . $row->id,
             'data-toggle' => 'tooltip',
             'data-placement' => 'top',
-            'title' => 'Edit'
-        ));
+            'title' => 'Edit',
+        ]);
 
         return $content;
     }
@@ -164,14 +164,12 @@ class enrolkey_available_table extends table_sql implements renderable {
         foreach ($persistents as $persistent) {
             $fields[] = [
                 'name' => $persistent->get_readable_name(),
-                'value' => $persistent->get_readable_value()
+                'value' => $persistent->get_readable_value(),
             ];
         }
 
         $context = [
-            'data' => [
-                'fields' => $fields
-            ]
+            'data' => ['fields' => $fields],
         ];
 
         $content .= $OUTPUT->render_from_template('auth_enrolkey/enrolkey_profiletable', $context);
@@ -180,13 +178,13 @@ class enrolkey_available_table extends table_sql implements renderable {
             . get_string('edit_profile', 'auth_enrolkey')
             . \html_writer::empty_tag('br');
         $url = new moodle_url('edit_profile.php', ['id' => $row->id]);
-        $content .= \html_writer::link($url, $icon, array(
+        $content .= \html_writer::link($url, $icon, [
             'class' => 'action-icon edit',
             'id' => 'admin-enrolkey-profile-' . $row->id,
             'data-toggle' => 'tooltip',
             'data-placement' => 'top',
-            'title' => 'Profile'
-        ));
+            'title' => 'Profile',
+        ]);
 
         return $content;
     }
@@ -214,13 +212,13 @@ class enrolkey_available_table extends table_sql implements renderable {
             . get_string('edit_redirect', 'auth_enrolkey')
             . \html_writer::empty_tag('br');
         $editurl = new moodle_url('edit_redirect.php', ['id' => $row->id]);
-        $content .= \html_writer::link($editurl, $icon, array(
+        $content .= \html_writer::link($editurl, $icon, [
             'class' => 'action-icon edit',
             'id' => 'admin-enrolkey-redirect-' . $row->id,
             'data-toggle' => 'tooltip',
             'data-placement' => 'top',
-            'title' => 'Redirect'
-        ));
+            'title' => 'Redirect',
+        ]);
 
         return $content;
     }
@@ -256,5 +254,4 @@ class enrolkey_available_table extends table_sql implements renderable {
 
         return  \html_writer::link($url, $row->coursefullname);
     }
-
 }

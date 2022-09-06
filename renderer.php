@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Class auth_enrolkey_renderer
  *
@@ -45,5 +43,4 @@ class auth_enrolkey_renderer extends plugin_renderer_base {
 
         return $this->render_from_template('core/signup_form_layout', $context);
     }
-
 }

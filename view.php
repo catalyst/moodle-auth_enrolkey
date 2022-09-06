@@ -37,10 +37,9 @@ $PAGE->set_heading(get_string('signup_view', 'auth_enrolkey'));
 echo $OUTPUT->header();
 
 if (!empty($availableenrolids)) {
-
     foreach ($availableenrolids as $enrolid) {
-        $plugin = $DB->get_record('enrol', array('enrol' => 'self', 'id' => $enrolid));
-        $course = $DB->get_record('course', array('id' => $plugin->courseid));
+        $plugin = $DB->get_record('enrol', ['enrol' => 'self', 'id' => $enrolid]);
+        $course = $DB->get_record('course', ['id' => $plugin->courseid]);
 
         $coursecontext = context_course::instance($plugin->courseid);
         $rolenames = role_get_names($coursecontext, ROLENAME_ALIAS, true);
@@ -51,36 +50,29 @@ if (!empty($availableenrolids)) {
         $data->role          = $rolenames[$plugin->roleid];
         $data->startdate     = date('Y-m-d H:i', $plugin->enrolstartdate);
         $data->enddate       = date('Y-m-d H:i', $plugin->enrolenddate);
-        $data->href          = (new moodle_url('/course/view.php', array('id' => $plugin->courseid)))->out();
+        $data->href          = (new moodle_url('/course/view.php', ['id' => $plugin->courseid]))->out();
 
         if ($plugin->enrolstartdate > 0 && $plugin->enrolenddate > 0) {
             // The course had both a start and end date.
             $successoutput = get_string('signup_view_message_basic_dates', 'auth_enrolkey', $data);
-
         } else if ($plugin->enrolstartdate > 0 && $plugin->enrolenddate == 0) {
             // The course only has a start date set.
             $successoutput = get_string('signup_view_message_basic_dates_startonly', 'auth_enrolkey', $data);
-
         } else if ($plugin->enrolstartdate == 0 && $plugin->enrolenddate > 0) {
             // The course only has a start date set.
             $successoutput = get_string('signup_view_message_basic_dates_endonly', 'auth_enrolkey', $data);
-
         } else {
             // The course has no date restrictions.
             $successoutput = get_string('signup_view_message_basic', 'auth_enrolkey', $data);
-
         }
 
         echo $OUTPUT->notification($successoutput, 'notifysuccess');
     }
-
 } else {
-
     $data = new stdClass();
     $data->href          = (new moodle_url('/'))->out();
     $failure = get_string('signup_failure', 'auth_enrolkey', $data);
     echo $OUTPUT->notification($failure, 'notifyfailure');
-
 }
 
 echo $OUTPUT->footer();

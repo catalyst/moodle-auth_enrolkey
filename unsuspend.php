@@ -55,13 +55,12 @@ if ($form->is_cancelled()) {
     // At this stage we can say, due to mform validation the user exists, is suspended and the password checks out.
     // Lets just double check these things anyway.
 
-    $user = utility::search_for_suspended_user((array)$data);
+    $user = utility::search_for_suspended_user((array) $data);
     if ($user) {
         $valid = validate_internal_user_password($user, $data->password);
     }
 
     if ($valid) {
-
         // Setting the userid can imitate logging in. Be careful with this.
         // This is used with the enrol_self() call.
         $USER->id = $user->id;
@@ -80,14 +79,12 @@ if ($form->is_cancelled()) {
                     \auth_enrolkey\persistent\enrolkey_redirect_mapping::redirect_during_signup($availableenrolids);
 
                     // Default redirect.
-                    redirect(new moodle_url("/auth/enrolkey/view.php", array('ids' => implode(',', $availableenrolids))));
+                    redirect(new moodle_url("/auth/enrolkey/view.php", ['ids' => implode(',', $availableenrolids)]));
                 }
             }
-
         } catch (Exception $e) {
             require_logout();
         }
-
     }
     // Well, we're not really logged in at all.
     $USER->id = 0;

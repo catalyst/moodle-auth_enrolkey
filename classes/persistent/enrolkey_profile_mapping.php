@@ -46,17 +46,11 @@ class enrolkey_profile_mapping extends persistent {
      * @return array
      */
     protected static function define_properties() {
-        return array(
-            'enrolid' => array(
-                'type' => PARAM_INT,
-            ),
-            'profilefieldname' => array(
-                'type' => PARAM_TEXT,
-            ),
-            'profilefielddata' => array(
-                'type' => PARAM_TEXT,
-            )
-        );
+        return [
+            'enrolid' => ['type' => PARAM_INT],
+            'profilefieldname' => ['type' => PARAM_TEXT],
+            'profilefielddata' => ['type' => PARAM_TEXT],
+        ];
     }
 
     /**
@@ -102,7 +96,6 @@ class enrolkey_profile_mapping extends persistent {
                     $user->$field = $data;
                 }
             }
-
         }
 
         // Do it.
@@ -136,7 +129,7 @@ class enrolkey_profile_mapping extends persistent {
         $select .= ' AND ' . $DB->sql_compare_text('datatype') . ' = ' . $DB->sql_compare_text(':datatype');
         $params = [
             'shortname' => $shortname,
-            'datatype' => 'menu'
+            'datatype' => 'menu',
         ];
 
         $record = $DB->get_record_select('user_info_field', $select, $params);
@@ -144,7 +137,7 @@ class enrolkey_profile_mapping extends persistent {
         if ($record) {
             // The param1 is a \n delimited list of dropdown choices.
             $values = explode("\n", $record->param1);
-            if (array_key_exists((int)$value, $values)) {
+            if (array_key_exists((int) $value, $values)) {
                 return $values[$value];
             }
         }

@@ -105,7 +105,6 @@ class enrolkey_signup_form extends \login_signup_form {
             if ($tokenisvalid === false) {
                 $errors['signup_token'] = get_string('signup_token_invalid', 'auth_enrolkey');
             }
-
         } else {
             // The form submission is an empty string, double check if the token is required.
             if ($this->signup_token_required()) {
@@ -114,12 +113,11 @@ class enrolkey_signup_form extends \login_signup_form {
         }
 
         if (get_config('auth_enrolkey', 'unsuspendaccounts') && utility::search_for_suspended_user($data)) {
-
             $stringdata = (object) ['href' => (new moodle_url('/auth/enrolkey/unsuspend.php'))->out()];
             if (empty($CFG->createuserwithemail)) {
                 $errors['username'] = $errors['username'] . get_string('suspendeduseratsignup', 'auth_enrolkey', $stringdata);
             } else {
-                $errors['email'] = $errors['email' ] . get_string('suspendeduseratsignup', 'auth_enrolkey', $stringdata);
+                $errors['email'] = $errors['email'] . get_string('suspendeduseratsignup', 'auth_enrolkey', $stringdata);
             }
         }
 
@@ -137,7 +135,7 @@ class enrolkey_signup_form extends \login_signup_form {
 
         $selfenrolinstance = false;
 
-        $instances = $DB->get_records('enrol', array('password' => $token, 'enrol' => 'self'));
+        $instances = $DB->get_records('enrol', ['password' => $token, 'enrol' => 'self']);
 
         // There may be more than one enrolment instance configured with various dates to check against.
         foreach ($instances as $instance) {
@@ -156,7 +154,7 @@ class enrolkey_signup_form extends \login_signup_form {
                                     AND e.enrol = 'self'
                                     AND e.customint1 = 1
                      WHERE g.enrolmentkey = ?
-            ", array($token));
+            ", [$token]);
         foreach ($instances as $instance) {
             if ($instance->status == ENROL_INSTANCE_ENABLED) {
                 $selfenrolinstance = true;
@@ -182,5 +180,4 @@ class enrolkey_signup_form extends \login_signup_form {
         global $CFG;
         return !empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey) && get_config('auth_enrolkey', 'recaptcha');
     }
-
 }

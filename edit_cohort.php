@@ -50,7 +50,6 @@ $form = new enrolkey_cohort_form($baseurl, $customdata);
 if ($form && $form->is_cancelled()) {
     redirect(new moodle_url('/auth/enrolkey/manage.php'));
 } else if (($data = $form->get_data())) {
-
     $savedcohortids = [];
 
     foreach ($data->cohortids as $cid) {
@@ -60,7 +59,7 @@ if ($form && $form->is_cancelled()) {
         if (!array_key_exists($cid, $records)) {
             $pdata = (object) [
                 'enrolid' => $id,
-                'cohortid' => $cid
+                'cohortid' => $cid,
             ];
             $persistent = new enrolkey_cohort_mapping(0, $pdata);
             $persistent->save();
