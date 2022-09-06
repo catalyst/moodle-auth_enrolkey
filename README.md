@@ -1,12 +1,12 @@
-[![Build Status](https://github.com/catalyst/moodle-auth_enrolkey/actions/workflows/ci.yml/badge.svg)](https://github.com/catalyst/moodle-auth_enrolkey/actions)
-
 # Moodle Enrolment key based self-registration
+
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/catalyst/moodle-auth_enrolkey/ci/master?label=ci)
 
 This auth plugin combines the best of both email based signup and self enrolment keys into a streamlined process making it much faster for students to get into a course. For the student it saves around 9-10 clicks and avoids context switching between a browser and their email client where they can become easily become disengaged or run into issues if their email is unavailable.
 
 This is mostly a clone of the Email-based self-registration plugin that also enrols a user into available courses based on a token supplied. When a user enters a valid token it will automatically enrol them into the course that token was specified for, and then take them directly to that course. Also an optional bonus setting: because they have demonstrated knowledge of a secret code we know they are a real human so we let them straight in without forcing them to confirm their email. For some use cases where they may login and complete their course in a single session we may not ever care about their email being valid.
 
-Courses that provide self enrolment can restrict access to them with a key. If the signup token matches any course enrolment key then the new user will be enrolled into those courses. 
+Courses that provide self enrolment can restrict access to them with a key. If the signup token matches any course enrolment key then the new user will be enrolled into those courses.
 
 Found in the Moodle plugins directory at [https://moodle.org/plugins/auth_enrolkey](https://moodle.org/plugins/auth_enrolkey)
 
@@ -34,7 +34,7 @@ Branches
 | Moodle 3.5 to 3.11    | master      | 7.1+  |
 
 Installation
------------- 
+------------
 
 Add the plugin to /auth/enrolkey/
 
@@ -47,11 +47,11 @@ First enable the Enrolment key based self-registration plugin for use.
 `Site administration > Plugins > Authentication > Manage Authentication`
 
 On the same page that you manage authentication options, scroll down to the common settings and select `Enrolment key based self-registration` in the Self Registration drop down list for `registerauth`.
-    
+
 Enable the Self enrolment plugin.
 
 `Site administration > Plugins > Enrolments > Manage enrol plugins`
-    
+
 Settings
 --------
 
@@ -64,7 +64,7 @@ Admin Usage
 
 ## Course enrolment keys
 
-Enable a new Self enrolment method in the course required. 
+Enable a new Self enrolment method in the course required.
 
 `Course administration > Users > Enrolment methods > Add method > Self enrolment`
 
@@ -78,7 +78,7 @@ Please add additional Self enrolment methods for the course that you require aut
 
 If you select `Use group enrolment keys: Yes` during creating of a new Self enrolment method, it enables a functionality of automatic adding self enrolled students to the groups created in the course.
 
-In order for that to work, create a group in the course and specify `Enrolment key`. 
+In order for that to work, create a group in the course and specify `Enrolment key`.
 
 Please note, that this key must be different from the course enrollment key which you set in the course Self enrolment method.
 
@@ -89,11 +89,11 @@ Client Usage
 
 When a user tries to log in they are given the option to create an account.
 
-The user can enter a token into the field name `Enrolment key`. 
+The user can enter a token into the field name `Enrolment key`.
 
 There is an optional setting that can force this field to be required.
 
-If the token matches **any** valid instance of self enrolment, then the user will be enrolled to those courses.  
+If the token matches **any** valid instance of self enrolment, then the user will be enrolled to those courses.
 
 TODO
 ----
