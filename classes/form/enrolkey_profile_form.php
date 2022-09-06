@@ -60,25 +60,42 @@ class enrolkey_profile_form extends \moodleform {
         $mform->addElement('text', 'url', get_string('webpage'), 'maxlength="255" size="50"');
         $mform->setType('url', core_user::get_property_type('url'));
 
-        $mform->addElement('text', 'icq', get_string('icqnumber'), 'maxlength="15" size="25"');
-        $mform->setType('icq', core_user::get_property_type('icq'));
-        $mform->setForceLtr('icq');
+        $removedfields = [];
+        if (defined('core_user::REMOVED_FIELDS')) {
+            $removedfields = core_user::REMOVED_FIELDS;
+        }
+
+        // Fields that might not exist, such as in Totara 13+.
+        if (!isset($removedfields['icq'])) {
+            $mform->addElement('text', 'icq', get_string('icqnumber'), 'maxlength="15" size="25"');
+            $mform->setType('icq', core_user::get_property_type('icq'));
+            $mform->setForceLtr('icq');
+        }
 
         $mform->addElement('text', 'skype', get_string('skypeid'), 'maxlength="50" size="25"');
         $mform->setType('skype', core_user::get_property_type('skype'));
         $mform->setForceLtr('skype');
 
-        $mform->addElement('text', 'aim', get_string('aimid'), 'maxlength="50" size="25"');
-        $mform->setType('aim', core_user::get_property_type('aim'));
-        $mform->setForceLtr('aim');
+        // Fields that might not exist, such as in Totara 13+.
+        if (!isset($removedfields['aim'])) {
+            $mform->addElement('text', 'aim', get_string('aimid'), 'maxlength="50" size="25"');
+            $mform->setType('aim', core_user::get_property_type('aim'));
+            $mform->setForceLtr('aim');
+        }
 
-        $mform->addElement('text', 'yahoo', get_string('yahooid'), 'maxlength="50" size="25"');
-        $mform->setType('yahoo', core_user::get_property_type('yahoo'));
-        $mform->setForceLtr('yahoo');
+        // Fields that might not exist, such as in Totara 13+.
+        if (!isset($removedfields['yahoo'])) {
+            $mform->addElement('text', 'yahoo', get_string('yahooid'), 'maxlength="50" size="25"');
+            $mform->setType('yahoo', core_user::get_property_type('yahoo'));
+            $mform->setForceLtr('yahoo');
+        }
 
-        $mform->addElement('text', 'msn', get_string('msnid'), 'maxlength="50" size="25"');
-        $mform->setType('msn', core_user::get_property_type('msn'));
-        $mform->setForceLtr('msn');
+        // Fields that might not exist, such as in Totara 13+.
+        if (!isset($removedfields['msn'])) {
+            $mform->addElement('text', 'msn', get_string('msnid'), 'maxlength="50" size="25"');
+            $mform->setType('msn', core_user::get_property_type('msn'));
+            $mform->setForceLtr('msn');
+        }
 
         $mform->addElement('text', 'idnumber', get_string('idnumber'), 'maxlength="255" size="25"');
         $mform->setType('idnumber', core_user::get_property_type('idnumber'));
