@@ -1,7 +1,13 @@
-name: Run all tests for Moodle 35+
+# .github/workflows/ci.yml
+name: ci
 
 on: [push, pull_request]
 
 jobs:
-  workflow_group_35_plus_ci:
-    uses: catalyst/catalyst-moodle-workflows/.github/workflows/group-35-plus-ci.yml@main
+  ci:
+    uses: catalyst/catalyst-moodle-workflows/.github/workflows/ci.yml@main
+    # Required if you plan to publish (uncomment the below)
+    secrets:
+      moodle_org_token: ${{ secrets.MOODLE_ORG_TOKEN }}
+    with:
+      release_branches: master
