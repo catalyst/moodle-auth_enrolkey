@@ -41,6 +41,7 @@ $PAGE->set_url($baseurl);
 $PAGE->set_pagelayout('login');
 $PAGE->set_title(get_string('title_unsuspend', 'auth_enrolkey'));
 $PAGE->set_heading(get_string('heading_unsuspend', 'auth_enrolkey'));
+$PAGE->set_context($context);
 $output = $PAGE->get_renderer('auth_enrolkey');
 
 $form = new unsuspend_form($baseurl);

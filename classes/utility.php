@@ -59,11 +59,6 @@ class utility {
             $params['username'] = $data['username'];
         }
 
-        // This setting means the email address is the username.
-        if ($CFG->createuserwithemail) {
-            $params['username'] = $data['email'];
-        }
-
         return $DB->get_record('user', $params, '*');
     }
 
