@@ -51,11 +51,11 @@ class utility {
             'auth' => 'enrolkey',
         ];
 
-        if (array_key_exists('email', $data)) {
+        if (!empty($data['email'])) {
             $params['email'] = $data['email'];
         }
 
-        if (array_key_exists('username', $data)) {
+        if (!empty($data['username'])) {
             $params['username'] = $data['username'];
         }
 
