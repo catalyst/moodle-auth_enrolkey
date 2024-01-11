@@ -70,6 +70,15 @@ function auth_enrolkey_post_set_password_requests($data) {
         return;
     }
 
+    // Log them out immediately.
+    // Required since resetting password logs you in,
+    // but the user is still suspended, so they get stuck in a halfway state.
     require_logout();
+
+    // Redirect them to the unsuspend page afterwards.
+    // So they can enter their new details and enrolkey and unsuspend themselves.
+    if (!PHPUNIT_TEST) {
+        redirect(new moodle_url('/auth/enrolkey/unsuspend.php'));
+    }
 }
 
