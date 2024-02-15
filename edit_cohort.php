@@ -29,6 +29,7 @@ use auth_enrolkey\persistent\enrolkey_cohort_mapping;
 
 require_once(__DIR__.'/../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->dirroot . '/cohort/lib.php');
 
 admin_externalpage_setup('auth_enrolkey_manage');
 
