@@ -29,4 +29,4 @@ $plugin->release   = 2022011200;        // Match release exactly to version.
 $plugin->requires  = 2014051200;        // Requires this Moodle version (2.7+).
 $plugin->component = 'auth_enrolkey';      // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->supported = [35, 311];            // A range of branch numbers of supported moodle versions.
+$plugin->supported = [35, 405];            // A range of branch numbers of supported moodle versions.
