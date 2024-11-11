@@ -29,9 +29,9 @@ https://moodle.org/plugins/block_enrolkey
 Branches
 --------
 
-| Moodle version        | Branch      | PHP   |
-| --------------------- | ----------- | ----- |
-| Moodle 3.5 to 3.11    | master      | 7.1+  |
+| Moodle version    | Branch      | PHP   |
+|-------------------| ----------- | ----- |
+| Moodle 3.5 to 4.5 | master      | 7.1+  |
 
 Installation
 ------------
@@ -66,7 +66,9 @@ Admin Usage
 
 Enable a new Self enrolment method in the course required.
 
-`Course administration > Users > Enrolment methods > Add method > Self enrolment`
+Moodle 3.5 to 3.11, `Course administration > Users > Enrolment methods > Add method > Self enrolment`
+
+Moodle 4.0+, `Participants > Enrolments > Enrolment methods > Add method > Self enrolment`
 
 The Enrolment key field that is visible will be used for the automatic enrolment on signup.
 

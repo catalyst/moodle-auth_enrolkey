@@ -172,6 +172,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             // Access to course, but confirmation required before next login attempt.
             $user->confirmed = 0;
         }
+        $user->lastip = getremoteaddr();
         $user->id = user_create_user($user, false, false);
 
         // Save any custom profile field information.
@@ -179,11 +180,10 @@ class auth_plugin_enrolkey extends auth_plugin_base {
 
         // Trigger event.
         \core\event\user_created::create_from_userid($user->id)->trigger();
-
         if ($notify) {
             if (!send_confirmation_email($user)) {
                 // TODO make this more resilient? Email shouldn't be critical here.
-                print_error('noemail', 'auth_enrolkey');
+                throw new \moodle_exception('noemail', 'auth_enrolkey');
             }
         }
 
