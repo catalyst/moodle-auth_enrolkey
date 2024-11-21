@@ -77,6 +77,16 @@ if ($form->is_cancelled()) {
                 if (authenticate_user_login($user->username, $data->password)) {
                     \auth_enrolkey\persistent\enrolkey_profile_mapping::add_fields_during_signup($user, $availableenrolids);
                     \auth_enrolkey\persistent\enrolkey_cohort_mapping::add_cohorts_during_signup($user, $availableenrolids);
+
+                    // At this point signup and enrolment is finished.
+                    // If enabled, run a cohort sync to force dynamic cohorts to update.
+                    if (get_config('auth_enrolkey', 'totaracohortsync') &&
+                        function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
+                        $trace = new \null_progress_trace();
+                        // This may be a perfomance hog.
+                        totara_cohort_check_and_update_dynamic_cohort_members(null, $trace);
+                    }
+
                     \auth_enrolkey\persistent\enrolkey_redirect_mapping::redirect_during_signup($availableenrolids);
 
                     // Default redirect.
