@@ -202,21 +202,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             return;
         }
 
-        // New Enrolkey hook, will force/add user profile fields user based on the enrolkey used.
-        \auth_enrolkey\persistent\enrolkey_profile_mapping::add_fields_during_signup($user, $availableenrolids);
-
-        // New Enrolkey hook, will assign and enrol this user to corhots based on the enrolkey used.
-        \auth_enrolkey\persistent\enrolkey_cohort_mapping::add_cohorts_during_signup($user, $availableenrolids);
-
-        // At this point signup and enrolment is finished.
-        // If enabled, run a cohort sync to force dynamic cohorts to update.
-        if (get_config('auth_enrolkey', 'totaracohortsync') &&
-            function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
-            $trace = new \null_progress_trace();
-            // This may be a perfomance hog.
-            totara_cohort_check_and_update_dynamic_cohort_members(null, $trace);
-        }
-
         if (!empty($availableenrolids) && $user->confirmed === 0 && $user->policyagreed === 0) {
             $this->email_confirmation($user->email);
         }
@@ -247,7 +232,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @return array
      */
     public function enrol_user(string $enrolkey, bool $notify = true) : array {
-        global $DB;
+        global $DB, $USER;
 
         /** @var enrol_self_plugin $enrol */
         $enrol = enrol_get_plugin('self');
@@ -265,6 +250,24 @@ class auth_plugin_enrolkey extends auth_plugin_base {
                 $errors[$enrolplugin->courseid] = $enrol->can_self_enrol($enrolplugin);
             }
         }
+
+        if ($availableenrolids) {
+            // New Enrolkey hook, will force/add user profile fields user based on the enrolkey used.
+            \auth_enrolkey\persistent\enrolkey_profile_mapping::add_fields_during_signup($USER, $availableenrolids);
+
+            // New Enrolkey hook, will assign and enrol this user to corhots based on the enrolkey used.
+            \auth_enrolkey\persistent\enrolkey_cohort_mapping::add_cohorts_during_signup($USER, $availableenrolids);
+
+            // At this point signup and enrolment is finished.
+            // If enabled, run a cohort sync to force dynamic cohorts to update.
+            if (get_config('auth_enrolkey', 'totaracohortsync') &&
+                function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
+                $trace = new \null_progress_trace();
+                // This may be a perfomance hog.
+                totara_cohort_check_and_update_dynamic_cohort_members(null, $trace);
+            }
+        }
+
         return [$availableenrolids, $errors];
     }
 
