@@ -69,23 +69,13 @@ if ($form->is_cancelled()) {
             list($availableenrolids, $errors) = utility::unsuspend_and_enrol_user($data->signup_token, false);
 
             // Only enrol a user to enrolkeys and courses which they are not already enrolled in.
-            if ($availableenrolids) {
+            if (!empty($availableenrolids)) {
                 complete_user_login($user);
                 utility::unsuspend_user($user);
 
                 // They are now unsuspended. We can actually called the real auth login function.
                 if (authenticate_user_login($user->username, $data->password)) {
-                    \auth_enrolkey\persistent\enrolkey_profile_mapping::add_fields_during_signup($user, $availableenrolids);
-                    \auth_enrolkey\persistent\enrolkey_cohort_mapping::add_cohorts_during_signup($user, $availableenrolids);
-
-                    // At this point signup and enrolment is finished.
-                    // If enabled, run a cohort sync to force dynamic cohorts to update.
-                    if (get_config('auth_enrolkey', 'totaracohortsync') &&
-                        function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
-                        $trace = new \null_progress_trace();
-                        // This may be a perfomance hog.
-                        totara_cohort_check_and_update_dynamic_cohort_members(null, $trace);
-                    }
+                    utility::update_user($user, $availableenrolids);
 
                     \auth_enrolkey\persistent\enrolkey_redirect_mapping::redirect_during_signup($availableenrolids);
 

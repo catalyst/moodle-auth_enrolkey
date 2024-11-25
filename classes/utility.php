@@ -200,4 +200,26 @@ class utility {
 
         return true;
     }
+
+    /**
+     * Updates user profile and cohort according to the set enrolkey mappings.
+     *
+     * @param \stdClass $user the user to update
+     * @param array $availableenrolids the enrol ids for the enrolkey used
+     */
+    public static function update_user($user, $availableenrolids) {
+        // Update user profile fields based on the enrolkey used.
+        \auth_enrolkey\persistent\enrolkey_profile_mapping::add_fields_during_signup($user, $availableenrolids);
+
+        // Assign this user to corhots based on the enrolkey used.
+        \auth_enrolkey\persistent\enrolkey_cohort_mapping::add_cohorts_during_signup($user, $availableenrolids);
+
+        // If enabled, run a cohort sync to force dynamic cohorts to update.
+        if (get_config('auth_enrolkey', 'totaracohortsync') &&
+            function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
+            $trace = new \null_progress_trace();
+            // This may be a perfomance hog.
+            totara_cohort_check_and_update_dynamic_cohort_members(null, $trace);
+        }
+    }
 }

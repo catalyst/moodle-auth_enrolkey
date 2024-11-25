@@ -26,6 +26,8 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/authlib.php');
 
+use auth_enrolkey\utility;
+
 // If totara cohort lib exists, import it.
 if (file_exists($CFG->dirroot . '/totara/cohort/lib.php')) {
     require_once($CFG->dirroot . '/totara/cohort/lib.php');
@@ -251,21 +253,8 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             }
         }
 
-        if ($availableenrolids) {
-            // New Enrolkey hook, will force/add user profile fields user based on the enrolkey used.
-            \auth_enrolkey\persistent\enrolkey_profile_mapping::add_fields_during_signup($USER, $availableenrolids);
-
-            // New Enrolkey hook, will assign and enrol this user to corhots based on the enrolkey used.
-            \auth_enrolkey\persistent\enrolkey_cohort_mapping::add_cohorts_during_signup($USER, $availableenrolids);
-
-            // At this point signup and enrolment is finished.
-            // If enabled, run a cohort sync to force dynamic cohorts to update.
-            if (get_config('auth_enrolkey', 'totaracohortsync') &&
-                function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
-                $trace = new \null_progress_trace();
-                // This may be a perfomance hog.
-                totara_cohort_check_and_update_dynamic_cohort_members(null, $trace);
-            }
+        if (!empty($availableenrolids)) {
+            utility::update_user($USER, $availableenrolids);
         }
 
         return [$availableenrolids, $errors];

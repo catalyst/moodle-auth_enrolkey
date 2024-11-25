@@ -73,7 +73,7 @@ class enrolkey_profile_mapping extends persistent {
     /**
      * During auth.php->user_signup, this adds the forced user profile fields.
      *
-     * @param stdClass $user
+     * @param \stdClass $user
      * @param array $availableenrolids
      */
     public static function add_fields_during_signup($user, $availableenrolids) {

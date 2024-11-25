@@ -73,7 +73,7 @@ class enrolkey_cohort_mapping extends persistent {
     /**
      * During auth.php->user_signup, this adds the user to the associated cohorts.
      *
-     * @param stdClass $user
+     * @param \stdClass $user
      * @param array $availableenrolids
      */
     public static function add_cohorts_during_signup($user, $availableenrolids) {
