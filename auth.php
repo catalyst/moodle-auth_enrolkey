@@ -185,7 +185,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         if ($notify && $emailconfirmation !== '0') {
             if (!send_confirmation_email($user)) {
                 // TODO make this more resilient? Email shouldn't be critical here.
-                print_error('noemail', 'auth_enrolkey');
+                throw new \moodle_exception('noemail', 'auth_enrolkey');
             }
         }
 
