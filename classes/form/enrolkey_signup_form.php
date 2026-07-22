@@ -59,6 +59,19 @@ class enrolkey_signup_form extends \login_signup_form {
 
         $mform = $this->_form;
 
+        // Add clearer instructions for the username field.
+        if ($mform->elementExists('username')) {
+            $mform->addHelpButton('username', 'signup_username', 'auth_enrolkey');
+        }
+
+        // Remove city and country fields - not required for NSW EC.
+        if ($mform->elementExists('city')) {
+            $mform->removeElement('city');
+        }
+        if ($mform->elementExists('country')) {
+            $mform->removeElement('country');
+        }
+
         $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
 
         // View https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#setType for more types.
@@ -70,6 +83,9 @@ class enrolkey_signup_form extends \login_signup_form {
 
         // Make the course token field visible earlier.
         $mform->insertElementBefore($element, 'email');
+
+        // Add help button to explain how to obtain the enrolment key.
+        $mform->addHelpButton('signup_token', 'signup_enrolkey', 'auth_enrolkey');
 
         if ($this->signup_token_required()) {
             $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'client');

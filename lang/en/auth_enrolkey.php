@@ -72,13 +72,10 @@ $string['signup_view_message_basic_dates_startonly'] = 'You have enrolled into {
 $string['signup_view_message_basic_dates_endonly'] = 'You have enrolled into {$a->course} as a {$a->role}. <a href={$a->href}>Click here to view the course.</a><br />Course ends: {$a->enddate}';
 $string['signup_auth_instructions'] = 'Hi! For full access to courses you\'ll need to take
 a minute to create a new account for yourself on this web site.
-Each of the individual courses may also have a one-time
-"enrolment key", which you can use during this sign up:
 <ol>
-<li>Fill out the <a href="{$a}">New Account</a> form with your details.</li>
-<li>You will be prompted for an "enrolment key" - use the one
-that your teacher has given you. This will "enrol" you in the
-course.</li>
+<li>Click <a href="{$a}">Create new account</a> and fill out the form with your details.</li>
+<li><strong>Username:</strong> Choose a username of at least 3 characters using lowercase letters, numbers, hyphens or underscores. For example: <em>jane.smith</em> or <em>jsmith2024</em>.</li>
+<li><strong>Enrolment key:</strong> Enter the enrolment key provided to you by NSW EC. This is the same key shared with all temporary election workforce staff and will be included in your onboarding communications.</li>
 <li>Your account will be created and you will be logged in.</li>
 <li>You can now access the full course for this session.</li>
 <li>An email has also been immediately sent to your email address.</li>
@@ -87,6 +84,10 @@ course.</li>
 username and password (in the form on this page) to log in
 and access any course you have enrolled in.</li>
 </ol>';
+$string['signup_username'] = 'Username';
+$string['signup_username_help'] = 'Choose a username to log in with.<br/><br/><strong>Requirements:</strong><ul><li>At least 3 characters long</li><li>Only lowercase letters, numbers, hyphens (-), underscores (_), or periods (.)</li></ul><strong>Examples:</strong><ul><li><strong>jane.smith</strong></li><li><strong>jsmith2024</strong></li><li><strong>john_doe</strong></li></ul>';
+$string['signup_enrolkey'] = 'Enrolment key';
+$string['signup_enrolkey_help'] = 'The enrolment key is a code provided by NSW EC. You will receive this key as part of your onboarding communications (e.g. in your offer letter or induction materials).';
 $string['suspendeduseratsignup'] = '<br />Perhaps your account exists but was suspended? <a href="{$a->href}">Please sign up with a new enrolkey here</a>';
 $string['th_cohorts'] = 'Assigned cohorts';
 $string['th_enrolkeyname'] = 'Enrolkey name';
