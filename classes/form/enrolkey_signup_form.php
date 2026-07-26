@@ -59,6 +59,11 @@ class enrolkey_signup_form extends \login_signup_form {
 
         $mform = $this->_form;
 
+        // Add instruction text at the top of the form.
+        $instructiontext = get_string('signup_form_instructions', 'auth_enrolkey');
+        $instruction = $mform->createElement('static', 'signupinstructions', '', $instructiontext);
+        $mform->insertElementBefore($instruction, 'username');
+
         // Add clearer instructions for the username field.
         if ($mform->elementExists('username')) {
             $mform->addHelpButton('username', 'signup_username', 'auth_enrolkey');

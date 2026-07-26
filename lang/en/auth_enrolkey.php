@@ -87,7 +87,8 @@ and access any course you have enrolled in.</li>
 $string['signup_username'] = 'Username';
 $string['signup_username_help'] = 'Choose a username to log in with.<br/><br/><strong>Requirements:</strong><ul><li>At least 3 characters long</li><li>Only lowercase letters, numbers, hyphens (-), underscores (_), or periods (.)</li></ul><strong>Examples:</strong><ul><li><strong>jane.smith</strong></li><li><strong>jsmith2024</strong></li><li><strong>john_doe</strong></li></ul>';
 $string['signup_enrolkey'] = 'Enrolment key';
-$string['signup_enrolkey_help'] = 'The enrolment key is a code provided by NSW EC. You will receive this key as part of your onboarding communications (e.g. in your offer letter or induction materials).';
+$string['signup_enrolkey_help'] = 'The enrolment key is a code provided by NSWEC. You will receive this key as part of your onboarding communications (e.g. in your offer letter or induction materials).';
+$string['signup_form_instructions'] = 'Fill in all the fields below to create an account. Use the examples and hints if you need help. When all fields are complete, select <strong>Create my new account</strong>.';
 $string['suspendeduseratsignup'] = '<br />Perhaps your account exists but was suspended? <a href="{$a->href}">Please sign up with a new enrolkey here</a>';
 $string['th_cohorts'] = 'Assigned cohorts';
 $string['th_enrolkeyname'] = 'Enrolkey name';
