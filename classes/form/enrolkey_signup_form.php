@@ -64,17 +64,19 @@ class enrolkey_signup_form extends \login_signup_form {
         $instruction = $mform->createElement('static', 'signupinstructions', '', $instructiontext);
         $mform->insertElementBefore($instruction, 'username');
 
-        // Add clearer instructions for the username field.
+        // Add help button for the username field.
         if ($mform->elementExists('username')) {
             $mform->addHelpButton('username', 'signup_username', 'auth_enrolkey');
         }
 
-        // Remove city and country fields - not required for NSW EC.
-        if ($mform->elementExists('city')) {
-            $mform->removeElement('city');
-        }
-        if ($mform->elementExists('country')) {
-            $mform->removeElement('country');
+        // Optionally hide city and country fields based on admin setting.
+        if (get_config('auth_enrolkey', 'hidecityandcountry')) {
+            if ($mform->elementExists('city')) {
+                $mform->removeElement('city');
+            }
+            if ($mform->elementExists('country')) {
+                $mform->removeElement('country');
+            }
         }
 
         $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
@@ -89,7 +91,7 @@ class enrolkey_signup_form extends \login_signup_form {
         // Make the course token field visible earlier.
         $mform->insertElementBefore($element, 'email');
 
-        // Add help button to explain how to obtain the enrolment key.
+        // Add help button for the enrolment key field.
         $mform->addHelpButton('signup_token', 'signup_enrolkey', 'auth_enrolkey');
 
         if ($this->signup_token_required()) {

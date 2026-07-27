@@ -52,6 +52,10 @@ if ($hassiteconfig) {
         get_string('unsuspendaccounts', 'auth_enrolkey'),
         get_string('unsuspendaccounts_description', 'auth_enrolkey'), 0, $options));
 
+    $settings->add(new admin_setting_configselect('auth_enrolkey/hidecityandcountry',
+        get_string('settings_hidecityandcountry_title', 'auth_enrolkey'),
+        get_string('settings_hidecityandcountry_description', 'auth_enrolkey'), 0, $options));
+
     if (function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
         $settings->add(new admin_setting_configcheckbox('auth_enrolkey/totaracohortsync',
             get_string('cohortsync', 'auth_enrolkey'),

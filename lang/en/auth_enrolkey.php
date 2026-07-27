@@ -75,7 +75,7 @@ a minute to create a new account for yourself on this web site.
 <ol>
 <li>Click <a href="{$a}">Create new account</a> and fill out the form with your details.</li>
 <li><strong>Username:</strong> Choose a username of at least 3 characters using lowercase letters, numbers, hyphens or underscores. For example: <em>jane.smith</em> or <em>jsmith2024</em>.</li>
-<li><strong>Enrolment key:</strong> Enter the enrolment key provided to you by NSW EC. This is the same key shared with all temporary election workforce staff and will be included in your onboarding communications.</li>
+<li><strong>Enrolment key:</strong> Enter the enrolment key provided to you by your organisation. This will be included in your onboarding communications.</li>
 <li>Your account will be created and you will be logged in.</li>
 <li>You can now access the full course for this session.</li>
 <li>An email has also been immediately sent to your email address.</li>
@@ -87,8 +87,10 @@ and access any course you have enrolled in.</li>
 $string['signup_username'] = 'Username';
 $string['signup_username_help'] = 'Choose a username to log in with.<br/><br/><strong>Requirements:</strong><ul><li>At least 3 characters long</li><li>Only lowercase letters, numbers, hyphens (-), underscores (_), or periods (.)</li></ul><strong>Examples:</strong><ul><li><strong>jane.smith</strong></li><li><strong>jsmith2024</strong></li><li><strong>john_doe</strong></li></ul>';
 $string['signup_enrolkey'] = 'Enrolment key';
-$string['signup_enrolkey_help'] = 'The enrolment key is a code provided by NSWEC. You will receive this key as part of your onboarding communications (e.g. in your offer letter or induction materials).';
+$string['signup_enrolkey_help'] = 'The enrolment key is a code provided by your organisation. You will receive this key as part of your onboarding communications (e.g. in your offer letter or induction materials).';
 $string['signup_form_instructions'] = 'Fill in all the fields below to create an account. Use the examples and hints if you need help. When all fields are complete, select <strong>Create my new account</strong>.';
+$string['settings_hidecityandcountry_title'] = 'Hide city and country fields';
+$string['settings_hidecityandcountry_description'] = 'When enabled, the city and country fields will be removed from the signup form.';
 $string['suspendeduseratsignup'] = '<br />Perhaps your account exists but was suspended? <a href="{$a->href}">Please sign up with a new enrolkey here</a>';
 $string['th_cohorts'] = 'Assigned cohorts';
 $string['th_enrolkeyname'] = 'Enrolkey name';
