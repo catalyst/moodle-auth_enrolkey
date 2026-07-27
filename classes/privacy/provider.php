@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Privacy provider.
  *
@@ -32,10 +33,11 @@ use core_privacy\local\request\writer;
 /**
  * Class provider
  */
-class provider implements \core_privacy\local\metadata\provider,
-                          \core_privacy\local\request\core_userlist_provider,
-                          \core_privacy\local\request\plugin\provider {
-
+class provider implements
+    \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\core_userlist_provider,
+    \core_privacy\local\request\plugin\provider
+{
     /**
      * Returns metadata about this plugin's privacy policy.
      *
@@ -44,19 +46,19 @@ class provider implements \core_privacy\local\metadata\provider,
      */
     public static function get_metadata(collection $collection): collection {
         $collection->add_database_table(
-                'auth_enrolkey_redirect',
-                ['usermodified' => 'privacy:metadata:auth_enrolkey_redirect:usermodified'],
-                'privacy:metadata:auth_enrolkey_redirect'
+            'auth_enrolkey_redirect',
+            ['usermodified' => 'privacy:metadata:auth_enrolkey_redirect:usermodified'],
+            'privacy:metadata:auth_enrolkey_redirect'
         );
         $collection->add_database_table(
-                'auth_enrolkey_profile',
-                ['usermodified' => 'privacy:metadata:auth_enrolkey_profile:usermodified'],
-                'privacy:metadata:auth_enrolkey_profile'
+            'auth_enrolkey_profile',
+            ['usermodified' => 'privacy:metadata:auth_enrolkey_profile:usermodified'],
+            'privacy:metadata:auth_enrolkey_profile'
         );
         $collection->add_database_table(
-                'auth_enrolkey_cohort',
-                ['usermodified' => 'privacy:metadata:auth_enrolkey_cohort:usermodified'],
-                'privacy:metadata:auth_enrolkey_cohort'
+            'auth_enrolkey_cohort',
+            ['usermodified' => 'privacy:metadata:auth_enrolkey_cohort:usermodified'],
+            'privacy:metadata:auth_enrolkey_cohort'
         );
 
         return $collection;
@@ -164,11 +166,11 @@ class provider implements \core_privacy\local\metadata\provider,
                     'email' => $user->email,
                 ];
                 writer::with_context($context)->export_data(
-                        [
-                            get_string('privacy:metadata:auth_enrolkey', 'auth_enrolkey'),
-                            $user->id,
-                        ],
-                        $data
+                    [
+                        get_string('privacy:metadata:auth_enrolkey', 'auth_enrolkey'),
+                        $user->id,
+                    ],
+                    $data
                 );
             }
         }

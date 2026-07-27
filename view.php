@@ -76,4 +76,3 @@ if (!empty($availableenrolids)) {
 }
 
 echo $OUTPUT->footer();
-

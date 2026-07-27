@@ -27,7 +27,8 @@
 use auth_enrolkey\form\unsuspend_form;
 use auth_enrolkey\utility;
 
-require_once(__DIR__.'/../../config.php');
+// phpcs:disable moodle.Files.RequireLogin.Missing -- Suspended users cannot log in, this page handles un-suspension.
+require_once(__DIR__ . '/../../config.php');
 
 $context = context_system::instance();
 
@@ -66,7 +67,7 @@ if ($form->is_cancelled()) {
         // This is used with the enrol_self() call.
         $USER->id = $user->id;
         try {
-            list($availableenrolids, $errors) = utility::unsuspend_and_enrol_user($data->signup_token, false);
+            [$availableenrolids, $errors] = utility::unsuspend_and_enrol_user($data->signup_token, false);
 
             // Only enrol a user to enrolkeys and courses which they are not already enrolled in.
             if (!empty($availableenrolids)) {

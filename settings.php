@@ -31,59 +31,114 @@ if ($hassiteconfig) {
 
     $settings->visiblename = get_string('menusettings', 'auth_enrolkey');
 
-    $settings->add(new admin_setting_heading('auth_enrolkey_heading', get_string('settings_heading', 'auth_enrolkey'),
-            get_string('settings_content', 'auth_enrolkey')));
+    $settings->add(
+        new admin_setting_heading(
+            'auth_enrolkey_heading',
+            get_string('settings_heading', 'auth_enrolkey'),
+            get_string('settings_content', 'auth_enrolkey')
+        )
+    );
 
-    $settings->add(new admin_setting_configselect('auth_enrolkey/tokenrequired',
+    $settings->add(
+        new admin_setting_configselect(
+            'auth_enrolkey/tokenrequired',
             get_string('settings_required_title', 'auth_enrolkey'),
-            get_string('settings_required_description', 'auth_enrolkey'), 1, $options));
+            get_string('settings_required_description', 'auth_enrolkey'),
+            1,
+            $options
+        )
+    );
 
-    $settings->add(new admin_setting_configselect('auth_enrolkey/recaptcha',
+    $settings->add(
+        new admin_setting_configselect(
+            'auth_enrolkey/recaptcha',
             get_string('recaptcha_key', 'auth_enrolkey'),
-            get_string('recaptcha', 'auth_enrolkey'), 0, $options));
+            get_string('recaptcha', 'auth_enrolkey'),
+            0,
+            $options
+        )
+    );
 
     $optionspartial = $options;
     $optionspartial[] = get_string('settings_partial', 'auth_enrolkey');
-    $settings->add(new admin_setting_configselect('auth_enrolkey/emailconfirmation',
+    $settings->add(
+        new admin_setting_configselect(
+            'auth_enrolkey/emailconfirmation',
             get_string('settings_email_title', 'auth_enrolkey'),
-            get_string('settings_email_description', 'auth_enrolkey'), 0, $optionspartial));
+            get_string('settings_email_description', 'auth_enrolkey'),
+            0,
+            $optionspartial
+        )
+    );
 
-    $settings->add(new admin_setting_configselect('auth_enrolkey/unsuspendaccounts',
-        get_string('unsuspendaccounts', 'auth_enrolkey'),
-        get_string('unsuspendaccounts_description', 'auth_enrolkey'), 0, $options));
+    $settings->add(
+        new admin_setting_configselect(
+            'auth_enrolkey/unsuspendaccounts',
+            get_string('unsuspendaccounts', 'auth_enrolkey'),
+            get_string('unsuspendaccounts_description', 'auth_enrolkey'),
+            0,
+            $options
+        )
+    );
 
-    $settings->add(new admin_setting_configselect('auth_enrolkey/hidecityandcountry',
-        get_string('settings_hidecityandcountry_title', 'auth_enrolkey'),
-        get_string('settings_hidecityandcountry_description', 'auth_enrolkey'), 0, $options));
+    $settings->add(
+        new admin_setting_configselect(
+            'auth_enrolkey/hidecityandcountry',
+            get_string('settings_hidecityandcountry_title', 'auth_enrolkey'),
+            get_string('settings_hidecityandcountry_description', 'auth_enrolkey'),
+            0,
+            $options
+        )
+    );
 
     if (function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
-        $settings->add(new admin_setting_configcheckbox('auth_enrolkey/totaracohortsync',
-            get_string('cohortsync', 'auth_enrolkey'),
-            get_string('cohortsync_description', 'auth_enrolkey'), 0));
+        $settings->add(
+            new admin_setting_configcheckbox(
+                'auth_enrolkey/totaracohortsync',
+                get_string('cohortsync', 'auth_enrolkey'),
+                get_string('cohortsync_description', 'auth_enrolkey'),
+                0
+            )
+        );
     }
 
     if (moodle_major_version() >= '3.3') {
-            $authplugin = get_auth_plugin('enrolkey');
-            display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields,
-                get_string('auth_fieldlocks_help', 'auth'), false, false, $authplugin->get_custom_user_profile_fields());
+        $authplugin = get_auth_plugin('enrolkey');
+        display_auth_lock_options(
+            $settings,
+            $authplugin->authtype,
+            $authplugin->userfields,
+            get_string('auth_fieldlocks_help', 'auth'),
+            false,
+            false,
+            $authplugin->get_custom_user_profile_fields()
+        );
     }
 
     $authplugin = get_auth_plugin('enrolkey');
-    display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields,
-            '', true, true, $authplugin->get_custom_user_profile_fields());
+    display_auth_lock_options(
+        $settings,
+        $authplugin->authtype,
+        $authplugin->userfields,
+        '',
+        true,
+        true,
+        $authplugin->get_custom_user_profile_fields()
+    );
 
     // Create category for Enrolkey.
     $ADMIN->add('authsettings', new admin_category('auth_enrolkey', get_string('pluginname', 'auth_enrolkey')));
-    // Add settings page toconfigure defaults.
+    // Add settings page to configure defaults.
     $ADMIN->add('auth_enrolkey', $settings);
     // Clear '$settings' to prevent adding again our site category.
     $settings = null;
     // Add options.
-    $ADMIN->add('auth_enrolkey',
+    $ADMIN->add(
+        'auth_enrolkey',
         new admin_externalpage(
             'auth_enrolkey_manage',
             get_string('menumanage', 'auth_enrolkey'),
-            new moodle_url($CFG->wwwroot.'/auth/enrolkey/manage.php')
+            new moodle_url($CFG->wwwroot . '/auth/enrolkey/manage.php')
         )
     );
 }

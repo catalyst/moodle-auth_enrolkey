@@ -43,7 +43,6 @@ use renderable;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrolkey_available_table extends table_sql implements renderable {
-
     /**
      * report_table constructor.
      *

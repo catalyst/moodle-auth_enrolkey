@@ -39,7 +39,6 @@ if (file_exists($CFG->dirroot . '/totara/cohort/lib.php')) {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class auth_plugin_enrolkey extends auth_plugin_base {
-
     /**
      * Constructor.
      */
@@ -149,7 +148,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public function user_signup($user, $notify=true) {
+    public function user_signup($user, $notify = true) {
         global $CFG, $DB, $SESSION, $USER, $PAGE, $OUTPUT;
         require_once($CFG->dirroot . '/user/profile/lib.php');
         require_once($CFG->dirroot . '/user/lib.php');
@@ -199,7 +198,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $USER->loggedin = true;
         $USER->site = $CFG->wwwroot;
         set_moodle_cookie($USER->username);
-        list($availableenrolids, $errors) = $this->enrol_user($user->signup_token, $notify);
+        [$availableenrolids, $errors] = $this->enrol_user($user->signup_token, $notify);
         if (!$notify) {
             return;
         }
@@ -233,7 +232,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @param bool $notify
      * @return array
      */
-    public function enrol_user(string $enrolkey, bool $notify = true) : array {
+    public function enrol_user(string $enrolkey, bool $notify = true): array {
         global $DB, $USER;
 
         /** @var enrol_self_plugin $enrol */
@@ -270,7 +269,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             $url = '/login/signup.php';
             $CFG->auth_instructions = get_string('signup_auth_instructions', 'auth_enrolkey', $url);
         }
-
     }
 
     /**
@@ -349,7 +347,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @param string $enrolkey
      * @return array
      */
-    private function get_enrol_plugins(moodle_database $db, string $enrolkey) : array {
+    private function get_enrol_plugins(moodle_database $db, string $enrolkey): array {
         // Password is the Enrolment key that is specified in the Self enrolment instance.
         $enrolplugins = $db->get_records('enrol', ['enrol' => 'self', 'password' => $enrolkey]);
 

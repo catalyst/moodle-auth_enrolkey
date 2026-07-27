@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 namespace auth_enrolkey;
 
 use advanced_testcase;
@@ -31,7 +30,7 @@ require_once($CFG->dirroot . '/auth/enrolkey/lib.php');
  * @author     Matthew Hilton <matthewhilton@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class reset_password_hook_test extends advanced_testcase {
+final class reset_password_hook_test extends advanced_testcase {
     /** @var object test user **/
     private $user;
 
@@ -39,6 +38,7 @@ class reset_password_hook_test extends advanced_testcase {
      * Sets up tests
      */
     public function setUp(): void {
+        parent::setUp();
         global $DB;
         $this->resetAfterTest(true);
 
@@ -72,8 +72,10 @@ class reset_password_hook_test extends advanced_testcase {
 
     /**
      * Tests auth_enrolkey_post_forgot_password_requests function
+     *
+     * @covers ::auth_enrolkey_post_forgot_password_requests
      */
-    public function test_auth_enrolkey_post_forgot_password_requests() {
+    public function test_auth_enrolkey_post_forgot_password_requests(): void {
         global $DB;
 
         $sink = $this->redirectEmails();
@@ -102,8 +104,10 @@ class reset_password_hook_test extends advanced_testcase {
 
     /**
      * Tests auth_enrolkey_post_set_password_requests function
+     *
+     * @covers ::auth_enrolkey_post_set_password_requests
      */
-    public function test_auth_enrolkey_post_set_password_requests() {
+    public function test_auth_enrolkey_post_set_password_requests(): void {
         global $USER;
 
         $randomuser = $this->getDataGenerator()->create_user();

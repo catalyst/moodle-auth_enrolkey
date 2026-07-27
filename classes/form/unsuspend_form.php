@@ -43,7 +43,6 @@ use core_user;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class unsuspend_form extends \moodleform {
-
     /**
      * Creates the Moodle singup form, calls parent::definition();
      */

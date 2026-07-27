@@ -28,7 +28,7 @@ use core\persistent;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Cohort form.
@@ -38,7 +38,6 @@ require_once($CFG->libdir.'/formslib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrolkey_cohort_form extends \moodleform {
-
     /**
      * Define the form - called by parent constructor
      */
@@ -76,4 +75,3 @@ class enrolkey_cohort_form extends \moodleform {
         $this->set_data(['cohortids' => $list]);
     }
 }
-

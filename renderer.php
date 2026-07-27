@@ -30,7 +30,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class auth_enrolkey_renderer extends plugin_renderer_base {
-
     /**
      * Render the signup form.
      *

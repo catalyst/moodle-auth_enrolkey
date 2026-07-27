@@ -39,12 +39,13 @@ require_once($CFG->dirroot . '/user/profile/lib.php');
  * @copyright  2016 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class auth_test extends \advanced_testcase {
-
+final class auth_test extends \advanced_testcase {
     /**
      * Test test_auth_enrolkey()
+     *
+     * @covers \auth_plugin_enrolkey::user_signup
      */
-    public function test_auth_enrolkey() {
+    public function test_auth_enrolkey(): void {
         global $DB, $CFG;
 
         $this->resetAfterTest(true);
@@ -184,7 +185,12 @@ class auth_test extends \advanced_testcase {
         $this->assertFalse(is_enrolled($context8, $user2, ''));
     }
 
-    public function test_group_enrolkey() {
+    /**
+     * Test group enrolkey.
+     *
+     * @covers \auth_plugin_enrolkey::user_signup
+     */
+    public function test_group_enrolkey(): void {
         $this->resetAfterTest(true);
         global $DB, $CFG;
 
@@ -258,7 +264,12 @@ class auth_test extends \advanced_testcase {
         $this->assertFalse(groups_is_member($group->id, $user3->id));
     }
 
-    public function test_add_cohorts_during_signup() {
+    /**
+     * Test adding cohorts during signup.
+     *
+     * @covers \auth_plugin_enrolkey::user_signup
+     */
+    public function test_add_cohorts_during_signup(): void {
         $this->resetAfterTest(true);
         global $DB;
 
@@ -289,7 +300,12 @@ class auth_test extends \advanced_testcase {
         $this->assertTrue($DB->record_exists('cohort_members', ['cohortid' => $cohort->id, 'userid' => $user1->id]));
     }
 
-    public function test_add_fields_during_signup() {
+    /**
+     * Test adding fields during signup.
+     *
+     * @covers \auth_plugin_enrolkey::user_signup
+     */
+    public function test_add_fields_during_signup(): void {
         $this->resetAfterTest(true);
         global $DB;
 

@@ -34,7 +34,6 @@ use moodle_database;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class utility {
-
     /**
      * Find the username / email combination of a user that is, not deleted, but suspended.
      *
@@ -85,7 +84,7 @@ class utility {
      * @param bool $checkuserenrolment
      * @return array
      */
-    public static function unsuspend_and_enrol_user(string $enrolkey, bool $checkuserenrolment = true) : array {
+    public static function unsuspend_and_enrol_user(string $enrolkey, bool $checkuserenrolment = true): array {
         global $DB;
 
         /** @var enrol_self_plugin $enrol */
@@ -114,7 +113,7 @@ class utility {
      * @param string $enrolkey
      * @return array
      */
-    public static function get_enrol_plugins(moodle_database $db, string $enrolkey) : array {
+    public static function get_enrol_plugins(moodle_database $db, string $enrolkey): array {
         // Password is the Enrolment key that is specified in the Self enrolment instance.
         $enrolplugins = $db->get_records('enrol', ['enrol' => 'self', 'password' => $enrolkey]);
 
@@ -215,8 +214,10 @@ class utility {
         \auth_enrolkey\persistent\enrolkey_cohort_mapping::add_cohorts_during_signup($user, $availableenrolids);
 
         // If enabled, run a cohort sync to force dynamic cohorts to update.
-        if (get_config('auth_enrolkey', 'totaracohortsync') &&
-            function_exists('totara_cohort_check_and_update_dynamic_cohort_members')) {
+        if (
+            get_config('auth_enrolkey', 'totaracohortsync') &&
+            function_exists('totara_cohort_check_and_update_dynamic_cohort_members')
+        ) {
             $trace = new \null_progress_trace();
             // This may be a perfomance hog.
             totara_cohort_check_and_update_dynamic_cohort_members(null, $trace);

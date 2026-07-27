@@ -36,7 +36,6 @@ use core\persistent;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrolkey_profile_mapping extends persistent {
-
     /** Table name for the persistent. */
     const TABLE = 'auth_enrolkey_profile';
 
