@@ -81,13 +81,17 @@ if ($hassiteconfig) {
         )
     );
 
+    $hiddenfields = [
+        'city' => get_string('city'),
+        'country' => get_string('country'),
+    ];
     $settings->add(
-        new admin_setting_configselect(
-            'auth_enrolkey/hidecityandcountry',
-            get_string('settings_hidecityandcountry_title', 'auth_enrolkey'),
-            get_string('settings_hidecityandcountry_description', 'auth_enrolkey'),
-            0,
-            $options
+        new admin_setting_configmulticheckbox(
+            'auth_enrolkey/hidefields',
+            get_string('settings_hidefields_title', 'auth_enrolkey'),
+            get_string('settings_hidefields_description', 'auth_enrolkey'),
+            [],
+            $hiddenfields
         )
     );
 

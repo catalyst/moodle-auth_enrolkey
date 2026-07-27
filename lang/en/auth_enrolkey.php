@@ -68,8 +68,8 @@ $string['settings_email_description'] = 'Force users to confirm their account wi
 ';
 $string['settings_email_title'] = 'Require email confirmation';
 $string['settings_heading'] = 'General settings';
-$string['settings_hidecityandcountry_description'] = 'When enabled, the city and country fields will be removed from the signup form.';
-$string['settings_hidecityandcountry_title'] = 'Hide city and country fields';
+$string['settings_hidefields_description'] = 'Selected fields will be removed from the signup form.';
+$string['settings_hidefields_title'] = 'Hide signup form fields';
 $string['settings_partial'] = 'Partial';
 $string['settings_required_description'] = 'The enrolment key will be a required field for validation';
 $string['settings_required_title'] = 'Require enrolment key for validation';

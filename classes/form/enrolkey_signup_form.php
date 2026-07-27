@@ -72,13 +72,14 @@ class enrolkey_signup_form extends \login_signup_form {
             $mform->addHelpButton('username', 'signup_username', 'auth_enrolkey');
         }
 
-        // Optionally hide city and country fields based on admin setting.
-        if (get_config('auth_enrolkey', 'hidecityandcountry')) {
-            if ($mform->elementExists('city')) {
-                $mform->removeElement('city');
-            }
-            if ($mform->elementExists('country')) {
-                $mform->removeElement('country');
+        // Optionally hide fields based on admin setting.
+        $hidefields = get_config('auth_enrolkey', 'hidefields');
+        if (!empty($hidefields)) {
+            foreach (explode(',', $hidefields) as $field) {
+                $field = trim($field);
+                if ($field !== '' && $mform->elementExists($field)) {
+                    $mform->removeElement($field);
+                }
             }
         }
 
