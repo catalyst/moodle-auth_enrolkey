@@ -79,7 +79,7 @@ $string['signup_auth_instructions'] = 'Hi! For full access to courses you\'ll ne
 a minute to create a new account for yourself on this web site.
 <ol>
 <li>Click <a href="{$a}">Create new account</a> and fill out the form with your details.</li>
-<li><strong>Username:</strong> Choose a username of at least 3 characters using lowercase letters, numbers, hyphens or underscores. For example: <em>jane.smith</em> or <em>jsmith2024</em>.</li>
+<li><strong>Username:</strong> Choose a username of at least 3 characters using lowercase letters, numbers, hyphens (-), underscores (_), or periods (.). For example: <em>jane.smith</em> or <em>jsmith2024</em>.</li>
 <li><strong>Enrolment key:</strong> Enter the enrolment key provided to you by your organisation. This will be included in your onboarding communications.</li>
 <li>Your account will be created and you will be logged in.</li>
 <li>You can now access the full course for this session.</li>
