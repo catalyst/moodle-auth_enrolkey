@@ -47,7 +47,6 @@ require_once($CFG->dirroot . '/login/signup_form.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrolkey_signup_form extends \login_signup_form {
-
     /**
      * Creates the Moodle singup form, calls parent::definition();
      */
@@ -58,6 +57,31 @@ class enrolkey_signup_form extends \login_signup_form {
         parent::definition();
 
         $mform = $this->_form;
+
+        // Add instruction text at the top of the form.
+        $instructiontext = get_string('signup_form_instructions', 'auth_enrolkey');
+        $instruction = $mform->createElement('static', 'signupinstructions', '', $instructiontext);
+        if ($mform->elementExists('username')) {
+            $mform->insertElementBefore($instruction, 'username');
+        } else if ($mform->elementExists('email')) {
+            $mform->insertElementBefore($instruction, 'email');
+        }
+
+        // Add help button for the username field.
+        if ($mform->elementExists('username')) {
+            $mform->addHelpButton('username', 'signup_username', 'auth_enrolkey');
+        }
+
+        // Optionally hide fields based on admin setting.
+        $hidefields = get_config('auth_enrolkey', 'hidefields');
+        if (!empty($hidefields)) {
+            foreach (explode(',', $hidefields) as $field) {
+                $field = trim($field);
+                if ($field !== '' && $mform->elementExists($field)) {
+                    $mform->removeElement($field);
+                }
+            }
+        }
 
         $element = $mform->createElement('text', 'signup_token', get_string('signup_field_title', 'auth_enrolkey'));
 
@@ -70,6 +94,9 @@ class enrolkey_signup_form extends \login_signup_form {
 
         // Make the course token field visible earlier.
         $mform->insertElementBefore($element, 'email');
+
+        // Add help button for the enrolment key field.
+        $mform->addHelpButton('signup_token', 'signup_enrolkey', 'auth_enrolkey');
 
         if ($this->signup_token_required()) {
             $mform->addRule('signup_token', get_string('signup_missing', 'auth_enrolkey'), 'required', null, 'client');

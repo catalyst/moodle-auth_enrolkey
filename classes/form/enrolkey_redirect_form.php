@@ -34,7 +34,6 @@ use core\form\persistent;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrolkey_redirect_form extends persistent {
-
     /** @var string $persistentclass */
     protected static $persistentclass = 'auth_enrolkey\\persistent\\enrolkey_redirect_mapping';
 
@@ -46,7 +45,7 @@ class enrolkey_redirect_form extends persistent {
         $persistent = $this->get_persistent();
 
         // External.
-        $mform->addElement('text', 'url', get_string('label_redirection', 'auth_enrolkey'),  ['size' => '100']);
+        $mform->addElement('text', 'url', get_string('label_redirection', 'auth_enrolkey'), ['size' => '100']);
         $mform->setType('url', PARAM_TEXT);
         $mform->addHelpButton('url', 'label_redirection', 'auth_enrolkey');
 
@@ -56,4 +55,3 @@ class enrolkey_redirect_form extends persistent {
         $this->add_action_buttons(true);
     }
 }
-

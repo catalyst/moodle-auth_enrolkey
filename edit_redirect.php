@@ -26,8 +26,8 @@
 use auth_enrolkey\form\enrolkey_redirect_form;
 use auth_enrolkey\persistent\enrolkey_redirect_mapping;
 
-require_once(__DIR__.'/../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
+require_once(__DIR__ . '/../../config.php');
+require_once($CFG->libdir . '/adminlib.php');
 
 admin_externalpage_setup('auth_enrolkey_manage');
 

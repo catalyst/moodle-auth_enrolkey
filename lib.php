@@ -81,4 +81,3 @@ function auth_enrolkey_post_set_password_requests($data) {
         redirect(new moodle_url('/auth/enrolkey/unsuspend.php'));
     }
 }
-
