@@ -35,6 +35,10 @@ namespace auth_enrolkey\form;
 use auth_enrolkey\utility;
 use core_user;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->libdir . '/formslib.php');
+
 /**
  * Class for the unsuspend form.
  *
