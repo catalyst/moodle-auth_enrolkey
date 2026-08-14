@@ -68,7 +68,11 @@ class utility {
      * @return bool Returns true if the user is unsuspended.
      */
     public static function unsuspend_user($user) {
+        global $CFG;
+
         if ($user->suspended == 1) {
+            require_once($CFG->dirroot . '/user/lib.php');
+
             $user->suspended = 0;
             user_update_user($user, false, true);
             return true;
