@@ -181,7 +181,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
 
         // Trigger event.
         \core\event\user_created::create_from_userid($user->id)->trigger();
-        if ($notify) {
+        if ($notify && $emailconfirmation !== '0') {
             if (!send_confirmation_email($user)) {
                 // TODO make this more resilient? Email shouldn't be critical here.
                 throw new \moodle_exception('noemail', 'auth_enrolkey');
