@@ -71,8 +71,8 @@ if ($form->is_cancelled()) {
 
             // Only enrol a user to enrolkeys and courses which they are not already enrolled in.
             if (!empty($availableenrolids)) {
-                complete_user_login($user);
                 utility::unsuspend_user($user);
+                complete_user_login($user);
 
                 // They are now unsuspended. We can actually called the real auth login function.
                 if (authenticate_user_login($user->username, $data->password)) {
