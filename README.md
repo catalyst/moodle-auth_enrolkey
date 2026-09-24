@@ -29,9 +29,27 @@ https://moodle.org/plugins/block_enrolkey
 Branches
 --------
 
-| Moodle version    | Branch      | PHP   |
-|-------------------| ----------- | ----- |
-| Moodle 3.5 to 4.5 | master      | 7.1+  |
+| Moodle version    | Branch           | PHP      |
+|--------------------|------------------|----------|
+| Moodle 3.5 to 4.5   | master           | 7.1+     |
+| Totara 20+          | TOTARA_20_STABLE | 8.1, 8.2 |
+
+### Totara 20 compatibility notes
+
+Totara 20 removed the Moodle privacy subsystem entirely (Totara has its own
+`totara_userdata` mechanism instead). The `TOTARA_20_STABLE` branch contains
+the following change on top of `master`:
+
+* Removed `classes/privacy/provider.php`, which implemented
+  `\core_privacy\local\metadata\provider`, `\core_privacy\local\request\
+  core_userlist_provider` and `\core_privacy\local\request\plugin\provider`.
+  None of these interfaces exist in Totara 20, so the class throws a fatal
+  `Interface not found` error if it is ever autoloaded (e.g. via
+  `class_exists()`). Totara 20 has no privacy subsystem to invoke this
+  provider anyway, so removing it is safe.
+
+No other changes were required; the auth plugin, forms, persistent classes,
+tables, renderer and settings all work unmodified on Totara 20.
 
 Installation
 ------------
