@@ -123,7 +123,9 @@ class enrolkey_signup_form extends \login_signup_form {
 
         $errors = parent::validation($data, $files);
 
-        $signuptoken = $data['signup_token'];
+        // A key that only consists of whitespace counts as no key. Database collations that pad with spaces would
+        // otherwise match it against self enrolment instances that have an empty key.
+        $signuptoken = trim($data['signup_token']);
 
         if ($signuptoken !== '') {
             // For any case where the token is populated, perform a lookup.

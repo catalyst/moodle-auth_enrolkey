@@ -27,6 +27,7 @@ namespace auth_enrolkey\table;
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/tablelib.php');
+require_once($CFG->dirroot . '/cohort/lib.php');
 
 use auth_enrolkey\persistent\enrolkey_cohort_mapping;
 use auth_enrolkey\persistent\enrolkey_profile_mapping;
@@ -43,6 +44,9 @@ use renderable;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrolkey_available_table extends table_sql implements renderable {
+    /** @var array All system level cohorts, as returned by cohort_get_all_cohorts(). */
+    protected $allcohorts;
+
     /**
      * report_table constructor.
      *

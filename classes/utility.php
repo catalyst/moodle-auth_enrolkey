@@ -35,6 +35,48 @@ use moodle_database;
  */
 class utility {
     /**
+     * Creates a user, using the namespaced API where it exists (Moodle 5.3+) and the legacy function otherwise.
+     *
+     * user_create_user() is deprecated since Moodle 5.3 (MDL-82650) and is removed in Moodle 6.0.
+     *
+     * @param \stdClass $user The user to create.
+     * @param bool $updatepassword If true, the authentication plugin will update the password (as in core).
+     * @param bool $triggerevent Set false if the user_created event should not be triggered (as in core).
+     * @return int The id of the new user.
+     */
+    public static function create_user(\stdClass $user, bool $updatepassword = true, bool $triggerevent = true): int {
+        global $CFG;
+
+        if (class_exists(\core\user::class) && method_exists(\core\user::class, 'create_user')) {
+            return \core\user::create_user($user, $updatepassword, $triggerevent);
+        }
+
+        require_once($CFG->dirroot . '/user/lib.php');
+        return user_create_user($user, $updatepassword, $triggerevent);
+    }
+
+    /**
+     * Updates a user, using the namespaced API where it exists (Moodle 5.3+) and the legacy function otherwise.
+     *
+     * user_update_user() is deprecated since Moodle 5.3 (MDL-82650) and is removed in Moodle 6.0.
+     *
+     * @param \stdClass $user The user to update.
+     * @param bool $updatepassword If true, the authentication plugin will update the password.
+     * @param bool $triggerevent Set false if the user_updated event should not be triggered.
+     */
+    public static function update_user_record(\stdClass $user, bool $updatepassword = true, bool $triggerevent = true): void {
+        global $CFG;
+
+        if (class_exists(\core\user::class) && method_exists(\core\user::class, 'update_user')) {
+            \core\user::update_user($user, $updatepassword, $triggerevent);
+            return;
+        }
+
+        require_once($CFG->dirroot . '/user/lib.php');
+        user_update_user($user, $updatepassword, $triggerevent);
+    }
+
+    /**
      * Find the username / email combination of a user that is, not deleted, but suspended.
      *
      * @param array $data
@@ -68,13 +110,9 @@ class utility {
      * @return bool Returns true if the user is unsuspended.
      */
     public static function unsuspend_user($user) {
-        global $CFG;
-
         if ($user->suspended == 1) {
-            require_once($CFG->dirroot . '/user/lib.php');
-
             $user->suspended = 0;
-            user_update_user($user, false, true);
+            self::update_user_record($user, false, true);
             return true;
         }
 
@@ -118,6 +156,12 @@ class utility {
      * @return array
      */
     public static function get_enrol_plugins(moodle_database $db, string $enrolkey): array {
+        // An empty key must never match anything. Otherwise every self enrolment instance without a key
+        // would match, and the user would be enrolled in all of those courses.
+        if (trim($enrolkey) === '') {
+            return [];
+        }
+
         // Password is the Enrolment key that is specified in the Self enrolment instance.
         $enrolplugins = $db->get_records('enrol', ['enrol' => 'self', 'password' => $enrolkey]);
 

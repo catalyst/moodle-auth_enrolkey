@@ -174,7 +174,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
             $user->confirmed = 0;
         }
         $user->lastip = getremoteaddr();
-        $user->id = user_create_user($user, false, false);
+        $user->id = utility::create_user($user, false, false);
 
         // Save any custom profile field information.
         profile_save_data($user);
@@ -198,7 +198,7 @@ class auth_plugin_enrolkey extends auth_plugin_base {
         $USER->loggedin = true;
         $USER->site = $CFG->wwwroot;
         set_moodle_cookie($USER->username);
-        [$availableenrolids, $errors] = $this->enrol_user($user->signup_token, $notify);
+        [$availableenrolids, $errors] = $this->enrol_user((string) ($user->signup_token ?? ''), $notify);
         if (!$notify) {
             return;
         }
@@ -348,16 +348,6 @@ class auth_plugin_enrolkey extends auth_plugin_base {
      * @return array
      */
     private function get_enrol_plugins(moodle_database $db, string $enrolkey): array {
-        // Password is the Enrolment key that is specified in the Self enrolment instance.
-        $enrolplugins = $db->get_records('enrol', ['enrol' => 'self', 'password' => $enrolkey]);
-
-        return array_merge($enrolplugins, $db->get_records_sql("
-                SELECT e.*, g.enrolmentkey
-                  FROM {groups} g
-                  JOIN {enrol} e ON e.courseid = g.courseid
-                                AND e.enrol = 'self'
-                                AND e.customint1 = 1
-                 WHERE g.enrolmentkey = ?
-            ", [$enrolkey]));
+        return utility::get_enrol_plugins($db, $enrolkey);
     }
 }
