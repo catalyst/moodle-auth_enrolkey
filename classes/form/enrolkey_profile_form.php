@@ -56,44 +56,26 @@ class enrolkey_profile_form extends \moodleform {
         $mform->addElement('header', 'moodle_optional', get_string('optional', 'form'));
         $mform->setExpanded('moodle_optional', false);
 
-        $mform->addElement('text', 'url', get_string('webpage'), 'maxlength="255" size="50"');
-        $mform->setType('url', core_user::get_property_type('url'));
-
-        $removedfields = [];
-        if (defined('core_user::REMOVED_FIELDS')) {
-            $removedfields = core_user::REMOVED_FIELDS;
-        }
-
-        // Fields that might not exist, such as in Totara 13+.
-        if (!isset($removedfields['icq'])) {
-            $mform->addElement('text', 'icq', get_string('icqnumber'), 'maxlength="15" size="25"');
-            $mform->setType('icq', core_user::get_property_type('icq'));
-            $mform->setForceLtr('icq');
-        }
-
-        $mform->addElement('text', 'skype', get_string('skypeid'), 'maxlength="50" size="25"');
-        $mform->setType('skype', core_user::get_property_type('skype'));
-        $mform->setForceLtr('skype');
-
-        // Fields that might not exist, such as in Totara 13+.
-        if (!isset($removedfields['aim'])) {
-            $mform->addElement('text', 'aim', get_string('aimid'), 'maxlength="50" size="25"');
-            $mform->setType('aim', core_user::get_property_type('aim'));
-            $mform->setForceLtr('aim');
-        }
-
-        // Fields that might not exist, such as in Totara 13+.
-        if (!isset($removedfields['yahoo'])) {
-            $mform->addElement('text', 'yahoo', get_string('yahooid'), 'maxlength="50" size="25"');
-            $mform->setType('yahoo', core_user::get_property_type('yahoo'));
-            $mform->setForceLtr('yahoo');
-        }
-
-        // Fields that might not exist, such as in Totara 13+.
-        if (!isset($removedfields['msn'])) {
-            $mform->addElement('text', 'msn', get_string('msnid'), 'maxlength="50" size="25"');
-            $mform->setType('msn', core_user::get_property_type('msn'));
-            $mform->setForceLtr('msn');
+        // Legacy fields that were removed from the user table in newer Moodle versions (and are missing in Totara 13+).
+        // Only offer a field if core still knows it, otherwise core_user::get_property_type() throws.
+        // Each entry is: field name => [language string, input attributes, force left-to-right].
+        $legacyfields = [
+            'url' => ['webpage', 'maxlength="255" size="50"', false],
+            'icq' => ['icqnumber', 'maxlength="15" size="25"', true],
+            'skype' => ['skypeid', 'maxlength="50" size="25"', true],
+            'aim' => ['aimid', 'maxlength="50" size="25"', true],
+            'yahoo' => ['yahooid', 'maxlength="50" size="25"', true],
+            'msn' => ['msnid', 'maxlength="50" size="25"', true],
+        ];
+        foreach ($legacyfields as $field => [$stringid, $attributes, $forceltr]) {
+            if (!self::user_property_exists($field)) {
+                continue;
+            }
+            $mform->addElement('text', $field, get_string($stringid), $attributes);
+            $mform->setType($field, core_user::get_property_type($field));
+            if ($forceltr) {
+                $mform->setForceLtr($field);
+            }
         }
 
         $mform->addElement('text', 'idnumber', get_string('idnumber'), 'maxlength="255" size="25"');
@@ -128,6 +110,21 @@ class enrolkey_profile_form extends \moodleform {
             if ($ele instanceof \MoodleQuickForm_header) {
                 $mform->setExpanded($ele->getName(), true);
             }
+        }
+    }
+
+    /**
+     * Whether core still knows a user table property.
+     *
+     * @param string $property The user property name.
+     * @return bool
+     */
+    protected static function user_property_exists(string $property): bool {
+        try {
+            core_user::get_property_type($property);
+            return true;
+        } catch (\coding_exception $e) {
+            return false;
         }
     }
 

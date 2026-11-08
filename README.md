@@ -31,7 +31,7 @@ Branches
 
 | Moodle version    | Branch           | PHP   |
 |-------------------| ---------------- | ----- |
-| Moodle 3.5 to 4.5 | MOODLE_35_STABLE | 7.1+  |
+| Moodle 3.5 to 5.3 | MOODLE_35_STABLE | 7.1+  |
 
 Installation
 ------------

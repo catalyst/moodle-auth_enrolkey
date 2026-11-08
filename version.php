@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version   = 2022011203;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->release   = 2022011203;        // Match release exactly to version.
+$plugin->version   = 2026110800;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->release   = 2026110800;        // Match release exactly to version.
 $plugin->requires  = 2014051200;        // Requires this Moodle version (2.7+).
 $plugin->component = 'auth_enrolkey';      // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->supported = [35, 405];            // A range of branch numbers of supported moodle versions.
+$plugin->supported = [35, 503];            // A range of branch numbers of supported moodle versions.
